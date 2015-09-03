@@ -3,6 +3,8 @@
 Суть: аноны сгуппировались, взяли открытый MUD framework evennia: https://github.com/evennia/evennia
 и начали создавать MUD манямирок основанный на "мифологии" имиджборд и лурка.
 
+**Координируемся [ЗДЕСЬ](https://titanpad.com/RkdHK6x7Hei)**
+
 Тещий статус:
   * Созданы тестовые сервера:
     * http://mu2ch.epac.to:8000/webclient/ либо telnet mu2ch.epac.to 4000
@@ -29,4 +31,3 @@
   * Играть получая ЛУЛЗЫ!
 
 
-**Пока коордиринуемся [ЗДЕСЬ](https://titanpad.com/RkdHK6x7Hei)**
