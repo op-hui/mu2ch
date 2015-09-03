@@ -15,7 +15,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-from commands.command import CmdSmile,CmdFap
+from commands.command import CmdSmile,CmdFap,CmdCreateNPC
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -35,6 +35,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         self.add(CmdSmile())
         self.add(CmdFap())
+        self.add(CmdCreateNPC())
 
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):
