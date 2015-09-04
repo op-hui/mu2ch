@@ -12,7 +12,8 @@
   * Созданы репозитории для кода: https://github.com/op-hui/mu2ch 
   * Репозиторий для общей карты и описание локаций: https://github.com/op-hui/mu2ch-map [сама рисовалка](http://sourceforge.net/projects/mudmap/)
   * Скрипты и гайды для [разворачивание собственного сервера на линуксе и на винде](https://github.com/op-hui/mu2ch-ci) у себя на пеке с нашим манямирком
-  * Гайды по создание собственных 
+  * Гайды 
+    * [F.A.Q](https://github.com/op-hui/mu2ch/blob/master/guide/faq.md)
     * [Как создать собственного NPC](https://github.com/op-hui/mu2ch/blob/master/guide/npc.md)
     * [Созданию локаций, предметов, соединение локаций между собой](https://github.com/op-hui/mu2ch/blob/master/guide/builders.md)
     * [Сопутствующие утилиты](https://github.com/op-hui/mu2ch/blob/master/guide/builders.md)
