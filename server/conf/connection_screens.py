@@ -20,14 +20,23 @@ from evennia import utils
 
 CONNECTION_SCREEN = \
 """{b=============================================================={n
- Welcome to {g%s{n, version %s!
+ Сап анон! Тестовый сервер Мудача приветствует тебя
 
- If you have an existing account, connect to it by typing:
+ Если у тебя есть аккаунт, набери
       {wconnect <username> <password>{n
- If you need to create an account, type (without the <>'s):
+ Если аккаунта нет, то создай:
       {wcreate <username> <password>{n
 
- If you have spaces in your username, enclose it in quotes.
- Enter {whelp{n for more info. {wlook{n will re-show this screen.
-{b=============================================================={n""" \
- % (settings.SERVERNAME, utils.get_evennia_version())
+ Основная страница:
+    https://github.com/op-hui/mu2ch
+
+ Гайды как пилить свои локации, объекты, мобов, даже небо, даже аллаха:
+    https://github.com/op-hui/mu2ch/wiki
+    
+
+ F.A.Q: как передвигаться между локациями, ходить, фапать, телебонить
+    https://github.com/op-hui/mu2ch/blob/master/guide/faq.md
+    
+ Если команда help
+{b=============================================================={n""" 
+ 
