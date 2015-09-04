@@ -1,3 +1,4 @@
+from django.conf import settings
 """
 Player
 
@@ -91,6 +92,13 @@ class Player(DefaultPlayer):
      at_server_shutdown()
 
     """
+    def at_first_login(self):
+        try:
+            if (settings.TEST_SERVER):
+                self.permissions.add('Builders') 
+        except AttributeError:
+            pass
+
     pass
 
 
