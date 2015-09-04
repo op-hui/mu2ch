@@ -2,6 +2,11 @@
 
 код:
 ```python
+# -*- coding: utf-8 -*-
+
+#Внимание первая строка должна быть именно такой
+#Иначе питону плохеет от utf-8 русских символов
+
 from evennia import Object, CmdSet
 from evennia import default_cmds
 
