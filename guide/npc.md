@@ -9,21 +9,22 @@ class CmdSetTest(CmdSet):
      def at_cmdset_creation(self):
          self.add(default_cmds.CmdSay())
 
-class YourMom(Object):
+class YourMom(DefaultObject):
+    # Этот код выполняется при создании объекта
     def at_object_creation(self):
-        # here we add the cmdset
         self.cmdset.add(CmdSetTest)
-        # we should lock the object so we can't
-        # call commands on it from "the outside",
-        # (only the npc itself should have access to
-        # this command). This is done with the "call"
-        # lock type.
+        # Запрещаем призывать этого NPC откуда либо
         self.locks.add("call:false()")
+    
+    # Это код выполняется, когда наш объект получает от другого объекта предмет
     def at_object_receive(self, obj, source_location):
+        # obj - сам объект
+        # source_location - откуда объект был передан
         self.execute_cmd("say Хороший сына растет, спасибо за %s, %s!" % (obj, source_location))
 ```
 
-Добавляем в собственный новый класс объектов 
+Создаем в директории mudach/typeclasses 
+Файл npc.py 
 ```
 mudach/typeclasses/npc.py
 ```
