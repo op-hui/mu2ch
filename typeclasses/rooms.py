@@ -19,3 +19,7 @@ class Room(DefaultRoom):
     properties and methods available on all Objects.
     """
     pass
+
+class SimpleRoom(DefaultRoom):
+    pass
+
