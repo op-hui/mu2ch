@@ -12,12 +12,12 @@ def PlayerDynamicLocation(player):
         return False
     def createLocation(): 
 
-        hallway = create_object("rooms.SimpleRoom", key = "Прихожка")
-        hallway.db.desc = "сюда приходят"
-        anonRoom = create_object("rooms.SimpleRoom", key = "Сычевальня")
-        anonRoom.db.desc = "фачпа на ковре. ковер на стене. такие дела"
+        hallway = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Прихожка")
+        hallway.db.desc = u"Сюда приходят"
+        anonRoom = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сычевальня")
+        anonRoom.db.desc = u"ПЭКА на столе, незаправленная кровать"
 
-        create_object(DefaultExit, key="Фапчевальня", location=hallway, destination=anonRoom)
+        create_object(settings.BASE_EXIT_TYPECLASS, u"Сычевальня", hallway, destination=anonRoom)
 
         homeRoom = hallway
         return homeRoom
