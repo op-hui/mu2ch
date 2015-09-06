@@ -2,6 +2,8 @@
 from evennia import DefaultObject, CmdSet
 from evennia import default_cmds
 import random
+from commands.command import CmdTalk
+from evennia.contrib import menusystem
 
 class CmdSetTest(CmdSet):
      def at_cmdset_creation(self):
@@ -135,3 +137,79 @@ class YourDad(DefaultObject):
           print speaker + " say " + message
           if (message == u"Батя ты лысый"):
                 self.execute_cmd(u"say Ща пизды дам")
+
+"""
+Диалог для лолли
+
+здесь пишем диалоги для разных неписей
+
+copyright 07.09.15
+"""
+
+class TalkingCmdSet(CmdSet):
+#    "Stores the talk command."
+    key = "talkingcmdset"
+#
+#    def at_cmdset_creation(self):
+#        "populates the cmdset"
+#        self.add(CmdTalk())
+
+CONV_loli = {"START": {"text": "Привет анон. Я лолли.",
+                  "links": ["i1", "i2"],
+                  "linktexts": ["Кто такие лолли?",
+                                "Ты любишь конфеты?"],
+                  "keywords": None,
+                  "callback": None},
+        "i1": {"text": "Лолли это маленькие девочки... И ты еще называешь себя аноном?",
+                  "links": ["i2", "END"],
+                  "linktexts":["Ясно. Ты любишь конфеты?",
+                               "Ясно. Пока"],
+                 "keywords": None,
+                 "callback": None},
+        "i2": {"text": "Очень люблю. Дети ведь любят сладкое! А что?",
+                 "links": ["i3", "END"],
+                 "linktexts": ["Знаешь, у меня есть конфеты, давай трахаться?",
+                               "Да не... ниче. Показалось. Пока"],
+                 "keywords": None,
+                 "callback": None},
+        "i3": {"text": "А конфеты у тебя шоколадные?",
+                 "links": ["i4", "END"],
+                 "linktexts": ["КОНЕЧНО!",
+                               "Нет. Только 'Рачки'."],
+                 "keywords": None,
+                 "callback": None},
+        "i4": {"text": "Вы отходите от остальных. Она снимает свои трусики с медвежатами и вы начинаете сливаться в экстазе безудержной любви.",
+                 "links": ["END", "i5"],
+                 "linktexts": ["[Закончить]",
+                               "У меня еще трюфели есть."],
+                 "keywords": None,
+                 "callback": None},
+        "i5": {"text": "Она, тяжело дыша, подставляет тебе свою молоденькую попку и ты входишь в ее, еще розовый, анус.",
+                 "links": ["END"],
+                 "linktexts": ["[Закончить]"],
+                 "keywords": None,
+                 "callback": None},         
+
+        }
+
+"""
+класс с лолей
+
+потом объевляем подоный класс
+
+copyright 07.09.15
+"""
+class T_Loli(DefaultObject):
+    """
+    This implements a simple Object using the talk command and using the
+    conversation defined above. .
+    """
+
+    def at_object_creation(self):
+        "This is called when object is first created."
+        # store the conversation.
+        self.db.conversation = CONV_loli
+        self.db.desc = "Маленькая девочка. Одета в футболку и юбку. Можно вступить с ней в диалог."
+        # assign the talk command to npc
+       #self.cmdset.add_default(TalkingCmdSet, permanent=True)
+   
