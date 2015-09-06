@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """
 Commands
 
@@ -8,8 +9,6 @@ Commands describe the input the player can do to the game.
 
 from evennia import Command as BaseCommand
 from evennia import default_cmds
-
-
 
 class Command(BaseCommand):
     """
@@ -129,103 +128,9 @@ class MuxCommand(default_cmds.MuxCommand):
         # this can be removed in your child class, it's just
         # printing the ingoing variables as a demo.
         super(MuxCommand, self).func()
+		
+		
 from evennia import Command
-
-class CmdSmile(Command):
-        """
-        A smile command
-
-        Usage: 
-          smile [at] [<someone>]
-          grin [at] [<someone>] 
-
-        Smiles to someone in your vicinity or to the room
-        in general.
-
-        (This initial string (the __doc__ string)
-        is also used to auto-generate the help 
-        for this command)
-        """ 
-
-        key = "smile"
-        aliases = ["приветик", "grin at"] 
-        locks = "cmd:all()"
-        help_category = "General"
-
-        def parse(self):
-            "Very trivial parser" 
-            self.target = self.args.strip() 
-
-        def func(self):
-            "This actually does things"
-            caller = self.caller
-            if not self.target or self.target == "here":
-                string = "%s smiles." % caller.name
-                caller.location.msg_contents(string, exclude=caller)
-                caller.msg("You smile.")
-            else:
-                target = caller.search(self.target)
-                if not target: 
-                    # caller.search handles error messages
-                    return
-                string = "%s smiles to you." % caller.name
-                target.msg(string)
-                string = "You smile to %s." % target.name
-                caller.msg(string)
-                string = "%s smiles to %s." % (caller.name, target.name)           
-                caller.location.msg_contents(string, exclude=[caller,target])
-
-
-
-
-class CmdFap(Command):
-        """
-        A smile command
-
-        Usage: 
-          smile [at] [<someone>]
-          grin [at] [<someone>] 
-
-        Smiles to someone in your vicinity or to the room
-        in general.
-
-        (This initial string (the __doc__ string)
-        is also used to auto-generate the help 
-        for this command)
-        """ 
-
-        key = "фап"
-        aliases = ["фап-фап"] 
-        locks = "cmd:all()"
-        help_category = "General"
-
-        def parse(self):
-            "Very trivial parser" 
-            self.target = self.args.strip() 
-
-        def func(self):
-            "This actually does things"
-            caller = self.caller
-            if not self.target or self.target == "here":
-                string = "%s фапает." % caller.name
-                caller.location.msg_contents(string, exclude=caller)
-                caller.msg("Ты фапаешь")
-            else:
-                target = caller.search(self.target)
-                if not target: 
-                    # caller.search handles error messages
-                    return
-                string = "%s фапает на тебя." % caller.name
-                target.msg(string)
-                string = "Ты фапаешь на %s." % target.name
-                caller.msg(string)
-                string = "%s фапает на %s." % (caller.name, target.name)           
-                caller.location.msg_contents(string, exclude=[caller,target])
-
-
-
-
-
 from evennia import create_object
 
 class CmdCreateNPC(Command):
@@ -240,7 +145,7 @@ class CmdCreateNPC(Command):
     key = "+createnpc"
     aliases = ["+createNPC"]
     locks = "call:not perm(nonpcs)"
-    help_category = "mush" 
+    help_category = "mush"
 
     def func(self):
         "creates the object and names it"
@@ -255,12 +160,340 @@ class CmdCreateNPC(Command):
         # make name always start with capital letter
         name = self.args.capitalize()
         # create npc in caller's location
-        npc = create_object("characters.Character", 
-                      key=name, 
+        npc = create_object("characters.Character",
+                      key=name,
                       location=caller.location,
                       locks="edit:id(%i) and perm(Builders)" % caller.id)
-        # announce 
+        # announce
         message = "%s created the NPC '%s'."
-        caller.msg(message % ("You", name)) 
-        caller.location.msg_contents(message % (caller.key, name), 
-                                                exclude=caller)      
+        caller.msg(message % ("You", name))
+        caller.location.msg_contents(message % (caller.key, name), exclude=caller)
+
+		
+class CmdHomeRu(Command):
+    """
+    move to your character's home location
+
+    Usage:
+      home
+
+    Teleports you to your home location.
+    """
+
+    key = u"домой"
+    locks = "cmd:perm(home) or perm(Builders)"
+    arg_regex = r"$"
+
+    def func(self):
+        "Implement the command"
+        caller = self.caller
+        home = caller.home
+        if not home:
+            caller.msg("У тебя нет дома!")
+        elif home == caller.location:
+            caller.msg("Ты и так дома!")
+        else:
+            caller.move_to(home)
+            caller.msg("Ты вернулся домой...")
+			
+class CmdLookRu(Command):
+    """
+    look at location or object
+
+    Usage:
+      look
+      look <obj>
+      look *<player>
+
+    Observes your location or objects in your vicinity.
+    """
+    key = u"посмотреть"
+    locks = "cmd:all()"
+    arg_regex = r"\s|$"
+
+    def func(self):
+        """
+        Handle the looking.
+        """
+        caller = self.caller
+        args = self.args
+        if args:
+            # Use search to handle duplicate/nonexistant results.
+            looking_at_obj = caller.search(args, use_nicks=True)
+            if not looking_at_obj:
+                return
+        else:
+            looking_at_obj = caller.location
+            if not looking_at_obj:
+                caller.msg("Тут не на что смотреть!")
+                return
+
+        if not hasattr(looking_at_obj, 'return_appearance'):
+            # this is likely due to us having a player instead
+            looking_at_obj = looking_at_obj.character
+        if not looking_at_obj.access(caller, "view"):
+            caller.msg("'%s' не существует." % args)
+            return
+        # get object's appearance
+        caller.msg(looking_at_obj.return_appearance(caller))
+        # the object's at_desc() method.
+        looking_at_obj.at_desc(looker=caller)
+
+
+class CmdInventoryRu(Command):
+    """
+    view inventory
+
+    Usage:
+      inventory
+      inv
+
+    Shows your inventory.
+    """
+    key = u"инвентарь"
+    locks = "cmd:all()"
+    arg_regex = r"$"
+
+    def func(self):
+        "check inventory"
+        items = self.caller.contents
+        if not items:
+            string = "У тебя ничего нет."
+        else:
+            table = prettytable.PrettyTable(["name", "desc"])
+            table.header = False
+            table.border = False
+            for item in items:
+                table.add_row(["{C%s{n" % item.name, item.db.desc and item.db.desc or ""])
+            string = "{wУ тебя с собой:\n%s" % table
+        self.caller.msg(string)
+
+
+class CmdGetRu(Command):
+    """
+    pick up something
+
+    Usage:
+      get <obj>
+
+    Picks up an object from your location and puts it in
+    your inventory.
+    """
+    key = u"взять"
+    locks = "cmd:all()"
+    arg_regex = r"\s|$"
+
+    def func(self):
+        "implements the command."
+
+        caller = self.caller
+
+        if not self.args:
+            caller.msg("Что взять?")
+            return
+        #print "general/get:", caller, caller.location, self.args, caller.location.contents
+        obj = caller.search(self.args, location=caller.location)
+        if not obj:
+            return
+        if caller == obj:
+            caller.msg("Ты не можешь взять себя. 0_0")
+            return
+        if not obj.access(caller, 'get'):
+            if obj.db.get_err_msg:
+                caller.msg(obj.db.get_err_msg)
+            else:
+                caller.msg("Ты не можешь это взять.")
+            return
+
+        obj.move_to(caller, quiet=True)
+        caller.msg("You pick up %s." % obj.name)
+        caller.location.msg_contents("%s picks up %s." %
+                                        (caller.name,
+                                         obj.name),
+                                     exclude=caller)
+        # calling hook method
+        obj.at_get(caller)
+
+
+class CmdDropRu(Command):
+    """
+    drop something
+
+    Usage:
+      drop <obj>
+
+    Lets you drop an object from your inventory into the
+    location you are currently in.
+    """
+
+    key = u"положить"
+    locks = "cmd:all()"
+    arg_regex = r"\s|$"
+
+    def func(self):
+        "Implement command"
+
+        caller = self.caller
+        if not self.args:
+            caller.msg("Drop what?")
+            return
+
+        # Because the DROP command by definition looks for items
+        # in inventory, call the search function using location = caller
+        obj = caller.search(self.args, location=caller,
+                            nofound_string="У тебя нет %s." % self.args,
+                            multimatch_string="У тебя несколько %s:" % self.args)
+        if not obj:
+            return
+
+        obj.move_to(caller.location, quiet=True)
+        caller.msg("Ты кладешь %s." % (obj.name,))
+        caller.location.msg_contents("%s положил %s." %
+                                         (caller.name, obj.name),
+                                     exclude=caller)
+        # Call the object script's at_drop() method.
+        obj.at_drop(caller)
+
+
+class CmdGiveRu(Command):
+    """
+    give away something to someone
+
+    Usage:
+      give <inventory obj> = <target>
+
+    Gives an items from your inventory to another character,
+    placing it in their inventory.
+    """
+    key = u"дать"
+    locks = "cmd:all()"
+    arg_regex = r"\s|$"
+
+    def func(self):
+        "Implement give"
+
+        caller = self.caller
+        if not self.args or not self.rhs:
+            caller.msg("Использование: дать <объект> = <цель>")
+            return
+        to_give = caller.search(self.lhs, location=caller,
+                                nofound_string="У тебя нет %s." % self.lhs,
+                                multimatch_string="У тебя несколько %s:" % self.lhs)
+        target = caller.search(self.rhs)
+        if not (to_give and target):
+            return
+        if target == caller:
+            caller.msg("Ты оставил %s у себя." % to_give.key)
+            return
+        if not to_give.location == caller:
+            caller.msg("У тебя нет %s." % to_give.key)
+            return
+        # give object
+        caller.msg("Ты дал %s: %s." % (to_give.key, target.key))
+        to_give.move_to(target, quiet=True)
+        target.msg("%s дал тебе %s." % (caller.key, to_give.key))
+
+
+class CmdDescRu(Command):
+    """
+    describe yourself
+
+    Usage:
+      desc <description>
+
+    Add a description to yourself. This
+    will be visible to people when they
+    look at you.
+    """
+    key = u"я"
+    locks = "cmd:all()"
+    arg_regex = r"\s|$"
+
+    def func(self):
+        "add the description"
+
+        if not self.args:
+            self.caller.msg("Ты должен рассказать о себе.")
+            return
+
+        self.caller.db.desc = self.args.strip()
+        self.caller.msg("Ты рассказал о себе.")
+
+class CmdSayRu(Command):
+    """
+    speak as your character
+
+    Usage:
+      say <message>
+
+    Talk to those in your current location.
+    """
+
+    key = u"сказать"
+    aliases = ['"', "'"]
+    locks = "cmd:all()"
+
+    def func(self):
+        "Run the say command"
+
+        caller = self.caller
+
+        if not self.args:
+            caller.msg("Что сказать?")
+            return
+
+        speech = self.args
+
+        # calling the speech hook on the location
+        speech = caller.location.at_say(caller, speech)
+
+        # Feedback for the object doing the talking.
+        caller.msg('Ты сказал, "%s{n"' % speech)
+
+        # Build the string to emit to neighbors.
+        emit_string = '%s говорит, "%s{n"' % (caller.name,
+                                               speech)
+        caller.location.msg_contents(emit_string,
+                                     exclude=caller)
+
+
+class CmdPoseRu(Command):
+    """
+    strike a pose
+
+    Usage:
+      pose <pose text>
+      pose's <pose text>
+
+    Example:
+      pose is standing by the wall, smiling.
+       -> others will see:
+      Tom is standing by the wall, smiling.
+
+    Describe an action being taken. The pose text will
+    automatically begin with your name.
+    """
+    key = u"действие"
+    locks = "cmd:all()"
+
+    def parse(self):
+        """
+        Custom parse the cases where the emote
+        starts with some special letter, such
+        as 's, at which we don't want to separate
+        the caller's name and the emote with a
+        space.
+        """
+        args = self.args
+        if args and not args[0] in ["'", ",", ":"]:
+            args = " %s" % args.strip()
+        self.args = args
+
+    def func(self):
+        "Hook function"
+        if not self.args:
+            msg = "Что ты хотел сделать?"
+            self.caller.msg(msg)
+        else:
+            msg = "%s%s" % (self.caller.name, self.args)
+            self.caller.location.msg_contents(msg)

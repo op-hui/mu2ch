@@ -15,7 +15,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-from commands.command import CmdSmile,CmdFap,CmdCreateNPC
+from commands.command import CmdCreateNPC,CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -33,10 +33,16 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
-        self.add(CmdSmile())
-        self.add(CmdFap())
         self.add(CmdCreateNPC())
-
+        self.add(CmdHomeRu())
+        self.add(CmdLookRu())
+        self.add(CmdInventoryRu())
+        self.add(CmdGetRu())
+        self.add(CmdDropRu())
+        self.add(CmdGiveRu())
+		self.add(CmdDescRu())
+        self.add(CmdSayRu())
+        self.add(CmdPoseRu())
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):
     """
