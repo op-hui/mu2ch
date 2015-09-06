@@ -40,7 +40,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdGetRu())
         self.add(CmdDropRu())
         self.add(CmdGiveRu())
-		self.add(CmdDescRu())
+        self.add(CmdDescRu())
         self.add(CmdSayRu())
         self.add(CmdPoseRu())
 

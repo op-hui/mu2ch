@@ -128,8 +128,8 @@ class MuxCommand(default_cmds.MuxCommand):
         # this can be removed in your child class, it's just
         # printing the ingoing variables as a demo.
         super(MuxCommand, self).func()
-		
-		
+
+
 from evennia import Command
 from evennia import create_object
 
@@ -169,7 +169,7 @@ class CmdCreateNPC(Command):
         caller.msg(message % ("You", name))
         caller.location.msg_contents(message % (caller.key, name), exclude=caller)
 
-		
+
 class CmdHomeRu(Command):
     """
     move to your character's home location
@@ -195,7 +195,7 @@ class CmdHomeRu(Command):
         else:
             caller.move_to(home)
             caller.msg("Ты вернулся домой...")
-			
+
 class CmdLookRu(Command):
     """
     look at location or object
@@ -239,7 +239,6 @@ class CmdLookRu(Command):
         # the object's at_desc() method.
         looking_at_obj.at_desc(looker=caller)
 
-
 class CmdInventoryRu(Command):
     """
     view inventory
@@ -267,7 +266,6 @@ class CmdInventoryRu(Command):
                 table.add_row(["{C%s{n" % item.name, item.db.desc and item.db.desc or ""])
             string = "{wУ тебя с собой:\n%s" % table
         self.caller.msg(string)
-
 
 class CmdGetRu(Command):
     """
@@ -314,7 +312,6 @@ class CmdGetRu(Command):
         # calling hook method
         obj.at_get(caller)
 
-
 class CmdDropRu(Command):
     """
     drop something
@@ -354,7 +351,6 @@ class CmdDropRu(Command):
         # Call the object script's at_drop() method.
         obj.at_drop(caller)
 
-
 class CmdGiveRu(Command):
     """
     give away something to someone
@@ -392,7 +388,6 @@ class CmdGiveRu(Command):
         caller.msg("Ты дал %s: %s." % (to_give.key, target.key))
         to_give.move_to(target, quiet=True)
         target.msg("%s дал тебе %s." % (caller.key, to_give.key))
-
 
 class CmdDescRu(Command):
     """
@@ -455,7 +450,6 @@ class CmdSayRu(Command):
                                                speech)
         caller.location.msg_contents(emit_string,
                                      exclude=caller)
-
 
 class CmdPoseRu(Command):
     """
