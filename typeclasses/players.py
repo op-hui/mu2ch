@@ -27,6 +27,9 @@ def PlayerDynamicLocation(player):
         kitchen = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Кухня")
         kitchen.db.desc = u"Женское место, пованивает рыбой"
 
+        mom = create_object("npc.YourMom", key = "Твоя Мамка", location = kitchen)
+
+
         toilet = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сортир")
         toilet.db.desc = u"Сортир, заметна щель ежду дверью и полом"
 
