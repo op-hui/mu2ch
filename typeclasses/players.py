@@ -33,6 +33,8 @@ def PlayerDynamicLocation(player):
         toilet = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сортир")
         toilet.db.desc = u"Сортир, заметна щель ежду дверью и полом"
 
+        dad = create_object("npc.YourDad", key = "Лысый Батя", location = toilet)
+
         badroom = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Ванная")
         badroom.db.desc = u"Ржавая ванная с капающим краном, каждый предмет в ванной исчточает совковую эпоху"
 
