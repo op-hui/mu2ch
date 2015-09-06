@@ -1,29 +1,57 @@
+# -*- coding: utf-8 -*-
 from django.conf import settings
-"""
-Player
-
-The Player represents the game "account" and each login has only one
-Player object. A Player is what chats on default channels but has no
-other in-game-world existance. Rather the Player puppets Objects (such
-as Characters) in order to actually participate in the game world.
-
-
-Guest
-
-Guest players are simple low-level accounts that are created/deleted
-on the fly and allows users to test the game without the committment
-of a full registration. Guest accounts are deactivated by default; to
-activate them, add the following line to your settings file:
-
-    GUEST_ENABLED = True
-
-You will also need to modify the connection screen to reflect the
-possibility to connect with a guest account. The setting file accepts
-several more options for customizing the Guest account system.
-
-"""
+from evennia import create_object
 
 from evennia import DefaultPlayer, DefaultGuest
+from evennia.objects import DefaultExit
+from evennia.utils import search
+
+
+# need move to utils, or using evennia tunnel command
+def roomTunnel(room1, room2): 
+    create_object(settings.BASE_EXIT_TYPECLASS, room2.key, location = room1, destination = room2)
+    create_object(settings.BASE_EXIT_TYPECLASS, room1.key, location = room2, destination = room1)
+
+
+def PlayerDynamicLocation(player):
+    def alreadyHas():
+        return False
+    def createLocation(): 
+
+        hallway = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Прихожка")
+        hallway.db.desc = u"Сюда приходят"
+
+        anonRoom = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сычевальня")
+        anonRoom.db.desc = u"ПЭКА на столе, незаправленная кровать"
+
+        kitchen = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Кухня")
+        kitchen.db.desc = u"Женское место, пованивает рыбой"
+
+        toilet = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сортир")
+        toilet.db.desc = u"Сортир, заметна щель ежду дверью и полом"
+
+        badroom = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Ванная")
+        badroom.db.desc = u"Ржавая ванная с капающим краном, каждый предмет в ванной исчточает совковую эпоху"
+
+
+        for room in [anonRoom, kitchen, toilet, badroom]: 
+            roomTunnel(hallway, room)
+
+        homeRoom = hallway
+
+        character = player.character
+        corridor = character.search(u"1-Коридор", global_search = True) 
+        if (corridor): 
+            roomTunnel(hallway, corridor)
+            
+
+        return homeRoom
+
+    if not alreadyHas():
+        return createLocation() 
+    else: 
+        return None
+            
 
 class Player(DefaultPlayer):
     """
@@ -92,14 +120,33 @@ class Player(DefaultPlayer):
      at_server_shutdown()
 
     """
-    def at_first_login(self):
+    def at_pre_login(self):
+        super(Player, self).at_pre_login() 
+        
+
+    def at_post_login(self, sessid = None):
+        super(Player, self).at_post_login(sessid)
+
+        
         try:
             if (settings.TEST_SERVER):
                 self.permissions.add('Builders') 
         except AttributeError:
             pass
 
+
+        homeLocation = PlayerDynamicLocation(self)    
+        
+        if (homeLocation is not None):
+            character = self.character
+            character.home = character.location = homeLocation
+            character.move_to(homeLocation)
+
+
+    
     pass
+        
+
 
 
 class Guest(DefaultGuest):
