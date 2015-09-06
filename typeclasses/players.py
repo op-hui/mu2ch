@@ -7,6 +7,12 @@ from evennia import DefaultPlayer, DefaultGuest
 from evennia.objects import DefaultExit
 
 
+# need move to utils, or using evennia tunnel command
+def roomTunnel(room1, room2): 
+    create_object(settings.BASE_EXIT_TYPECLASS, room2.key, location = room1, destination = room2)
+    create_object(settings.BASE_EXIT_TYPECLASS, room1.key, location = room2, destination = room1)
+
+
 def PlayerDynamicLocation(player):
     def alreadyHas():
         return False
@@ -14,10 +20,22 @@ def PlayerDynamicLocation(player):
 
         hallway = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Прихожка")
         hallway.db.desc = u"Сюда приходят"
+
         anonRoom = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сычевальня")
         anonRoom.db.desc = u"ПЭКА на столе, незаправленная кровать"
 
-        create_object(settings.BASE_EXIT_TYPECLASS, u"Сычевальня", hallway, destination=anonRoom)
+        kitchen = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Кухня")
+        kitchen.db.desc = u"Женское место, пованивает рыбой"
+
+        toilet = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сортир")
+        toilet.db.desc = u"Сортир, заметна щель ежду дверью и полом"
+
+        badroom = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Ванная")
+        badroom.db.desc = u"Ржавая ванная с капающим краном, каждый предмет в ванной исчточает совковую эпоху"
+
+
+        for room in [anonRoom, kitchen, toilet, badroom]: 
+            roomTunnel(hallway, room)
 
         homeRoom = hallway
         return homeRoom
