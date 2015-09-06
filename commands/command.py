@@ -9,6 +9,7 @@ Commands describe the input the player can do to the game.
 
 from evennia import Command as BaseCommand
 from evennia import default_cmds
+from evennia.contrib import menusystem
 
 class Command(BaseCommand):
     """
@@ -491,3 +492,59 @@ class CmdPoseRu(Command):
         else:
             msg = "%s%s" % (self.caller.name, self.args)
             self.caller.location.msg_contents(msg)
+
+"""
+команда разговора с NPC
+
+"""
+
+
+class CmdTalk(Command):
+    """
+    talks to an npc
+
+    Usage:
+      talk
+
+    This command is only available if a talkative non-player-character (NPC)
+    is actually present. It will strike up a conversation with that NPC
+    and give you options on what to talk about.
+    """
+    key = "talk"
+    aliases = ["говорить","ск"]
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+        "Implements the command."
+
+        caller = self.caller
+
+        if not self.args:
+            caller.msg("Говорить с кем?")
+            return
+        #print "general/get:", caller, caller.location, self.args, caller.location.contents
+        obj = caller.search(self.args, location=caller.location)
+        if not obj:
+            return
+        if caller == obj:
+            caller.msg("Ты не можешь говорить сам с собой.")
+            return
+
+        # self.obj is the NPC this is defined on
+
+        self.caller.msg("(Ты подходишь к %s и начинаешь разговор.)" % self.obj.key)
+
+        # conversation is a dictionary of keys, each pointing to
+        # a dictionary defining the keyword arguments to the MenuNode
+        # constructor.
+        conversation = obj.db.conversation
+        if not conversation:
+            self.caller.msg("%s говорит: 'Нам с тобой не о чем разговаритвать'" % (obj.key))
+            return
+
+        # build all nodes by loading them from the conversation tree.
+        menu = menusystem.MenuTree(self.caller)
+        for key, kwargs in conversation.items():
+            menu.add(menusystem.MenuNode(key, **kwargs))
+        menu.start()

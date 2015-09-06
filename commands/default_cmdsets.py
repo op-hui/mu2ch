@@ -15,7 +15,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
-from commands.command import CmdCreateNPC,CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu
+from commands.command import CmdCreateNPC,CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu,CmdTalk
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -43,6 +43,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdDescRu())
         self.add(CmdSayRu())
         self.add(CmdPoseRu())
+        self.add(CmdTalk())
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):
     """
