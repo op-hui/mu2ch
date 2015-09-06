@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 from evennia import create_object
-import json
 
 from evennia import DefaultPlayer, DefaultGuest
 from evennia.objects import DefaultExit
+from evennia.utils import search
 
 
 # need move to utils, or using evennia tunnel command
@@ -38,6 +38,13 @@ def PlayerDynamicLocation(player):
             roomTunnel(hallway, room)
 
         homeRoom = hallway
+
+        character = player.character
+        corridor = character.search(u"1-Коридор", global_search = True) 
+        if (corridor): 
+            roomTunnel(hallway, corridor)
+            
+
         return homeRoom
 
     if not alreadyHas():
