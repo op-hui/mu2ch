@@ -6,6 +6,7 @@ import random
 class CmdSetTest(CmdSet):
      def at_cmdset_creation(self):
          self.add(default_cmds.CmdSay())
+         
 
 class YourMom(DefaultObject):
     descriptions = [
@@ -32,7 +33,6 @@ class YourMom(DefaultObject):
 
     def at_object_receive(self, obj, source_location):
         self.execute_cmd("say Хороший сына растет, спасибо за %s, %s!" % (obj, source_location))
-
 class YourDad(DefaultObject):
     descriptions = [ 
         u"""Батя -- типичный сельский тупой агрессивный быдлан, закончил 8 классов школы, с 10 лет курит, верит в жидорептилойдов на дне байкала, на вопрос "за сколько солнце обращается вокруг земли" отвечает "откуда я знаю, моя задача -- зарабатывать деньги". Изменял/изменяет. Иногда приходит домой нажравшись. Рассказывал, что в армии работал охранником в тюрьме и кого-то там завалил. Алсо, имеются какие-то наколки вроде тюремных. Скучает по советскому союзу.""",
@@ -81,3 +81,6 @@ class YourDad(DefaultObject):
           self.execute_cmd("say Ой, мне нужно в туалет")
         else:
           self.execute_cmd("say Путин - лучший президент!")
+    def at_say(self, speaker, message):
+          if (message == "Батя ты лысый"):
+                self.execute_cmd("say Ща пизды дам")
