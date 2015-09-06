@@ -22,7 +22,7 @@ def PlayerDynamicLocation(player):
         hallway.db.desc = u"Сюда приходят{/Под ногами уютно поскрипывает паркет"
 
         anonRoom = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сычевальня")
-        anonRoom.db.desc = u"ПЭКА на столе, незаправленная кровать"
+        anonRoom.db.desc = u"Все облезло-обшарпано, стулья, диван древние разъебанные в хлам, ремонт утонул, разве что компьютерный стол из этого века"
 
         kitchen = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Кухня")
         kitchen.db.desc = u"Женское место, пованивает рыбой"
@@ -31,7 +31,7 @@ def PlayerDynamicLocation(player):
 
 
         toilet = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сортир")
-        toilet.db.desc = u"Сортир, заметна щель ежду дверью и полом"
+        toilet.db.desc = u"Сортир, заметна щель ежду дверью и полом{/В углу стоит эмалированное ведро для использованной туалетой бумаги"
 
         dad = create_object("npc.YourDad", key = "Лысый Батя", location = toilet)
 
