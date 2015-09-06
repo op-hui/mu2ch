@@ -19,7 +19,7 @@ def PlayerDynamicLocation(player):
     def createLocation(): 
 
         hallway = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Прихожка")
-        hallway.db.desc = u"Сюда приходят"
+        hallway.db.desc = u"Сюда приходят{/Под ногами уютно поскрипывает паркет"
 
         anonRoom = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сычевальня")
         anonRoom.db.desc = u"ПЭКА на столе, незаправленная кровать"
