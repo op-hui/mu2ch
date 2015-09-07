@@ -493,6 +493,8 @@ class CmdPoseRu(Command):
             msg = "%s%s" % (self.caller.name, self.args)
             self.caller.location.msg_contents(msg)
 
+            
+
 """
 команда разговора с NPC
 
