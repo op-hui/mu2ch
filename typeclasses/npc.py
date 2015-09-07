@@ -152,10 +152,10 @@ class T_Loli(DefaultObject):
     """
     This implements a simple Object using the talk command and using the
     conversation defined above. .
-    """
-
+    """	
+    def sex_callback(self,):
+    	self.db.desc = "Девочка лежит на полу и плачет, держа одну руку на ягодицах."
     
-
     def at_object_creation(self):
         "This is called when object is first created."
         # store the conversation.
@@ -171,7 +171,7 @@ class T_Loli(DefaultObject):
         "i1": {"text": "Лолли это маленькие девочки. Они миленькие и беззащитные.",
                   "links": ["i2", "START", "END"],
                   "linktexts":["Ясно. Ты любишь конфеты?",
-                  			   "Хочу еще кое что спросить."
+                  			   "Хочу еще кое что спросить.",
                                "Ясно. Пока"],
                  "keywords": None,
                  "callback": None},
@@ -197,7 +197,7 @@ class T_Loli(DefaultObject):
                  "links": ["END"],
                  "linktexts": ["[Закончить]"],
                  "keywords": None,
-                 "callback": None},         
+                 "callback": self.sex_callback()},         
         "i6": {"text": "Мудач это наш Муд-маня-мирок для анона по мифологии имиджборд. Здесь все твои друзья. MUD - многопользовательский текстовый квест. Если хочешь, можешь познакомиться поближе с нашим проектом.",
                  "links": ["i7","i8","i9","START"],
                  "linktexts": ["Где почитать F.A.Q?",
@@ -234,4 +234,6 @@ class T_Loli(DefaultObject):
         self.db.desc = "Маленькая девочка. Одета в футболку и юбку. Можно вступить с ней в диалог при помощи команды talk."
         # assign the talk command to npc
        #self.cmdset.add_default(TalkingCmdSet, permanent=True)
+
+    
 
