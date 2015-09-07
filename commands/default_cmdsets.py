@@ -15,6 +15,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 """
 
 from evennia import default_cmds
+from commands.help_ru import CmdHelp_ru,CmdUnconnectedHelp_ru
 from commands.command import CmdCreateNPC,CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu,CmdTalk
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
@@ -44,6 +45,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdSayRu())
         self.add(CmdPoseRu())
         self.add(CmdTalk())
+        self.add(CmdHelp_ru())
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):
     """
@@ -79,6 +81,7 @@ class UnloggedinCmdSet(default_cmds.UnloggedinCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
+        self.add(CmdUnconnectedHelp_ru())
 
 
 class SessionCmdSet(default_cmds.SessionCmdSet):
