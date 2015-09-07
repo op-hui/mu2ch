@@ -140,31 +140,38 @@ class YourDad(DefaultObject):
           if (message == u"Батя ты лысый"):
                 self.execute_cmd(u"say Ща пизды дам")
 
-"""
-Диалог для лолли
 
-здесь пишем диалоги для разных неписей
+"""
+класс с лолей
+
+потом объевляем подоный класс
 
 copyright 07.09.15
 """
+class T_Loli(DefaultObject):
+    """
+    This implements a simple Object using the talk command and using the
+    conversation defined above. .
+    """
 
-class TalkingCmdSet(CmdSet):
-#    "Stores the talk command."
-    key = "talkingcmdset"
-#
-#    def at_cmdset_creation(self):
-#        "populates the cmdset"
-#        self.add(CmdTalk())
+    
 
-CONV_loli = {"START": {"text": "Привет анон. Я лолли.",
-                  "links": ["i1", "i2"],
+    def at_object_creation(self):
+        "This is called when object is first created."
+        # store the conversation.
+
+        CONV_loli = {"START": {"text": "Привет анон. Я %s. Добро пожаловать на Мудач. Снова." % self.key,
+                  "links": ["i1", "i2", "i6","END"],
                   "linktexts": ["Кто такие лолли?",
-                                "Ты любишь конфеты?"],
+                                "Ты любишь конфеты?",
+                                "Что такое Мудач?",
+                                "Пока."],
                   "keywords": None,
                   "callback": None},
-        "i1": {"text": "Лолли это маленькие девочки... И ты еще называешь себя аноном?",
-                  "links": ["i2", "END"],
+        "i1": {"text": "Лолли это маленькие девочки. Они миленькие и беззащитные.",
+                  "links": ["i2", "START", "END"],
                   "linktexts":["Ясно. Ты любишь конфеты?",
+                  			   "Хочу еще кое что спросить."
                                "Ясно. Пока"],
                  "keywords": None,
                  "callback": None},
@@ -180,38 +187,51 @@ CONV_loli = {"START": {"text": "Привет анон. Я лолли.",
                                "Нет. Только 'Рачки'."],
                  "keywords": None,
                  "callback": None},
-        "i4": {"text": "Вы отходите от остальных. Она снимает свои трусики с медвежатами и вы начинаете сливаться в экстазе безудержной любви.",
+        "i4": {"text": "P-Put it in me, senpai... (*^.^*)",
                  "links": ["END", "i5"],
                  "linktexts": ["[Закончить]",
                                "У меня еще трюфели есть."],
                  "keywords": None,
                  "callback": None},
-        "i5": {"text": "Она, тяжело дыша, подставляет тебе свою молоденькую попку и ты входишь в ее, еще розовый, анус.",
+        "i5": {"text": "Только не туда, семпай... (*^o^*)",
                  "links": ["END"],
                  "linktexts": ["[Закончить]"],
                  "keywords": None,
                  "callback": None},         
-
+        "i6": {"text": "Мудач это наш Муд-маня-мирок для анона по мифологии имиджборд. Здесь все твои друзья. MUD - многопользовательский текстовый квест. Если хочешь, можешь познакомиться поближе с нашим проектом.",
+                 "links": ["i7","i8","i9","START"],
+                 "linktexts": ["Где почитать F.A.Q?",
+                 			   "Как к вам присоедениться?",
+                 			   "Расскажи поподробней об этом мире",
+                 			   "Хочу еще кое-что спросить."],
+                 "keywords": None,
+                 "callback": None},
+        "i7": {"text": "F.A.Q. для новичком есть в нашей Wiki на Github. Пройди по этой ссылке - https://github.com/op-hui/mu2ch/wiki и там ты найдешь то, что искал.",
+                 "links": ["i8","i9","START"],
+                 "linktexts": ["Как к вам присоедениться?",
+                 			   "Расскажи поподробней об этом мире",
+                 			   "Хочу задать еще пару вопросов"],
+                 "keywords": None,
+                 "callback": None},
+        "i8": {"text": "Чтобы к нам присоедениться нужно пройти по ссылке - https://github.com/op-hui/mu2ch. Это наш репозиторий. В ReadMe.md описано, что нужно чтобы стать творцом миров.",
+                 "links": ["i7","i9","START"],
+                 "linktexts": ["Где почитать F.A.Q?",
+                 			   "Расскажи поподробней об этом мире",
+                 			   "Хочу задать еще пару вопросов"],
+                 "keywords": None,
+                 "callback": None},
+        "i9": {"text": "Пока что наш маня-мирок ограничиваеися квартирами анона и общим коридором. Если у тебя есть предложение или ты нашел баг то оставь это здесь https://github.com/op-hui/mu2ch/issues",
+                 "links": ["i7","i8","START"],
+                 "linktexts": ["Где почитать F.A.Q?",
+                 			   "Как к вам присоедениться?",
+                 			   "Хочу задать еще пару вопросов"],
+                 "keywords": None,
+                 "callback": None},                  
         }
 
-"""
-класс с лолей
 
-потом объевляем подоный класс
-
-copyright 07.09.15
-"""
-class T_Loli(DefaultObject):
-    """
-    This implements a simple Object using the talk command and using the
-    conversation defined above. .
-    """
-
-    def at_object_creation(self):
-        "This is called when object is first created."
-        # store the conversation.
         self.db.conversation = CONV_loli
-        self.db.desc = "Маленькая девочка. Одета в футболку и юбку. Можно вступить с ней в диалог."
+        self.db.desc = "Маленькая девочка. Одета в футболку и юбку. Можно вступить с ней в диалог при помощи команды talk."
         # assign the talk command to npc
        #self.cmdset.add_default(TalkingCmdSet, permanent=True)
-   
+
