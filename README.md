@@ -1,9 +1,12 @@
+**[Вики с гайдами и положняком](https://github.com/op-hui/mu2ch/wiki)** 
+
+
 Добро пожаловать в МУДАЧ.
+
 
 Суть: аноны сгуппировались, взяли открытый MUD framework evennia: https://github.com/evennia/evennia
 и начали создавать MUD манямирок основанный на "мифологии" имиджборд и лурка.
 
-[Вики с гайдами и положняком](https://github.com/op-hui/mu2ch/wiki) 
 
 Тестовые сервера:
   * http://mu2ch.epac.to:8000/webclient/ либо telnet mu2ch.epac.to 4000
