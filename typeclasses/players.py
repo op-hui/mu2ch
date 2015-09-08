@@ -7,12 +7,6 @@ from evennia.objects import DefaultExit
 from evennia.utils import search
 
 
-# need move to utils, or using evennia tunnel command
-def roomTunnel(room1, room2): 
-    create_object(settings.BASE_EXIT_TYPECLASS, room2.key, location = room1, destination = room2)
-    create_object(settings.BASE_EXIT_TYPECLASS, room1.key, location = room2, destination = room1)
-
-
 def PlayerDynamicLocation(player):
     def alreadyHas():
         return False
