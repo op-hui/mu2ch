@@ -5,6 +5,7 @@ from evennia import create_object
 from evennia import DefaultPlayer, DefaultGuest
 from evennia.objects import DefaultExit
 from evennia.utils import search
+from evennia.mudach import tunnelLocation
 
 
 def PlayerDynamicLocation(player):
@@ -34,7 +35,7 @@ def PlayerDynamicLocation(player):
 
 
         for room in [anonRoom, kitchen, toilet, badroom]: 
-            roomTunnel(hallway, room)
+            locationTunnelDefault(hallway, room)
 
         homeRoom = hallway
 
@@ -42,7 +43,7 @@ def PlayerDynamicLocation(player):
         corridor = character.search(u"1-Коридор", global_search = True) 
         if (corridor): 
             create_object(settings.BASE_EXIT_TYPECLASS, u"Лестничная площадка", location = hallway, destination = corridor)
-            #roomTunnel(hallway, corridor)
+            #locationTunnelDefault(hallway, corridor)
             
 
         return homeRoom
