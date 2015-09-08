@@ -2,8 +2,13 @@
 from evennia import DefaultObject, CmdSet
 from evennia import default_cmds
 import random
+from evennia import syscmdkeys
 from commands.command import CmdTalk
+from evennia import Command, CmdSet, utils
 from evennia.contrib import menusystem
+
+from evennia import create_object
+from django.conf import settings
 
 class CmdSetTest(CmdSet):
      def at_cmdset_creation(self):
@@ -146,21 +151,19 @@ class YourDad(DefaultObject):
 
 потом объевляем подоный класс
 
-copyright 07.09.15
+copyright 08.09.15
 """
 class T_Loli(DefaultObject):
     """
     This implements a simple Object using the talk command and using the
     conversation defined above. .
     """	
-    def sex_callback(self,):
-    	self.db.desc = "Девочка лежит на полу и плачет, держа одну руку на ягодицах."
-    
+
     def at_object_creation(self):
         "This is called when object is first created."
         # store the conversation.
 
-        CONV_loli = {"START": {"text": "Привет анон. Я %s. Добро пожаловать на Мудач. Снова." % self.key,
+	CONV_loli = {"START": {"text": "Привет анон. Я %s. Добро пожаловать на Мудач. Снова." % self.key,
                   "links": ["i1", "i2", "i6","END"],
                   "linktexts": ["Кто такие лолли?",
                                 "Ты любишь конфеты?",
@@ -196,8 +199,9 @@ class T_Loli(DefaultObject):
         "i5": {"text": "Только не туда, семпай... (*^o^*)",
                  "links": ["END"],
                  "linktexts": ["[Закончить]"],
-                 "keywords": None,
-                 "callback": self.sex_callback()},         
+                 "selectcmds":[CmdSetStr],
+                 "keywords": ["1"],
+                 "callback": None},         
         "i6": {"text": "Мудач это наш Муд-маня-мирок для анона по мифологии имиджборд. Здесь все твои друзья. MUD - многопользовательский текстовый квест. Если хочешь, можешь познакомиться поближе с нашим проектом.",
                  "links": ["i7","i8","i9","START"],
                  "linktexts": ["Где почитать F.A.Q?",
@@ -235,5 +239,22 @@ class T_Loli(DefaultObject):
         # assign the talk command to npc
        #self.cmdset.add_default(TalkingCmdSet, permanent=True)
 
-    
 
+
+"""
+команда для дилога
+
+"""
+
+class CmdSetStr(Command):
+	"""docstring for ClassName"""
+	key="1"
+	locks = "cmd:all()"
+	
+	def func(self):
+		self.caller.db.str = 5
+		self.caller.db.agl = 5
+		self.caller.db.vos = 5
+		pantsu = create_object(settings.BASE_OBJECT_TYPECLASS, "труселя", self.caller, home=self.caller)
+		pantsu.db.desc = "Труселя лолиты!"
+		self.menutree.goto("END")
