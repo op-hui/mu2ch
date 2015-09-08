@@ -247,7 +247,7 @@ class T_Loli(DefaultObject):
 
 
         self.db.conversation = CONV_loli
-        self.db.desc = "Маленькая девочка. Одета в футболку и юбку. Можно вступить с ней в диалог при помощи команды talk."
+        self.db.desc = "Маленькая девочка. Одета в футболку и юбку. Можно вступить с ней в диалог при помощи команды talk или на русском 'ск'. Любит 'шоколадные конфеты' и 'трюфели'"
         # assign the talk command to npc
        #self.cmdset.add_default(TalkingCmdSet, permanent=True)
 
@@ -263,11 +263,13 @@ class CmdSetStr(Command):
 	locks = "cmd:all()"
 	
 	def func(self):
-		self.caller.db.str = 5
-		self.caller.db.agl = 5
-		self.caller.db.vos = 5
-		pantsu = create_object(settings.BASE_OBJECT_TYPECLASS, "труселя", self.caller, home=self.caller)
-		pantsu.db.desc = "Труселя лолиты!"
+		caller = self.caller
+		caller.db.str = 5
+		caller.db.agl = 5
+		caller.db.vos = 5
+		pantsu = create_object(settings.BASE_OBJECT_TYPECLASS, "Детские трусики", caller, home=caller)
+		talking_to = caller.search(caller.db.last_talk_with, location=caller.location)
+		pantsu.db.desc = "Трусики принадлежат: %s!" % talking_to.key
 		self.menutree.goto("END")
 
 class CmdChoco(Command):
