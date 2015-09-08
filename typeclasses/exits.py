@@ -32,3 +32,6 @@ class Exit(DefaultExit):
                                         defined, in which case that will simply be echoed.
     """
     pass
+
+class CodeExit(DefaultExit):
+    pass
