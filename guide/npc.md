@@ -26,6 +26,8 @@ class YourMom(DefaultObject):
         # obj - сам объект
         # source_location - откуда объект был передан
         self.execute_cmd("say Хороший сына растет, спасибо за %s, %s!" % (obj, source_location))
+        #говорим что этот объект - NPC
+        self.db.npc = True
 ```
 
 Создаем в директории mudach/typeclasses 
