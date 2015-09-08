@@ -34,6 +34,6 @@ class Character(DefaultCharacter):
         super(Character, self).at_after_move(source_location) 
         if self.location.key == (u"Сычевальня"):
             bugurts = [u"первый бугурт", u"второй бугурт"]
-            self.execute_cmd("say" + random.choice(bugurts))
+            self.execute_cmd("сказать " + random.choice(bugurts))
 
 
