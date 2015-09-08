@@ -188,13 +188,15 @@ class T_Loli(DefaultObject):
                  "links": ["i4", "END"],
                  "linktexts": ["КОНЕЧНО!",
                                "Нет. Только 'Рачки'."],
-                 "keywords": None,
+                 "selectcmds":[CmdChoco,None],
+                 "keywords": ["1","2"],
                  "callback": None},
         "i4": {"text": "P-Put it in me, senpai... (*^.^*)",
                  "links": ["END", "i5"],
                  "linktexts": ["[Закончить]",
                                "У меня еще трюфели есть."],
-                 "keywords": None,
+                 "selectcmds":[None,CmdTruff],
+                 "keywords": ["1","2"],
                  "callback": None},
         "i5": {"text": "Только не туда, семпай... (*^o^*)",
                  "links": ["END"],
@@ -230,7 +232,17 @@ class T_Loli(DefaultObject):
                  			   "Как к вам присоедениться?",
                  			   "Хочу задать еще пару вопросов"],
                  "keywords": None,
-                 "callback": None},                  
+                 "callback": None},
+        "i10": {"text": "Ну ты и тварь... у тебя нет конфет...",
+                 "links": ["END"],
+                 "linktexts": ["[Закончить]"],
+                 "keywords": None,
+                 "callback": None},
+         "i11": {"text": "Ну и тварь же ты... у тебя нет трюфилей...",
+                 "links": ["END"],
+                 "linktexts": ["[Закончить]"],
+                 "keywords": None,
+                 "callback": None},                     
         }
 
 
@@ -242,12 +254,11 @@ class T_Loli(DefaultObject):
 
 
 """
-команда для дилога
+команды для дилога
 
 """
 
 class CmdSetStr(Command):
-	"""docstring for ClassName"""
 	key="1"
 	locks = "cmd:all()"
 	
@@ -258,3 +269,33 @@ class CmdSetStr(Command):
 		pantsu = create_object(settings.BASE_OBJECT_TYPECLASS, "труселя", self.caller, home=self.caller)
 		pantsu.db.desc = "Труселя лолиты!"
 		self.menutree.goto("END")
+
+class CmdChoco(Command):
+
+	key="1"
+	locks = "cmd:all()"
+
+	def func(self):
+		caller = self.caller
+		talking_to = caller.search(caller.db.last_talk_with, location=caller.location)
+		sweets = caller.search("шоколадные конфеты", location=caller)
+		if not sweets : 
+			self.menutree.goto("i10")
+		else : 
+			self.menutree.goto("i4")
+			sweets.move_to(talking_to,quiet=True)
+
+class CmdTruff(Command):
+
+	key="2"
+	locks = "cmd:all()"
+
+	def func(self):
+		caller = self.caller
+		talking_to = caller.search(caller.db.last_talk_with, location=caller.location)
+		sweets = caller.search("трюфели", location=caller)
+		if not sweets : 
+			self.menutree.goto("i11")
+		else : 
+			self.menutree.goto("i5")
+			sweets.move_to(talking_to,quiet=True)
