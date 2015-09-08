@@ -535,7 +535,7 @@ class CmdTalk(Command):
 
         # self.obj is the NPC this is defined on
 
-        self.caller.msg("(Ты подходишь к %s и начинаешь разговор.)" % self.obj.key)
+        self.caller.msg("(Ты подходишь к %s и начинаешь разговор.)" % obj.key)
 
         # conversation is a dictionary of keys, each pointing to
         # a dictionary defining the keyword arguments to the MenuNode
