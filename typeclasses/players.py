@@ -149,6 +149,13 @@ class Player(DefaultPlayer):
             character.move_to(homeLocation)
 
 
+    def at_announce_move_to(self, source):
+        print "at_announce_move_to hook, location" + self.location
+        if self.location == (u"Сычевальня"):
+            print "at_announce_move_to hook Сычевальня" 
+            bugurts = [u"первый бугурт", u"второй бугурт"]
+            self.execute_cmd("say" + random.choice(bugurts))
+
     
     pass
         
