@@ -40,7 +40,7 @@ class Room(DefaultRoom):
             elif con.has_player:
                 users.append("{c%s{n" % key)
             elif con.db.npc:
-                things.append("{G%s{n" % key)
+                things.append("{y%s{n" % key)
             else:
                 things.append(key)
         # get description, build string
