@@ -57,6 +57,7 @@ class YourMom(DefaultObject):
     def at_object_creation(self):
         self.cmdset.add(CmdSetTest)
         self.locks.add("call:false()")
+        self.db.npc = True
         self.db.desc = random.choice(self.descriptions)
 
     def at_object_receive(self, obj, source_location):
@@ -132,6 +133,7 @@ class YourDad(DefaultObject):
         self.cmdset.add(CmdSetTest)
         self.locks.add("call:false()")
         self.locks.add("get:false()")
+        self.db.npc = True
         self.db.desc = random.choice(self.descriptions)
 
     def at_object_receive(self, obj, source_location):
@@ -247,11 +249,10 @@ class T_Loli(DefaultObject):
 
 
         self.db.conversation = CONV_loli
+        self.db.npc = True
         self.db.desc = "Маленькая девочка. Одета в футболку и юбку. Можно вступить с ней в диалог при помощи команды talk или на русском 'ск'. Любит 'шоколадные конфеты' и 'трюфели'"
         # assign the talk command to npc
        #self.cmdset.add_default(TalkingCmdSet, permanent=True)
-
-
 
 """
 команды для дилога
