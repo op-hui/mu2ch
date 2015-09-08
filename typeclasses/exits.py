@@ -33,5 +33,7 @@ class Exit(DefaultExit):
     """
     pass
 
-class CodeExit(DefaultExit):
+def CreateCodeExit(): 
     pass
+
+    
