@@ -47,7 +47,7 @@ def PlayerDynamicLocation(player):
         character = player.character
         corridor = character.search(u"1-Коридор", global_search = True) 
         if (corridor): 
-            create_object(settings.BASE_EXIT_TYPECLASS, "Лестничная площадка", location = hallway, destination = corridor)
+            create_object(settings.BASE_EXIT_TYPECLASS, u"Лестничная площадка", location = hallway, destination = corridor)
             #roomTunnel(hallway, corridor)
             
 
