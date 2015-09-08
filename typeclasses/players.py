@@ -149,7 +149,6 @@ class Player(DefaultPlayer):
             character.move_to(homeLocation)
 
 
-    
     pass
         
 

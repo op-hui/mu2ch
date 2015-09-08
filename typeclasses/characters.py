@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Characters
 
@@ -8,6 +9,7 @@ creation commands.
 
 """
 from evennia import DefaultCharacter
+import random
 
 class Character(DefaultCharacter):
     """
@@ -28,4 +30,10 @@ class Character(DefaultCharacter):
                     has connected" message echoed to the room
 
     """
-    pass
+    def at_after_move(self, source_location):
+        super(Character, self).at_after_move(source_location) 
+        if self.location.key == (u"Сычевальня"):
+            bugurts = [u"первый бугурт", u"второй бугурт"]
+            self.execute_cmd("сказать " + random.choice(bugurts))
+
+
