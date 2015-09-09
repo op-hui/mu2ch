@@ -283,6 +283,8 @@ class CmdExtendedLook(default_cmds.CmdLook):
 
     Observes your location, details at your location or objects in your vicinity.
     """
+    aliases = ["l","lk","смотреть"]
+    
     def func(self):
         """
         Handle the looking - add fallback to details.
