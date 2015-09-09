@@ -16,6 +16,7 @@ class Building(DefaultRoom):
 
 
     def build(self):
+        i = 0
         for i in xrange(1, self.db.floor_n):  
             new_floor = create_object('floor.BuildingFloor', key = "%d Этаж" % i) 
             new_floor.build(self, i) 
