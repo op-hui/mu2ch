@@ -34,7 +34,7 @@ class BuildingApartment(DefaultRoom):
         self.db.n = n
         self.db.floor = floor
         locationTunnelDefault(floor, self) 
-        self.buildRooms()
+        self.build_rooms()
         return self
         
 
