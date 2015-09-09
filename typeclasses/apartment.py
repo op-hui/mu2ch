@@ -38,7 +38,7 @@ class BuildingApartment(DefaultRoom):
         return self
         
 
-class BuildingApartmentUnused(BuilingdApartment):
+class BuildingApartmentUnused(BuildingApartment):
     def at_object_creation(self):
         super(BuildingApartmentUnused, self).at_object_creation()
         self.db.desc = u"Пустое нежилое помещение, ничего особенного"
@@ -46,7 +46,7 @@ class BuildingApartmentUnused(BuilingdApartment):
     def build_rooms(self):
         pass
 
-class BuildingApartmentUsed(BuildApartment): 
+class BuildingApartmentUsed(BuildingApartment): 
     rooms = {
         # В непустой квартире, всегда есть эти комнаты
         "default" : [
