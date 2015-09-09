@@ -10,7 +10,7 @@ class BuildingApartment(DefaultRoom):
         self.db.n = None
         # Количество "дополнительных" комнат
         self.db.room_n = 0
-        self.db.desc = "Прихожка"
+        self.db.desc = u"Прихожка"
 
     def create_room(self, room):
         new_room = create_object(settings.BASE_ROOM_TYPECLASS, key = room['name'])

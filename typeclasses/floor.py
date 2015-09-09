@@ -19,13 +19,13 @@ class BuildingFloor(DefaultRoom):
 
     def build(self, building, n):
         self.db.n = n
-        self.db.desc = "%d этаж" % n
+        self.db.desc = u"%d этаж" % n
         self.db.building = building
         per_floor = building.db.apartment_per_floor
         i = 0
         for i in xrange(i, per_floor):
-            roomEntryLocation = create_object('apartment.BuildingApartmentUnused', key = "Кв-%d" % (n * per_floor + i))
-            locationTunnel(roomEntryLocation, roomEntryLocation.key, self, "Лестничная площадка")
+            roomEntryLocation = create_object('apartment.BuildingApartmentUnused', key = u"Кв-%d" % (n * per_floor + i))
+            locationTunnel(roomEntryLocation, roomEntryLocation.key, self, u"Лестничная площадка")
         return self
 
     pass
