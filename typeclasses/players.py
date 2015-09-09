@@ -5,7 +5,7 @@ from evennia import create_object
 from evennia import DefaultPlayer, DefaultGuest
 from evennia.objects import DefaultExit
 from evennia.utils import search
-from evennia.mudach import tunnelLocation
+from mudach.utils import locationTunnelDefault
 
 
 def PlayerDynamicLocation(player):
