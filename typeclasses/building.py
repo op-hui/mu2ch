@@ -20,7 +20,7 @@ class Building(DefaultRoom):
         for i in xrange(1, self.db.floor_n):  
             new_floor = create_object('floor.BuildingFloor', key = "%d Этаж" % i) 
             new_floor.build(self, i) 
-            localTunnelDefault(self, new_floor)
+            locationTunnelDefault(self, new_floor)
             
         
     pass 
