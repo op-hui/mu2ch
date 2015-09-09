@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from evennia import DefaultRoom
 from evennia import create_object
-from evennia.mudach import localTunnelDefault
+from mudach.utils import localTunnelDefault
 
 class BuildingApartment(DefaultRoom):
     # Вход в квартиру, существует всегда
