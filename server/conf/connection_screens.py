@@ -36,6 +36,9 @@ CONNECTION_SCREEN = \
 
  F.A.Q: как передвигаться между локациями, ходить, фапать, телебонить
     https://github.com/op-hui/mu2ch/blob/master/guide/faq.md
+
+ Конференция в жаббере:
+    mu2ch@conference.jabber.ru
     
  Если команда help
 {b=============================================================={n""" 
