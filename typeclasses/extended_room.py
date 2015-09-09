@@ -310,14 +310,14 @@ class CmdExtendedLook(default_cmds.CmdLook):
         else:
             looking_at_obj = caller.location
             if not looking_at_obj:
-                caller.msg("You have no location to look at!")
+                caller.msg("Тебе некуда смотреть!")
                 return
 
         if not hasattr(looking_at_obj, 'return_appearance'):
             # this is likely due to us having a player instead
             looking_at_obj = looking_at_obj.character
         if not looking_at_obj.access(caller, "view"):
-            caller.msg("Could not find '%s'." % args)
+            caller.msg("Не могу найти '%s'." % args)
             return
         # get object's appearance
         caller.msg(looking_at_obj.return_appearance(caller))
@@ -379,45 +379,45 @@ class CmdExtendedDesc(default_cmds.CmdDesc):
         if self.cmdstring == '@detail':
             # switch to detailing mode. This operates only on current location
             if not location:
-                caller.msg("No location to detail!")
+                caller.msg("Невозможно задать этой локации деталь!")
                 return
             if self.switches and self.switches[0] in 'del':
                 # removing a detail.
                 if self.lhs in location.db.details:
                     del location.db.details[self.lhs]
-                caller.msg("Detail %s deleted, if it existed." % self.lhs)
+                caller.msg("Деталь %s удалена, если она была." % self.lhs)
                 self.reset_times(location)
                 return
             if not self.args:
                 # No args given. Return all details on location
-                string = "{wDetails on %s{n:\n" % location
+                string = "{wДетали в %s{n:\n" % location
                 string += "\n".join(" {w%s{n: %s" % (key, utils.crop(text)) for key, text in location.db.details.items())
                 caller.msg(string)
                 return
             if not self.rhs:
                 # no '=' used - list content of given detail
                 if self.args in location.db.details:
-                    string = "{wDetail '%s' on %s:\n{n" % (self.args, location)
+                    string = "{wДеталь '%s' в %s:\n{n" % (self.args, location)
                     string += str(location.db.details[self.args])
                     caller.msg(string)
                 else:
-                    caller.msg("Detail '%s' not found." % self.args)
+                    caller.msg("Деталь '%s' не найдена." % self.args)
                 return
             # setting a detail
             location.db.details[self.lhs] = self.rhs
-            caller.msg("Set Detail %s to '%s'." % (self.lhs, self.rhs))
+            caller.msg("Здана деталь %s для '%s'." % (self.lhs, self.rhs))
             self.reset_times(location)
             return
         else:
             # we are doing a @desc call
             if not self.args:
                 if location:
-                    string = "{wDescriptions on %s{n:\n" % location.key
-                    string += " {wspring:{n %s\n" % location.db.spring_desc
-                    string += " {wsummer:{n %s\n" % location.db.summer_desc
-                    string += " {wautumn:{n %s\n" % location.db.autumn_desc
-                    string += " {wwinter:{n %s\n" % location.db.winter_desc
-                    string += " {wgeneral:{n %s" % location.db.general_desc
+                    string = "{wОписания для %s{n:\n" % location.key
+                    string += " {wвесна:{n %s\n" % location.db.spring_desc
+                    string += " {wлето:{n %s\n" % location.db.summer_desc
+                    string += " {wосень:{n %s\n" % location.db.autumn_desc
+                    string += " {wзима:{n %s\n" % location.db.winter_desc
+                    string += " {wосновное:{n %s" % location.db.general_desc
                     caller.msg(string)
                     return
             if self.switches and self.switches[0] in ("spring",
@@ -426,11 +426,11 @@ class CmdExtendedDesc(default_cmds.CmdDesc):
                                                       "winter"):
                 # a seasonal switch was given
                 if self.rhs:
-                    caller.msg("Seasonal descs only works with rooms, not objects.")
+                    caller.msg("Сезрнные описания работают только с комнатами, не с объектами.")
                     return
                 switch = self.switches[0]
                 if not location:
-                    caller.msg("No location was found!")
+                    caller.msg("Локация не найдена!")
                     return
                 if switch == 'spring':
                     location.db.spring_desc = self.args
@@ -442,7 +442,7 @@ class CmdExtendedDesc(default_cmds.CmdDesc):
                     location.db.winter_desc = self.args
                 # clear flag to force an update
                 self.reset_times(location)
-                caller.msg("Seasonal description was set on %s." % location.key)
+                caller.msg("Сезонное описание было задано для %s." % location.key)
             else:
                 # No seasonal desc set, maybe this is not an extended room
                 if self.rhs:
@@ -456,10 +456,10 @@ class CmdExtendedDesc(default_cmds.CmdDesc):
                 obj.db.desc = text # a compatibility fallback
                 if obj.attributes.has("general_desc"):
                     obj.db.general_desc = text
-                    caller.msg("General description was set on %s." % obj.key)
+                    caller.msg("Основное описаине было задано для %s." % obj.key)
                 else:
                     # this is not an ExtendedRoom.
-                    caller.msg("The description was set on %s." % obj.key)
+                    caller.msg("Описаине было задано для %s." % obj.key)
 
 
 # Simple command to view the current time and season
@@ -481,7 +481,7 @@ class CmdGameTime(default_cmds.MuxCommand):
         "Reads time info from current room"
         location = self.caller.location
         if not location or not hasattr(location, "get_time_and_season"):
-            self.caller.msg("No location available - you are outside time.")
+            self.caller.msg("в этой локации не доступно вермя - вы находитесь вне времени.")
         else:
             season, timeslot = location.get_time_and_season()
             prep = "a"
