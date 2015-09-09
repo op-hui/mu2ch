@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from evennia import DefaultRoom
 from evennia import create_object
-from mudach.utils import locationTunnelDefault
+from mudach.utils import locationTunnelDefault,locationTunnel
 
 class Building(DefaultRoom):  
     def at_object_creation(self): 
-        self.db.desc = "Подъезд"
+        self.db.desc = u"Подъезд"
         self.db.address = None
         self.db.apartment_per_floor = None
         self.db.floor_n = None
@@ -18,9 +18,9 @@ class Building(DefaultRoom):
     def build(self):
         i = 0
         for i in xrange(1, self.db.floor_n):  
-            new_floor = create_object('floor.BuildingFloor', key = "%d Этаж" % i) 
+            new_floor = create_object('floor.BuildingFloor', key = u"%d Этаж" % i) 
             new_floor.build(self, i) 
-            locationTunnelDefault(self, new_floor)
+            locationTunnel(self, self.db.desc, new_floor, None)
             
         
     pass 

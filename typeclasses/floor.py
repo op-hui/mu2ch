@@ -9,19 +9,17 @@ class BuildingFloor(DefaultRoom):
         self.db.n = None
         # связь со зданием
         self.db.building = None
-    
+        self.db.desc = "Неизвестный этаж"
 
     # TODO: переписать с использованием setter/getter
-    # Возвращает локацию здания
     def getBuilding():
-        # XXX заглушка
         return self.db.building
 
     
 
-    # TODO переделать через конструктор объекта
     def build(self, building, n):
         self.db.n = n
+        self.db.desc = "%d этаж" % n
         self.db.building = building
         per_floor = building.db.apartment_per_floor
         i = 0
