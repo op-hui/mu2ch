@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from evennia import DefaultRoom
+from typeclasses.rooms import Room
 from evennia import create_object
 from mudach.utils import locationTunnelDefault, locationTunnel
 
@@ -22,9 +23,9 @@ class BuildingFloor(DefaultRoom):
         self.db.desc = u"%d этаж" % n
         self.db.building = building
         per_floor = building.db.apartment_per_floor
-        i = 0
-        for i in xrange(i, per_floor):
-            room_n = (n * per_floor - 1) + i 
+        i = 1
+        for i in xrange(i, per_floor + 1):
+            room_n = ((n - 1) * per_floor) + i 
             roomEntryLocation = create_object('apartment.BuildingApartmentUnused', key = u"Кв-%d" % room_n)
             roomEntryLocation.build(self, room_n) 
             locationTunnel(roomEntryLocation, roomEntryLocation.key, self, u"Лестничная площадка")

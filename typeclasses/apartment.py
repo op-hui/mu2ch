@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from evennia import DefaultRoom
+from typeclasses.rooms import Room
 from evennia import create_object
 from mudach.utils import locationTunnelDefault
 
