@@ -30,7 +30,7 @@ def format_help_entry(title, help_text, aliases=None, suggested=None):
     if title:
         string += "{CПомощь по {w%s{n" % title
     if aliases:
-        string += " {C(aliases: %s{C){n" % ("{C,{n ".join("{w%s{n" % ali for ali in aliases))
+        string += " {C(еще варианты: %s{C){n" % ("{C,{n ".join("{w%s{n" % ali for ali in aliases))
     if help_text:
         string += "\n%s" % dedent(help_text.rstrip())
     if suggested:
