@@ -25,7 +25,7 @@ class Building(DefaultRoom):
     pass 
     
 
-class Hroushevka(Building):  
+class Hrushevka(Building):  
     def at_objecta_creation(self): 
         super(Hrushevka, self).at_object_creation() 
         self.db.apartment_per_floor = 4
