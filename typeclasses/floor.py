@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from evennia import DefaultRoom
-from evennia.mudach import tunnelLocation
 from evennia import create_object
+from mudach.utils import locationTunnelDefault
 
 class BuildingFloor(DefaultRoom):
     def at_object_creation(self):
