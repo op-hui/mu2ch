@@ -16,7 +16,7 @@ class Building(DefaultRoom):
 
 
     def build(self):
-        for (i = 1; i < self.db_floor_n; i++):
+        for i in xrange(1, self.db_floor_n):  
             new_floor = create_object('floor.BuildingFloor', key = "%d Этаж" % i) 
             new_floor.build(self, i) 
             localTunnelDefault(self, new_floor)

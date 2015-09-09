@@ -20,10 +20,10 @@ class BuildingApartment(DefaultRoom):
         
 
     def build_rooms(self): 
-        for (i = 0; i++ i < self.rooms['default']):
+        for in in xrange(0, self.rooms['default']):
             self.create_room(self.rooms['default'][i])
 
-        for (i = 0; i++ i < min(self.rooms['additional'], self.db.room_n)):
+        for in in xrange(0, min(self.rooms['additional'], self.db.room_n)):
             self.create_room(self.rooms['additional'][i])
             
         return self
