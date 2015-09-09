@@ -32,3 +32,8 @@ class Exit(DefaultExit):
                                         defined, in which case that will simply be echoed.
     """
     pass
+
+def CreateCodeExit(): 
+    pass
+
+    
