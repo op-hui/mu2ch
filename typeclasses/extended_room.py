@@ -405,7 +405,7 @@ class CmdExtendedDesc(default_cmds.CmdDesc):
                 return
             # setting a detail
             location.db.details[self.lhs] = self.rhs
-            caller.msg("Здана деталь %s для '%s'." % (self.lhs, self.rhs))
+            caller.msg("Здана деталь %s как '%s'." % (self.lhs, self.rhs))
             self.reset_times(location)
             return
         else:

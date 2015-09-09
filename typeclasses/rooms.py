@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Room
 
@@ -54,9 +55,9 @@ class Room(DefaultRoom):
                         desc = desc.replace(detail,"{y%s{n" % detail)
             string += "%s" % desc
         if exits:
-            string += "\n{wExits:{n " + ", ".join(exits)
+            string += "\n{wВыходы:{n " + ", ".join(exits)
         if users or things:
-            string += "\n{wYou see:{n " + ", ".join(users + things)
+            string += "\n{wТы видишь:{n " + ", ".join(users + things)
         return string
 
     pass
