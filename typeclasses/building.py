@@ -16,7 +16,7 @@ class Building(DefaultRoom):
 
 
     def build(self):
-        for i in xrange(1, self.db_floor_n):  
+        for i in xrange(1, self.db.floor_n):  
             new_floor = create_object('floor.BuildingFloor', key = "%d Этаж" % i) 
             new_floor.build(self, i) 
             localTunnelDefault(self, new_floor)
@@ -30,7 +30,6 @@ class Hrushevka(Building):
         super(Hrushevka, self).at_object_creation() 
         self.db.apartment_per_floor = 4
         self.db.floor_n = 5
-        
         self.build() 
 
 
