@@ -17,10 +17,14 @@ class Building(DefaultRoom):
 
     def build(self):
         i = 0
+        prev_floor = None
         for i in xrange(1, self.db.floor_n):  
             new_floor = create_object('floor.BuildingFloor', key = u"%d Этаж" % i) 
             new_floor.build(self, i) 
             locationTunnel(self, self.db.desc, new_floor, None)
+            if (prev_floor):
+                locationTunnelDefault(prev_floor, new_floor)
+            prev_floor = new_floor
             
         
     pass 

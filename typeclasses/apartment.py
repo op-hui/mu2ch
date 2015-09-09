@@ -29,11 +29,11 @@ class BuildingApartment(DefaultRoom):
             
         return self
 
-    # TODO: переделать через конструктор объекта
     def build(self, floor, n):
         self.db.n = n
         self.db.floor = floor
-        locationTunnelDefault(floor, self) 
+        # слинковано уже в классе этажа:w
+        #locationTunnelDefault(floor, self) 
         self.build_rooms()
         return self
         
