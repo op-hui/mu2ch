@@ -47,6 +47,11 @@ class Room(DefaultRoom):
         string = "{c%s{n\n" % self.get_display_name(looker)
         desc = self.db.desc
         if desc:
+            if self.db.details :
+                for detail in self.db.details.keys():
+                    det = desc.count(detail)
+                    if det > 0:
+                        desc = desc.replace(detail,"{y%s{n" % detail)
             string += "%s" % desc
         if exits:
             string += "\n{wExits:{n " + ", ".join(exits)
