@@ -13,24 +13,24 @@ def PlayerDynamicLocation(player):
         return False
     def createLocation(): 
 
-        hallway = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Прихожка")
+        hallway = create_object('extended_room.ExtendedRoom', key = u"Прихожка")
         hallway.db.desc = u"Сюда приходят{/Под ногами уютно поскрипывает паркет"
 
-        anonRoom = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сычевальня")
+        anonRoom = create_object('extended_room.ExtendedRoom', key = u"Сычевальня")
         anonRoom.db.desc = u"Все облезло-обшарпано, стулья, диван древние разъебанные в хлам, ремонт утонул, разве что компьютерный стол из этого века"
 
-        kitchen = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Кухня")
+        kitchen = create_object('extended_room.ExtendedRoom', key = u"Кухня")
         kitchen.db.desc = u"Женское место, пованивает рыбой"
 
         mom = create_object("npc.YourMom", key = "Твоя Мамка", location = kitchen)
 
 
-        toilet = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Сортир")
+        toilet = create_object('extended_room.ExtendedRoom', key = u"Сортир")
         toilet.db.desc = u"Сортир, заметна щель ежду дверью и полом{/В углу стоит эмалированное ведро для использованной туалетой бумаги"
 
         dad = create_object("npc.YourDad", key = "Лысый Батя", location = toilet)
 
-        badroom = create_object(settings.BASE_ROOM_TYPECLASS, key = u"Ванная")
+        badroom = create_object('extended_room.ExtendedRoom', key = u"Ванная")
         badroom.db.desc = u"Ржавая ванная с капающим краном, каждый предмет в ванной исчточает совковую эпоху"
 
 
