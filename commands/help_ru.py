@@ -28,13 +28,13 @@ def format_help_entry(title, help_text, aliases=None, suggested=None):
     """
     string = _SEP + "\n"
     if title:
-        string += "{CHelp for {w%s{n" % title
+        string += "{CПомощь по {w%s{n" % title
     if aliases:
         string += " {C(aliases: %s{C){n" % ("{C,{n ".join("{w%s{n" % ali for ali in aliases))
     if help_text:
         string += "\n%s" % dedent(help_text.rstrip())
     if suggested:
-        string += "\n\n{CSuggested:{n "
+        string += "\n\n{CПредложено:{n "
         string += "%s" % fill("{C,{n ".join("{w%s{n" % sug for sug in suggested))
     string.strip()
     string += "\n" + _SEP
@@ -113,9 +113,11 @@ class CmdHelp_ru(Command):
         if query in ("list", "all"):
             # we want to list all available help entries, grouped by category
             hdict_cmd = defaultdict(list)
+            #hdict_cmd_ali = defaultdict(list)
             hdict_topic = defaultdict(list)
             # create the dictionaries {category:[topic, topic ...]} required by format_help_list
             [hdict_cmd[cmd.help_category].append(cmd.key) for cmd in all_cmds]
+            [hdict_cmd[cmd.help_category].extend(cmd.aliases) for cmd in all_cmds]
             [hdict_topic[topic.help_category].append(topic.key) for topic in all_topics]
             # report back
             self.msg(format_help_list(hdict_cmd, hdict_topic))
@@ -186,7 +188,7 @@ class CmdSetHelp_RU(MuxCommand):
 
     """
     key = "@help"
-    aliases = "@sethelp"
+    aliases = ["@sethelp","@помощь"]
     locks = "cmd:perm(PlayerHelpers)"
     help_category = "Building"
 
@@ -197,7 +199,7 @@ class CmdSetHelp_RU(MuxCommand):
         lhslist = self.lhslist
 
         if not self.args:
-            self.msg("Usage: @sethelp/[add|del|append|merge] <topic>[,category[,locks,..] = <text>")
+            self.msg("Использование: @sethelp/[add|del|append|merge] <заголвок>[,категория[,ограничения,..] = <текст>")
             return
 
         topicstr = ""
@@ -211,7 +213,7 @@ class CmdSetHelp_RU(MuxCommand):
             pass
 
         if not topicstr:
-            self.msg("You have to define a topic!")
+            self.msg("Ты должен определить тему!")
             return
         # check if we have an old entry with the same name
         try:
@@ -222,29 +224,29 @@ class CmdSetHelp_RU(MuxCommand):
         if 'append' in switches or "merge" in switches:
             # merge/append operations
             if not old_entry:
-                self.msg("Could not find topic '%s'. You must give an exact name." % topicstr)
+                self.msg("Не могу найти тему '%s'. Ты должен дать точное название." % topicstr)
                 return
             if not self.rhs:
-                self.msg("You must supply text to append/merge.")
+                self.msg("Ты должен указать текст append/merge.")
                 return
             if 'merge' in switches:
                 old_entry.entrytext += " " + self.rhs
             else:
                 old_entry.entrytext += "\n%s" % self.rhs
-            self.msg("Entry updated:\n%s" % old_entry.entrytext)
+            self.msg("Всутпление обновлено:\n%s" % old_entry.entrytext)
             return
         if 'delete' in switches or 'del' in switches:
             # delete the help entry
             if not old_entry:
-                self.msg("Could not find topic '%s'" % topicstr)
+                self.msg("Не могу найти тему '%s'" % topicstr)
                 return
             old_entry.delete()
-            self.msg("Deleted help entry '%s'." % topicstr)
+            self.msg("Удалено '%s'." % topicstr)
             return
 
         # at this point it means we want to add a new help entry.
         if not self.rhs:
-            self.msg("You must supply a help text to add.")
+            self.msg("Ты должен указать текст.")
             return
         if old_entry:
             if 'for' in switches or 'force' in switches:
@@ -255,17 +257,17 @@ class CmdSetHelp_RU(MuxCommand):
                 old_entry.locks.clear()
                 old_entry.locks.add(lockstring)
                 old_entry.save()
-                self.msg("Overwrote the old topic '%s' with a new one." % topicstr)
+                self.msg("Переписана тема '%s' на новую." % topicstr)
             else:
-                self.msg("Topic '%s' already exists. Use /force to overwrite or /append or /merge to add text to it." % topicstr)
+                self.msg("Топик '%s' уже существует. Используй /force для перезаписи или /append или /merge чтобы добавить текст." % topicstr)
         else:
             # no old entry. Create a new one.
             new_entry = create.create_help_entry(topicstr,
                                                  self.rhs, category, lockstring)
             if new_entry:
-                self.msg("Topic '%s' was successfully created." % topicstr)
+                self.msg("Топик '%s' был успешно создан." % topicstr)
             else:
-                self.msg("Error when creating topic '%s'! Contact an admin." % topicstr)
+                self.msg("Ошибка при создании темы '%s'! Свяжитесь с админом." % topicstr)
 
 class CmdUnconnectedHelp_ru(MuxCommand):
     """

@@ -10,6 +10,10 @@ Commands describe the input the player can do to the game.
 from evennia import Command as BaseCommand
 from evennia import default_cmds
 from evennia.contrib import menusystem
+from evennia.server.sessionhandler import SESSIONS
+from evennia.commands.default.muxcommand import MuxPlayerCommand
+from evennia.utils import utils, create, search, prettytable
+import time
 
 class Command(BaseCommand):
     """
@@ -181,7 +185,8 @@ class CmdHomeRu(Command):
     Teleports you to your home location.
     """
 
-    key = u"домой"
+    key = u"home"
+    aliases = "домой"
     locks = "cmd:perm(home) or perm(Builders)"
     arg_regex = r"$"
 
@@ -208,7 +213,8 @@ class CmdLookRu(Command):
 
     Observes your location or objects in your vicinity.
     """
-    key = u"посмотреть"
+    key = u"look"
+    aliases = ["l","lk","смотреть"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -250,7 +256,8 @@ class CmdInventoryRu(Command):
 
     Shows your inventory.
     """
-    key = u"инвентарь"
+    key = u"inventory"
+    aliases = ["i","инвентарь","и"]
     locks = "cmd:all()"
     arg_regex = r"$"
 
@@ -278,7 +285,8 @@ class CmdGetRu(Command):
     Picks up an object from your location and puts it in
     your inventory.
     """
-    key = u"взять"
+    key = u"get"
+    aliases = "взять"
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -305,8 +313,8 @@ class CmdGetRu(Command):
             return
 
         obj.move_to(caller, quiet=True)
-        caller.msg("You pick up %s." % obj.name)
-        caller.location.msg_contents("%s picks up %s." %
+        caller.msg("Ты подобрал %s." % obj.name)
+        caller.location.msg_contents("%s подобрал %s." %
                                         (caller.name,
                                          obj.name),
                                      exclude=caller)
@@ -324,7 +332,8 @@ class CmdDropRu(Command):
     location you are currently in.
     """
 
-    key = u"положить"
+    key = u"drop"
+    aliases = ["положить","бросить"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -333,7 +342,7 @@ class CmdDropRu(Command):
 
         caller = self.caller
         if not self.args:
-            caller.msg("Drop what?")
+            caller.msg("Что бросить?")
             return
 
         # Because the DROP command by definition looks for items
@@ -362,7 +371,8 @@ class CmdGiveRu(Command):
     Gives an items from your inventory to another character,
     placing it in their inventory.
     """
-    key = u"дать"
+    key = u"give"
+    aliases = "дать"
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -401,7 +411,8 @@ class CmdDescRu(Command):
     will be visible to people when they
     look at you.
     """
-    key = u"я"
+    key = u"desc"
+    aliases = "я"
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -425,8 +436,8 @@ class CmdSayRu(Command):
     Talk to those in your current location.
     """
 
-    key = u"сказать"
-    aliases = ['"', "'"]
+    key = u"say"
+    aliases = ['"', "'","сказать"]
     locks = "cmd:all()"
 
     def func(self):
@@ -468,7 +479,8 @@ class CmdPoseRu(Command):
     Describe an action being taken. The pose text will
     automatically begin with your name.
     """
-    key = u"действие"
+    key = u"pose"
+    aliases = "действие"
     locks = "cmd:all()"
 
     def parse(self):
@@ -493,6 +505,211 @@ class CmdPoseRu(Command):
             msg = "%s%s" % (self.caller.name, self.args)
             self.caller.location.msg_contents(msg)
 
+class CmdNickRu(MuxCommand):
+    """
+    define a personal alias/nick
+
+    Usage:
+      nick[/switches] <nickname> [= [<string>]]
+      alias             ''
+
+    Switches:
+      object   - alias an object
+      player   - alias a player
+      clearall - clear all your aliases
+      list     - show all defined aliases (also "nicks" works)
+
+    Examples:
+      nick hi = say Hello, I'm Sarah!
+      nick/object tom = the tall man
+      nick hi              (shows the nick substitution)
+      nick hi =            (removes nick 'hi')
+
+    A 'nick' is a personal shortcut you create for your own use. When
+    you enter the nick, the alternative string will be sent instead.
+    The switches control in which situations the substitution will
+    happen. The default is that it will happen when you enter a
+    command. The 'object' and 'player' nick-types kick in only when
+    you use commands that requires an object or player as a target -
+    you can then use the nick to refer to them.
+
+    Note that no objects are actually renamed or changed by this
+    command - the nick is only available to you. If you want to
+    permanently add keywords to an object for everyone to use, you
+    need build privileges and to use the @alias command.
+    """
+    key = "nick"
+    aliases = ["nickname", "nicks", "@nick", "alias","ник"]
+    locks = "cmd:all()"
+
+    def func(self):
+        "Create the nickname"
+
+        caller = self.caller
+        switches = self.switches
+        nicks = caller.nicks.get(return_obj=True)
+
+        if 'list' in switches:
+            if not nicks:
+                string = "{wНик не указан.{n"
+            else:
+                table = prettytable.PrettyTable(["{wNickType",
+                                                 "{wNickname",
+                                                 "{wTranslates-to"])
+                for nick in utils.make_iter(nicks):
+                    table.add_row([nick.db_category, nick.db_key, nick.db_strvalue])
+                string = "{wУказанные ники:{n\n%s" % table
+            caller.msg(string)
+            return
+        if 'clearall' in switches:
+            caller.nicks.clear()
+            caller.msg("Очищены все ники.")
+            return
+        if not self.args or not self.lhs:
+            caller.msg("Использование: nick[/switches] nickname = [realname]")
+            return
+        nick = self.lhs
+        real = self.rhs
+
+        if real == nick:
+            caller.msg("Нет смылса задавать такой же ник...")
+            return
+
+        # check so we have a suitable nick type
+        if not any(True for switch in switches if switch in ("object", "player", "inputline")):
+            switches = ["inputline"]
+        string = ""
+        for switch in switches:
+            oldnick = caller.nicks.get(key=nick, category=switch)
+            if not real:
+                if "=" in self.args:
+                    if oldnick:
+                            # clear the alias
+                            string += "\nНик заменен: '{w%s{n' (-> '{w%s{n')." % (nick, oldnick)
+                            caller.nicks.remove(nick, category=switch)
+                    else:
+                        string += "\nНик '%s' не найден, поэтому он не может быть удален." % nick
+                else:
+                    string += "\nНик: '{w%s{n'{n -> '{w%s{n'." % (nick, oldnick)
+
+            else:
+                # creating new nick
+                if oldnick:
+                    string += "\nНик '{w%s{n' замене с '{w%s{n' на '{w%s{n'." % (nick, oldnick, real)
+                else:
+                    string += "\nНик задан: '{w%s{n' -> '{w%s{n'." % (nick, real)
+                caller.nicks.add(nick, real, category=switch)
+        caller.msg(string)
+
+class CmdAccessRu(MuxCommand):
+    """
+    show your current game access
+
+    Usage:
+      access
+
+    This command shows you the permission hierarchy and
+    which permission groups you are a member of.
+    """
+    key = "access"
+    aliases = ["groups", "hierarchy","доступ"]
+    locks = "cmd:all()"
+    arg_regex = r"$"
+
+    def func(self):
+        "Load the permission groups"
+
+        caller = self.caller
+        hierarchy_full = settings.PERMISSION_HIERARCHY
+        string = "\n{wИерархия доступов{n (по возрастанию):\n %s" % ", ".join(hierarchy_full)
+        #hierarchy = [p.lower() for p in hierarchy_full]
+
+        if self.caller.player.is_superuser:
+            cperms = "<Superuser>"
+            pperms = "<Superuser>"
+        else:
+            cperms = ", ".join(caller.permissions.all())
+            pperms = ", ".join(caller.player.permissions.all())
+
+        string += "\n{wТвой доступ{n:"
+        string += "\nПерсонаж {c%s{n: %s" % (caller.key, cperms)
+        if hasattr(caller, 'player'):
+            string += "\nИгрок {c%s{n: %s" % (caller.player.key, pperms)
+        caller.msg(string)
+
+class CmdWhoRu(MuxPlayerCommand):
+    """
+    list who is currently online
+
+    Usage:
+      who
+      doing
+
+    Shows who is currently online. Doing is an alias that limits info
+    also for those with all permissions.
+    """
+
+    key = "who"
+    aliases = ["doing","кто"]
+    locks = "cmd:all()"
+
+    def func(self):
+        """
+        Get all connected players by polling session.
+        """
+
+        player = self.player
+        session_list = SESSIONS.get_sessions()
+
+        session_list = sorted(session_list, key=lambda o: o.player.key)
+
+        if self.cmdstring == "doing":
+            show_session_data = False
+        else:
+            show_session_data = player.check_permstring("Immortals") or player.check_permstring("Wizards")
+
+        nplayers = (SESSIONS.player_count())
+        if show_session_data:
+            # privileged info
+            table = prettytable.PrettyTable(["{wИмя игрока",
+                                             "{wВ игре",
+                                             "{wIdle",
+                                             "{wУправляет",
+                                             "{wКомната",
+                                             "{wCmds",
+                                             "{wПротокол",
+                                             "{wHost"])
+            for session in session_list:
+                if not session.logged_in: continue
+                delta_cmd = time.time() - session.cmd_last_visible
+                delta_conn = time.time() - session.conn_time
+                player = session.get_player()
+                puppet = session.get_puppet()
+                location = puppet.location.key if puppet else "None"
+                table.add_row([utils.crop(player.name, width=25),
+                               utils.time_format(delta_conn, 0),
+                               utils.time_format(delta_cmd, 1),
+                               utils.crop(puppet.key if puppet else "None", width=25),
+                               utils.crop(location, width=25),
+                               session.cmd_total,
+                               session.protocol_key,
+                               isinstance(session.address, tuple) and session.address[0] or session.address])
+        else:
+            # unprivileged
+            table = prettytable.PrettyTable(["{wИмя игрока", "{wВ игре", "{wIdle"])
+            for session in session_list:
+                if not session.logged_in:
+                    continue
+                delta_cmd = time.time() - session.cmd_last_visible
+                delta_conn = time.time() - session.conn_time
+                player = session.get_player()
+                table.add_row([utils.crop(player.key, width=25),
+                               utils.time_format(delta_conn, 0),
+                               utils.time_format(delta_cmd, 1)])
+
+        isone = nplayers == 1
+        string = "{wИграков:{n\n%s\n%s уникальных аккаунтов%s залогинено." % (table, "Один" if isone else nplayers, "" if isone else "")
+        self.msg(string)
             
 
 """
