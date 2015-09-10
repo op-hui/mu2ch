@@ -4,7 +4,7 @@ from typeclasses.rooms import Room
 from evennia import create_object
 from mudach.utils import locationTunnelDefault
 
-class BuildingApartment(DefaultRoom):
+class BuildingApartment(Room):
     # Вход в квартиру, существует всегда
     def at_object_creation(self):
         # Номер квартиры в доме
