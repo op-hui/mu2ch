@@ -15,13 +15,15 @@ class Building(Room):
         # raise if None
         self.db.apartment_per_floor * self.db.floor_n
 
-
     def build(self):
         i = 0
         prev_floor = None
         for i in xrange(1, self.db.floor_n):  
             new_floor = create_object('floor.BuildingFloor', key = u"%d Этаж" % i) 
             new_floor.build(self, i) 
+
+            new_floor.move_to(self) 
+                
             locationTunnel(self, self.db.desc, new_floor, None)
             if (prev_floor):
                 locationTunnelDefault(prev_floor, new_floor)
@@ -37,5 +39,4 @@ class Hrushevka(Building):
         self.db.apartment_per_floor = 4
         self.db.floor_n = 5
         self.build() 
-
 

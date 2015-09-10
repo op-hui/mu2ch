@@ -28,6 +28,7 @@ class BuildingFloor(Room):
             room_n = ((n - 1) * per_floor) + i 
             roomEntryLocation = create_object('apartment.BuildingApartmentUnused', key = u"Кв-%d" % room_n)
             roomEntryLocation.build(self, room_n) 
+            roomEntryLocation.move_to(self)
             locationTunnel(roomEntryLocation, roomEntryLocation.key, self, u"Лестничная площадка")
         return self
 
