@@ -14,6 +14,7 @@ from evennia.server.sessionhandler import SESSIONS
 from evennia.commands.default.muxcommand import MuxPlayerCommand
 from evennia.utils import utils, create, search, prettytable
 import time
+from django.conf import settings
 
 class Command(BaseCommand):
     """
@@ -678,7 +679,7 @@ class CmdWhoRu(MuxPlayerCommand):
                                              "{wКомната",
                                              "{wCmds",
                                              "{wПротокол",
-                                             "{wHost"])
+                                             "{wХост"])
             for session in session_list:
                 if not session.logged_in: continue
                 delta_cmd = time.time() - session.cmd_last_visible
@@ -708,7 +709,7 @@ class CmdWhoRu(MuxPlayerCommand):
                                utils.time_format(delta_cmd, 1)])
 
         isone = nplayers == 1
-        string = "{wИграков:{n\n%s\n%s уникальных аккаунтов%s залогинено." % (table, "Один" if isone else nplayers, "" if isone else "")
+        string = "{wИгроков:{n\n%s\n%s уникальных аккаунтов%s залогинено." % (table, "Один" if isone else nplayers, "" if isone else "")
         self.msg(string)
             
 
