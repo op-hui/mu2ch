@@ -20,21 +20,19 @@ class BuildingApartment(Room):
         return new_room
         
 
-    def build_rooms(self): 
+    def build_rooms(self, floor): 
         i = 0 
         for i in xrange(0, self.rooms['default']):
-            self.create_room(self.rooms['default'][i])
+            self.create_room(self.rooms['default'][i]).move_to(self.db.floor)
 
         for i in xrange(0, min(self.rooms['additional'], self.db.room_n)):
-            self.create_room(self.rooms['additional'][i])
+            self.create_room(self.rooms['additional'][i]).move_to(self.db.floor)
             
         return self
 
     def build(self, floor, n):
         self.db.n = n
         self.db.floor = floor
-        # слинковано уже в классе этажа:w
-        #locationTunnelDefault(floor, self) 
         self.build_rooms()
         return self
         
