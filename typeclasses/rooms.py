@@ -62,7 +62,7 @@ class Room(DefaultRoom):
         return string
 
     def at_object_delete(self):
-        print "room remove %s" % self.key
+        print "Комната удалена %s" % self.key
         for i in self.contents_get():
             try:
                 i.delete() 
