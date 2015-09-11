@@ -362,7 +362,7 @@ class CmdDropRu(Command):
         # Call the object script's at_drop() method.
         obj.at_drop(caller)
 
-class CmdGiveRu(Command):
+class CmdGiveRu(MuxCommand):
     """
     give away something to someone
 
@@ -373,7 +373,7 @@ class CmdGiveRu(Command):
     placing it in their inventory.
     """
     key = u"give"
-    aliases = "дать"
+    aliases = [u"дать",u"передать",u"отдать"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
