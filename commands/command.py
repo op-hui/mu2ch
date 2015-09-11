@@ -203,7 +203,7 @@ class CmdHomeRu(Command):
             caller.move_to(home)
             caller.msg("Ты вернулся домой...")
 
-class CmdLookRu(Command):
+class CmdLookRu(MuxCommand):
     """
     look at location or object
 
@@ -215,7 +215,7 @@ class CmdLookRu(Command):
     Observes your location or objects in your vicinity.
     """
     key = u"look"
-    aliases = ["l","lk","смотреть"]
+    aliases = [u"l",u"lk",u"смотреть"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -258,7 +258,7 @@ class CmdInventoryRu(Command):
     Shows your inventory.
     """
     key = u"inventory"
-    aliases = ["i","инвентарь","и"]
+    aliases = [u"i",u"инвентарь",u"и"]
     locks = "cmd:all()"
     arg_regex = r"$"
 
@@ -445,24 +445,61 @@ class CmdSayRu(Command):
         "Run the say command"
 
         caller = self.caller
+        talking_npc = caller.search(self.args, location=caller.location,nofound_string="Здесь нет таких Npc")
 
-        if not self.args:
-            caller.msg("Что сказать?")
-            return
+        if not talking_npc:
+            
+            if not self.args:
+                caller.msg("Что сказать?")
+                return
 
-        speech = self.args
+            speech = self.args
 
-        # calling the speech hook on the location
-        speech = caller.location.at_say(caller, speech)
+            # calling the speech hook on the location
+            speech = caller.location.at_say(caller, speech)
 
-        # Feedback for the object doing the talking.
-        caller.msg('Ты сказал, "%s{n"' % speech)
+            # Feedback for the object doing the talking.
+            caller.msg('Ты сказал, "%s{n"' % speech)
 
-        # Build the string to emit to neighbors.
-        emit_string = '%s говорит, "%s{n"' % (caller.name,
-                                               speech)
-        caller.location.msg_contents(emit_string,
-                                     exclude=caller)
+            # Build the string to emit to neighbors.
+            emit_string = '%s говорит, "%s{n"' % (caller.name,
+                                                  speech)
+            caller.location.msg_contents(emit_string,
+                                         exclude=caller)
+        else:
+            if talking_npc.db.npc:
+
+                if not self.args:
+                    caller.msg("Говорить с кем?")
+                    return
+
+                #print "general/get:", caller, caller.location, self.args, caller.location.contents
+                obj = caller.search(self.args, location=caller.location)
+
+                if not obj:
+                    return
+                if caller == obj:
+                    caller.msg("Ты не можешь говорить сам с собой.")
+                    return
+
+                # self.obj is the NPC this is defined on
+
+                self.caller.msg("(Ты подходишь к %s и начинаешь разговор.)" % obj.key)
+                caller.db.last_talk_with = obj.key
+
+                # conversation is a dictionary of keys, each pointing to
+                # a dictionary defining the keyword arguments to the MenuNode
+                # constructor.
+                conversation = obj.db.conversation
+                if not conversation:
+                    self.caller.msg("%s говорит: 'Нам с тобой не о чем разговаритвать'" % (obj.key))
+                    return
+
+                 # build all nodes by loading them from the conversation tree.
+                menu = menusystem.MenuTree(self.caller)
+                for key, kwargs in conversation.items():
+                    menu.add(menusystem.MenuNode(key, **kwargs))
+                menu.start()
 
 class CmdPoseRu(Command):
     """
@@ -554,9 +591,9 @@ class CmdNickRu(MuxCommand):
             if not nicks:
                 string = "{wНик не указан.{n"
             else:
-                table = prettytable.PrettyTable(["{wNickType",
-                                                 "{wNickname",
-                                                 "{wTranslates-to"])
+                table = prettytable.PrettyTable(["{wТип Ника",
+                                                 "{wНик",
+                                                 "{wПеревод-на"])
                 for nick in utils.make_iter(nicks):
                     table.add_row([nick.db_category, nick.db_key, nick.db_strvalue])
                 string = "{wУказанные ники:{n\n%s" % table
