@@ -15,6 +15,7 @@ from evennia.commands.default.muxcommand import MuxPlayerCommand
 from evennia.utils import utils, create, search, prettytable
 import time
 from django.conf import settings
+from evennia import create_object
 
 class Command(BaseCommand):
     """
@@ -136,8 +137,6 @@ class MuxCommand(default_cmds.MuxCommand):
         super(MuxCommand, self).func()
 
 
-from evennia import Command
-from evennia import create_object
 
 class CmdCreateNPC(Command):
     """
