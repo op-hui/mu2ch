@@ -469,39 +469,26 @@ class CmdSayRu(Command):
         else:
             for one_npc in talking_npc:
                 if one_npc.db.npc:
-
                     obj = one_npc
-                    #if not self.args:
-                    #    caller.msg("Говорить с кем?")
-                    #    return
+                    break
 
-                    #print "general/get:", caller, caller.location, self.args, caller.location.contents
-                    #obj = caller.search(self.args, location=caller.location)
+            if obj:
+                self.caller.msg("(Ты подходишь к %s и начинаешь разговор.)" % obj.key)
+                caller.db.last_talk_with = obj.key
 
-                    if not obj:
-                        return
-                    if caller == obj:
-                        caller.msg("Ты не можешь говорить сам с собой.")
-                        return
-
-                    # self.obj is the NPC this is defined on
-
-                    self.caller.msg("(Ты подходишь к %s и начинаешь разговор.)" % obj.key)
-                    caller.db.last_talk_with = obj.key
-
-                    # conversation is a dictionary of keys, each pointing to
-                    # a dictionary defining the keyword arguments to the MenuNode
-                    # constructor.
-                    conversation = obj.db.conversation
-                    if not conversation:
-                        self.caller.msg("%s говорит: 'Нам с тобой не о чем разговаритвать'" % (obj.key))
-                        return
+                # conversation is a dictionary of keys, each pointing to
+                # a dictionary defining the keyword arguments to the MenuNode
+                # constructor.
+                conversation = obj.db.conversation
+                if not conversation:
+                    self.caller.msg("%s говорит: 'Нам с тобой не о чем разговаритвать'" % (obj.key))
+                    return
 
                     # build all nodes by loading them from the conversation tree.
-                    menu = menusystem.MenuTree(self.caller)
-                    for key, kwargs in conversation.items():
-                        menu.add(menusystem.MenuNode(key, **kwargs))
-                    menu.start()
+                menu = menusystem.MenuTree(self.caller)
+                for key, kwargs in conversation.items():
+                    menu.add(menusystem.MenuNode(key, **kwargs))
+                menu.start()
 
 class CmdPoseRu(Command):
     """
