@@ -445,7 +445,7 @@ class CmdSayRu(Command):
         "Run the say command"
 
         caller = self.caller
-        talking_npc = caller.search(self.args, location=caller.location,nofound_string="Здесь нет таких Npc")
+        talking_npc = caller.search(self.args, location=caller.location,quiet=True)
 
         if not talking_npc:
             
@@ -467,39 +467,41 @@ class CmdSayRu(Command):
             caller.location.msg_contents(emit_string,
                                          exclude=caller)
         else:
-            if talking_npc.db.npc:
+            for one_npc in talking_npc:
+                if one_npc.db.npc:
 
-                if not self.args:
-                    caller.msg("Говорить с кем?")
-                    return
+                    obj = one_npc
+                    #if not self.args:
+                    #    caller.msg("Говорить с кем?")
+                    #    return
 
-                #print "general/get:", caller, caller.location, self.args, caller.location.contents
-                obj = caller.search(self.args, location=caller.location)
+                    #print "general/get:", caller, caller.location, self.args, caller.location.contents
+                    #obj = caller.search(self.args, location=caller.location)
 
-                if not obj:
-                    return
-                if caller == obj:
-                    caller.msg("Ты не можешь говорить сам с собой.")
-                    return
+                    if not obj:
+                        return
+                    if caller == obj:
+                        caller.msg("Ты не можешь говорить сам с собой.")
+                        return
 
-                # self.obj is the NPC this is defined on
+                    # self.obj is the NPC this is defined on
 
-                self.caller.msg("(Ты подходишь к %s и начинаешь разговор.)" % obj.key)
-                caller.db.last_talk_with = obj.key
+                    self.caller.msg("(Ты подходишь к %s и начинаешь разговор.)" % obj.key)
+                    caller.db.last_talk_with = obj.key
 
-                # conversation is a dictionary of keys, each pointing to
-                # a dictionary defining the keyword arguments to the MenuNode
-                # constructor.
-                conversation = obj.db.conversation
-                if not conversation:
-                    self.caller.msg("%s говорит: 'Нам с тобой не о чем разговаритвать'" % (obj.key))
-                    return
+                    # conversation is a dictionary of keys, each pointing to
+                    # a dictionary defining the keyword arguments to the MenuNode
+                    # constructor.
+                    conversation = obj.db.conversation
+                    if not conversation:
+                        self.caller.msg("%s говорит: 'Нам с тобой не о чем разговаритвать'" % (obj.key))
+                        return
 
-                 # build all nodes by loading them from the conversation tree.
-                menu = menusystem.MenuTree(self.caller)
-                for key, kwargs in conversation.items():
-                    menu.add(menusystem.MenuNode(key, **kwargs))
-                menu.start()
+                    # build all nodes by loading them from the conversation tree.
+                    menu = menusystem.MenuTree(self.caller)
+                    for key, kwargs in conversation.items():
+                        menu.add(menusystem.MenuNode(key, **kwargs))
+                    menu.start()
 
 class CmdPoseRu(Command):
     """
