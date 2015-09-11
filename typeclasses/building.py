@@ -29,6 +29,14 @@ class Building(Room):
                 locationTunnelDefault(prev_floor, new_floor)
             prev_floor = new_floor
             
+    def searchFreeLocation():
+        for i in self.contents_get():
+            #floor.searchFreeLocation() 
+            location = i.searchFreeLocation() 
+            if (location):
+                return location
+
+        return None
         
     pass 
     
@@ -39,4 +47,3 @@ class Hrushevka(Building):
         self.db.apartment_per_floor = 4
         self.db.floor_n = 5
         self.build() 
-
