@@ -16,6 +16,13 @@ class BuildingFloor(Room):
     def getBuilding():
         return self.db.building
 
+
+    def searchFreeLocation():
+        for i in self.contents_get(): 
+            if (i.isUsed() == false):
+                return i
+
+        return None
     
 
     def build(self, building, n):

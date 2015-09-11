@@ -30,6 +30,10 @@ class BuildingApartment(Room):
             
         return self
 
+    def isUsed(self):
+        return True if (__class__.__name__ == "BuildingApartmentUnused") else False
+            
+
     def build(self, floor, n):
         self.db.n = n
         self.db.floor = floor
