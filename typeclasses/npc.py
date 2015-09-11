@@ -249,9 +249,9 @@ class T_Loli(DefaultObject):
 
 
         self.db.conversation = CONV_loli
+        self.db.npc = True
         self.locks.add("call:false()")
         self.locks.add("get:false()")
-        self.db.npc = True
         self.db.desc = "Маленькая девочка. Одета в футболку и юбку. Можно вступить с ней в диалог при помощи команды talk или на русском 'ск'. Любит 'шоколадные конфеты' и 'трюфели'"
         # assign the talk command to npc
        #self.cmdset.add_default(TalkingCmdSet, permanent=True)
