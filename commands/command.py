@@ -139,7 +139,7 @@ class MuxCommand(default_cmds.MuxCommand):
 
 class CmdMethod(Command):
     """
-    Вызывает и показывает метод у игрового объекта
+    Вызывает и показывает результат выполнения метода у игрового объекта
     
     Использование:
         @method [obj.].methodName()
