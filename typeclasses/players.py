@@ -135,13 +135,14 @@ class Player(DefaultPlayer):
         except AttributeError:
             pass
 
+        character = self.character
+        homeLocation = character.search(u"1-Общий дворик", global_search = True) 
 
 #        homeLocation = PlayerDynamicLocation(self)    
 #        
-#        if (homeLocation is not None):
-#            character = self.character
-#            character.home = character.location = homeLocation
-#            character.move_to(homeLocation)
+        if (homeLocation is not None):
+            character.home = character.location = homeLocation
+            character.move_to(homeLocation)
 
 
     pass
