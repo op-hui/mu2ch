@@ -833,7 +833,7 @@ class CmdTalk(Command):
         for key, kwargs in conversation.items():
             menu.add(menusystem.MenuNode(key, **kwargs))
         menu.start()
-        
+
 class CmdWear(Command):
     """
     Команда для перемещения предметов в руку
@@ -907,8 +907,105 @@ class CmdGetHands(Command):
 
         if caller.db.hands:
             caller.msg("У тебя уже есть руки")
-            return
         else:
             caller.db.hands = create_object(settings.BASE_OBJECT_TYPECLASS, "hands")
             caller.msg("Теперь у тебя есть руки")
+
+        if caller.db.frags:
+            caller.msg("У тебя уже есть параметр фрагов")
+        else:
+            caller.db.frags = 0
+            caller.msg("Теперь у тебя есть фраги")
+
+        if caller.db.death_count:
+            caller.msg("У тебя уже есть параметр смертей")
+        else:
+            caller.db.death_count = 0
+            caller.msg("Теперь у тебя есть количество смертей")
+
+        if caller.db.effects:
+            caller.msg("У тебя уже есть массив с эффектами")
+        else:
+            caller.db.effects = []
+            caller.msg("Теперь у тебя есть массив с эффектами")
+
+
+class CmdKill(Command):
+    """
+    Команда для изъятия объектов их рук
+    """
+    key = "kill"
+    aliases = ["убить"]
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+
+        caller = self.caller
+
+        if not self.args:
+            caller.msg("Кого убиваем?")
+            return
+
+        target = caller.search(self.args, location=caller.location,nofound_string = "Нет такого игрока")
+
+        if not target:
+            return
+
+        #if caller.location.key == "Limbo"
+        #    caller.msg("Здесь нельзя убивать.")
+        #    return
+
+        in_hands = caller.db.hands.contents
+
+        if not target.has_player:
+            caller.msg("Ты можешь убивать только игроков!")
+            return
+
+        if not in_hands:
+            caller.msg("У тебя в руках ничего нет. В руках должно быть оружие!")
+            return
+
+        in_hands_obj = in_hands[0]
+
+        if not in_hands_obj.db.is_weapon:
+            caller.msg("Тем что у тебя в руках нельзя убить. В руках должно быть оружие!")
+            return
+
+        weapon = in_hands_obj   
+        caller.db.frags = caller.db.frags + 1
+        target.db.death_count = target.db.death_count +1
+        target.db.effects = []
+        target.msg("Тебя убил %s." % caller.key)
+        caller.location.msg_contents("%s убил %s." % (caller.key, target.key))
+
+        limbs = caller.search("Limbo", global_search=True, quiet=True,nofound_string="Бога нет, и рая нет!" )
+
+        if not limbs:
+            target.msg("Ты не смог попасть в рай. Потому что его нет! Где твой Бог теперь?")
+            return
+
+        limb = limbs[0]
+        target.move_to(limb, quiet=True)
+
+        weapon.db.durability = weapon.db.durability - 1
+        caller.msg("Твое оружие утратило одно очко запаса прочности. {wЗапас просности: %s{n" % weapon.db.durability)
+
+        if weapon.db.durability > 0:
+            return
+
+        okey = weapon.delete()
+
+        if not okey:
+            caller.msg("Не удалось уничтожить оружие.")
+        else:
+            caller.msg("Твою оружие сломалось и рассыпалось в пиль.")
+            return
+
+
+
+
+
+
+
 
