@@ -31,7 +31,7 @@ class BuildingApartment(Room):
         return self
 
     def isUsed(self):
-        return True if (__class__.__name__ == "BuildingApartmentUnused") else False
+        return False if (self.__class__.__name__ == "BuildingApartmentUnused") else True
             
 
     def build(self, floor, n):
