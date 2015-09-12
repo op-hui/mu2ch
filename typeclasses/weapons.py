@@ -59,34 +59,31 @@ class Weapon(Object):
         return string
 
 class Knife(Weapon):
-"""
-класс катранного ножа
-"""
+
     def at_object_creation(self):
         #добавляем прочность нашему оружию(int)
         self.db.durability = 1
+        self.db.is_weapon = True
         #self.db.placing = "RightHand"
         self.db.desc = "Картонный нож. Достосно прочный что убить кого-то... один раз."
 
 class AcidBottle(Weapon):
-"""
-класс банки с кислотой
-"""
+
 
     def at_object_creation(self):
         #добавляем прочность нашему оружию(int)
         self.db.durability = 3
+        self.db.is_weapon = True
         #добавим часть тела, куда одевается предмет
         #self.db.placing = "RightHand"
         self.db.desc = "Банка с серной кислотой. Можно облить кого-нить и наблюдать, как он подыхает."
-"""
-и на будущее
-"""
+
 class Pistol(Weapon):
 
     def at_object_creation(self):
         #добавляем прочность нашему оружию(int)
         self.db.durability = 50
+        self.db.is_weapon = True
         #добавим часть тела, куда одевается предмет
         #self.db.placing = "RightHand"
         self.db.desc = "Пистолет ТТ."

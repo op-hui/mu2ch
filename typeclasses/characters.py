@@ -36,7 +36,14 @@ class Character(DefaultCharacter):
     #hands = create_object(settings.BASE_OBJECT_TYPECLASS, "hands")
 
     def at_object_creation(self):
+        #прикручиваем руку
         self.db.hands = create_object(settings.BASE_OBJECT_TYPECLASS, "hands")
+        #прикручиваем фраги
+        self.db.frags = 0
+        #прикручиваем количество смертей
+        self.db.death_count = 0
+        #прикручиваем массив ээфектов
+        self.db.effects = [];
 
     def return_appearance(self, looker):
         """

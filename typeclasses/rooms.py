@@ -8,7 +8,7 @@ Rooms are simple containers that has no location of their own.
 
 from evennia import DefaultRoom
 from django.core.exceptions import ObjectDoesNotExist
-from mudach.utils import isCharacter
+from utils import isCharacter
 
 
 class Room(DefaultRoom):
