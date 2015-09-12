@@ -136,12 +136,12 @@ class Player(DefaultPlayer):
             pass
 
 
-        homeLocation = PlayerDynamicLocation(self)    
-        
-        if (homeLocation is not None):
-            character = self.character
-            character.home = character.location = homeLocation
-            character.move_to(homeLocation)
+#        homeLocation = PlayerDynamicLocation(self)    
+#        
+#        if (homeLocation is not None):
+#            character = self.character
+#            character.home = character.location = homeLocation
+#            character.move_to(homeLocation)
 
 
     pass
