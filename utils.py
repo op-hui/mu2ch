@@ -3,6 +3,7 @@
 
 from evennia import create_object
 from evennia import settings
+from evennia import utils
 
 def locationTunnel(location1, location1_exit_name, location2, location2_exit_name): 
 
@@ -14,4 +15,7 @@ def locationTunnel(location1, location1_exit_name, location2, location2_exit_nam
 
 def locationTunnelDefault(location1, location2): 
     return locationTunnel(location1, None, location2, None) 
+
+def isCharacter(obj):
+        return utils.inherits_from(obj, 'typeclasses.character.Character')
 
