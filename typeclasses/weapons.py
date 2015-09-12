@@ -17,18 +17,20 @@ from django.conf import settings
 class Weapon(Object):
     """
     Основной класс для оружия, здесь будем править return_appearence
+    durability - прочность оружия, количество убиств которое можно им совершить.
+    is_weapon - флаг обозначающий, что передмет является оружием, т.е. этим пердметом можно убить.
     """
     def at_object_creation(self):
         #добавляем прочность нашему оружию(int)
         self.db.durability = 0
+        #и говорим что наш предмет оружие(bool)
+        self.db.is_weapon = True
+        #добавим часть тела, куда одевается предмет
+        #self.db.placing = "RightHand"
 
     def return_appearance(self, looker):
         """
-        This formats a description. It is the hook a 'look' command
-        should call.
-
-        Args:
-            looker (Object): Object doing the looking.
+        Оверрайд отображения описания объекта
         """
         if not looker:
             return
@@ -57,17 +59,25 @@ class Weapon(Object):
         return string
 
 class Knife(Weapon):
-
+"""
+класс катранного ножа
+"""
     def at_object_creation(self):
         #добавляем прочность нашему оружию(int)
         self.db.durability = 1
+        #self.db.placing = "RightHand"
         self.db.desc = "Картонный нож. Достосно прочный что убить кого-то... один раз."
 
 class AcidBottle(Weapon):
+"""
+класс банки с кислотой
+"""
 
     def at_object_creation(self):
         #добавляем прочность нашему оружию(int)
         self.db.durability = 3
+        #добавим часть тела, куда одевается предмет
+        #self.db.placing = "RightHand"
         self.db.desc = "Банка с серной кислотой. Можно облить кого-нить и наблюдать, как он подыхает."
 """
 и на будущее
@@ -77,6 +87,8 @@ class Pistol(Weapon):
     def at_object_creation(self):
         #добавляем прочность нашему оружию(int)
         self.db.durability = 50
+        #добавим часть тела, куда одевается предмет
+        #self.db.placing = "RightHand"
         self.db.desc = "Пистолет ТТ."
         mag = create_object(settings.BASE_OBJECT_TYPECLASS, "Магазин на 12 патронов", self, home=self)
         mag.db.desc = "Магазин на 12 патронов"

@@ -10,6 +10,9 @@ creation commands.
 """
 from evennia import DefaultCharacter
 import random
+from typeclasses.objects import Object
+from evennia import create_object
+from django.conf import settings
 
 class Character(DefaultCharacter):
     """
@@ -30,6 +33,55 @@ class Character(DefaultCharacter):
                     has connected" message echoed to the room
 
     """
+    #hands = create_object(settings.BASE_OBJECT_TYPECLASS, "hands")
+
+    def at_object_creation(self):
+        self.db.hands = create_object(settings.BASE_OBJECT_TYPECLASS, "hands")
+
+    def return_appearance(self, looker):
+        """
+        This formats a description. It is the hook a 'look' command
+        should call.
+
+        Args:
+            looker (Object): Object doing the looking.
+        """
+        if not looker:
+            return
+        # get and identify all objects
+        visible = (con for con in self.contents if con != looker and
+                                                    con.access(looker, "view"))
+        exits, users, things = [], [], []
+        for con in visible:
+            key = con.get_display_name(looker)
+            if con.destination:
+                exits.append(key)
+            elif con.has_player:
+                users.append("{c%s{n" % key)
+            else:
+                things.append(key)
+
+        in_hands = (con for con in self.db.hands.contents if con != looker and
+                                                    con.access(looker, "view"))
+        thing = []
+        for con in in_hands:
+            key = con.get_display_name(looker)
+            if con:
+                thing.append(key)        
+        # get description, build string
+        string = "{c%s{n\n" % self.get_display_name(looker)
+        desc = self.db.desc
+        if desc:
+            string += "%s" % desc
+        if exits:
+            string += "\n{wВыходы:{n " + ", ".join(exits)
+        if users or things:
+            string += "\n{wТы видишь:{n " + ", ".join(users + things)
+        if thing:
+             string += "\n{wВ руках:{n " + ", ".join(thing)
+        return string
+
+
     def at_after_move(self, source_location):
         super(Character, self).at_after_move(source_location) 
         if self.location.key == (u"Сычевальня"):
@@ -80,5 +132,3 @@ class Character(DefaultCharacter):
             src_name = source_location.name
         string = "%s пришел в %s из %s."
         self.location.msg_contents(string % (name, loc_name, src_name), exclude=self)
-
-
