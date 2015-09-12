@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from evennia import DefaultRoom
-from typeclasses.rooms import Room
+from typeclasses.rooms import Box
 from evennia import create_object
 from mudach.utils import locationTunnelDefault
 
@@ -10,7 +10,7 @@ class BuildingApartment(Box):
         # Номер квартиры в доме
         self.db.n = None
         # Количество "дополнительных" комнат
-        self.db.room_n = 0
+        self.db.additional_n = 0
         self.db.desc = u"Прихожка"
 
     def create_room(self, room):
@@ -25,7 +25,7 @@ class BuildingApartment(Box):
         for i in xrange(0, self.rooms['default']):
             self.create_room(self.rooms['default'][i]).move_to(self.db.floor)
 
-        for i in xrange(0, min(self.rooms['additional'], self.db.room_n)):
+        for i in xrange(0, min(self.rooms['additional'], self.db.additional_n)):
             self.create_room(self.rooms['additional'][i]).move_to(self.db.floor)
             
         return self
