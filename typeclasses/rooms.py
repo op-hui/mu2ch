@@ -8,6 +8,7 @@ Rooms are simple containers that has no location of their own.
 
 from evennia import DefaultRoom
 from django.core.exceptions import ObjectDoesNotExist
+from mudach.utils import isCharacter
 
 
 class Room(DefaultRoom):
@@ -61,18 +62,21 @@ class Room(DefaultRoom):
             string += "\n{wТы видишь:{n " + ", ".join(users + things)
         return string
 
+    pass
+
+# Этот класс при удалении рекурсивно удаляет все кроме игроков
+class Box(DefaultRoom):
+
     def at_object_delete(self):
         print "Комната удалена %s" % self.key
         for i in self.contents_get():
             try:
-                i.delete() 
+                if (not isCharacter(i)):                
+                    i.delete() 
             # XXX bug?
             except ObjectDoesNotExist:
                 pass 
 
         return True
-    pass
-
-class SimpleRoom(DefaultRoom):
     pass
 
