@@ -142,36 +142,45 @@ class CmdMethod(Command):
     Вызывает и показывает метод у игрового объекта
     
     Использование:
-    method Этаж.freeRooms() 
+        @method [obj.].methodName()
 
-    Вызывает у объекта с названием Этаж (имя объекта в игре) метод freeRooms и показывает вывод
+    Например:
+        @method Этаж.freeRooms() # Вызов у объекта Этаж метод freeRoms()
+        @method isUsed() # Если объект не указан, вызов метода isUsed происходит для текущей локации
     """
 
-    key = "method"
+    key = "@method"
     locks = "call:perm(Immortals)"
     help_category = "Admin"
 
-    def func(self):
-        if (not self.args):
-            self.caller.msg(u"Используй: method объект.метод(аргументы)")
-            return False
-            
-        (object_name, method) = self.args.strip().split(".") 
+    def func(self): 
+        #super(CmdMethod, self).parser()
+        self.arglist = self.args.strip().split(".", 1)
 
-        if (not method):
+        args_n = len(self.arglist)
+
+        obj = None
+        if (args_n == 2):
+            # method Object.method()
+            obj = self.caller.search(self.arglist[0], location = self.caller.location)
+            if (obj is None):
+                self.caller.msg("Такого объекта в этой локации нет")
+                return False
+
+            method = self.arglist[1]
+        elif(args_n == 1):
+            # method method()
+            # Запускаем в текущем контексте локации
+            obj = self.caller.location
+            method = self.arglist[0]
+        else:
             self.caller.msg(u"Используй: method объект.имя_метода(аргументы)")
             return False
 
-        if (not object_name): 
-            obj = self.caller.location
-        else:
-            obj = self.caller.search(object_name, location = self.caller.location)
-
-        if (not obj): 
-            self.caller.msg(u"Объект '%s' не найден в текущей локации" % object_name)
-            return False
-
-        self.caller.msg(u"Output: %s" % repr(eval("obj."+method)))
+        try:
+            self.caller.msg(u"Output: %s" % repr(eval("obj." + method)))
+        except AttributeError:
+            self.caller.msg(u"У объекта %s нет метода %s" % (obj, method))
 
         return True
 
