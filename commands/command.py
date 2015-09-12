@@ -795,3 +795,82 @@ class CmdTalk(Command):
         for key, kwargs in conversation.items():
             menu.add(menusystem.MenuNode(key, **kwargs))
         menu.start()
+
+class CmdWear(Command):
+    """
+    Команда для перемещения предметов в руку
+    """
+    key = "wear"
+    aliases = ["одеть"]
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+
+        caller = self.caller
+
+        if not self.args:
+            caller.msg("Что одеть?")
+            return
+
+        obj = caller.search(self.args, location=caller)
+        
+        if not obj:
+            caller.msg("У тебя с собой нет %s" % self.args)
+            return
+        
+        in_hands = caller.db.hands.contents
+        if in_hands:
+            string = "У тебя в руках уже есть: "
+            for in_hands_obj in in_hands:
+                string+="%s, " % in_hands_obj.key
+            string+="сними это с помощью команды 'снять'."
+            caller.msg(string)
+            return
+        else:
+            obj.move_to(caller.db.hands,quiet=True)
+            caller.msg("Ты взял в руки %s" % obj.key)
+
+class CmdUnWear(Command):
+    """
+    Команда для изъятия объектов их рук
+    """
+    key = "unwear"
+    aliases = ["снять"]
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+
+        caller = self.caller
+
+        in_hands = caller.db.hands.contents
+
+        if not in_hands:
+            caller.msg("У тебя в руках ничего нет")
+            return
+        else:
+            for in_hands_obj in in_hands:
+                in_hands_obj.move_to(caller,quiet=True)
+                caller.msg("Ты убрал из рук : %s" % in_hands_obj.key)
+
+class CmdGetHands(Command):
+    """
+    Команда для изъятия объектов их рук
+    """
+    key = "@hands"
+    aliases = ["@руки"]
+    locks = "cmd:perm(Builders)"
+    help_category = "Building"
+
+    def func(self):
+
+        caller = self.caller
+
+        if caller.db.hands:
+            caller.msg("У тебя уже есть руки")
+            return
+        else:
+            caller.db.hands = create_object(settings.BASE_OBJECT_TYPECLASS, "hands")
+            caller.msg("Теперь у тебя есть руки")
+
