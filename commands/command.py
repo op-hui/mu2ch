@@ -137,6 +137,45 @@ class MuxCommand(default_cmds.MuxCommand):
         super(MuxCommand, self).func()
 
 
+class CmdMethod(Command):
+    """
+    Вызывает и показывает метод у игрового объекта
+    
+    Использование:
+    method Этаж.freeRooms() 
+
+    Вызывает у объекта с названием Этаж (имя объекта в игре) метод freeRooms и показывает вывод
+    """
+
+    key = "method"
+    locks = "call:perm(Immortals)"
+    help_category = "Admin"
+
+    def func(self):
+        if (not self.args):
+            self.caller.msg(u"Используй: method объект.метод(аргументы)")
+            return False
+            
+        (object_name, method) = self.args.strip().split(".") 
+
+        if (not method):
+            self.caller.msg(u"Используй: method объект.имя_метода(аргументы)")
+            return False
+
+        if (not object_name): 
+            obj = self.caller.location
+        else:
+            obj = self.caller.search(object_name, location = self.caller.location)
+
+        if (not obj): 
+            self.caller.msg(u"Объект '%s' не найден в текущей локации" % object_name)
+            return False
+
+        self.caller.msg(u"Output: %s" % repr(eval("obj."+method)))
+
+        return True
+
+
 
 class CmdCreateNPC(Command):
     """

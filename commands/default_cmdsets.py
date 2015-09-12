@@ -17,7 +17,7 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 from evennia import default_cmds
 from typeclasses.extended_room import CmdExtendedLook,CmdExtendedDesc,CmdGameTime
 from commands.help_ru import CmdHelp_ru,CmdUnconnectedHelp_ru
-from commands.command import CmdCreateNPC,CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu,CmdTalk,CmdWhoRu,CmdAccessRu,CmdNickRu
+from commands.command import CmdCreateNPC,CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu,CmdTalk,CmdWhoRu,CmdAccessRu,CmdNickRu,CmdMethod
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -53,6 +53,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdWhoRu())
         self.add(CmdAccessRu())
         self.add(CmdNickRu())
+        self.add(CmdMethod())
         
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):
