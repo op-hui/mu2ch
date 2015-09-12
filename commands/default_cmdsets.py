@@ -18,7 +18,8 @@ from evennia import default_cmds
 from typeclasses.extended_room import CmdExtendedLook,CmdExtendedDesc,CmdGameTime
 from commands.help_ru import CmdHelp_ru,CmdUnconnectedHelp_ru
 from commands.command import CmdCreateNPC,CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu,CmdTalk,CmdWhoRu,CmdAccessRu,CmdNickRu
-from commands.command import CmdWear,CmdUnWear,CmdGetHands
+from commands.command import CmdWear,CmdUnWear,CmdGetHands,CmdMethod
+
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
     The `CharacterCmdSet` contains general in-game commands like `look`,
@@ -56,6 +57,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdWear())
         self.add(CmdUnWear())
         self.add(CmdGetHands())
+        self.add(CmdMethod())
         
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):
