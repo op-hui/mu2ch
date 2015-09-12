@@ -4,7 +4,7 @@ from typeclasses.rooms import Room
 from evennia import create_object
 from mudach.utils import locationTunnelDefault,locationTunnel
 
-class Building(Room):  
+class Building(Box):  
     def at_object_creation(self): 
         self.db.desc = u"Подъезд"
         self.db.address = None
