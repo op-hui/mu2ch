@@ -136,11 +136,11 @@ class Player(DefaultPlayer):
             pass
 
         character = self.character
+        
+        # Вероятно, этот код нужно убрать в at_first_login хук
         homeLocation = character.search(u"1-Общий дворик", global_search = True) 
 
-#        homeLocation = PlayerDynamicLocation(self)    
-#        
-        if (homeLocation is not None):
+        if (homeLocation and character.home != homeLocation):
             character.home = character.location = homeLocation
             character.move_to(homeLocation)
 
