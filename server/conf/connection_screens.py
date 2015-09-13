@@ -27,7 +27,7 @@ Sup Анонимус!
 Что бы войти на сервер введите:
         {wconnect <username> <password> {n
 Что бы создать аккаунт введите:
-        {wcreate <username> <password> {n
+        {wсоздать <username> <password> {n
 
 Основная страница разработчиков на GitHub:
         https://github.com/op-hui/mu2ch
