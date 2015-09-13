@@ -116,12 +116,12 @@ class CmdUnconnectedCreateRu(MuxCommand):
                     _create_character(session, new_player, typeclass,
                                     default_home, permissions)
                 # tell the caller everything went well.
-                string = u"Новый аккаунт создан Добро пожаловать %USERNAME%"
+                string = u"Новый аккаунт создан Добро пожаловать %%USERNAME%%"
                 if " " in playername:
                     string += u"\n\nТеперь можно войти в игру 'connect \"%s\" <пароль>'."
                 else:
                     string += u"\n\nТеперь можно войти в игру 'connect %s <пароль>'."
-                #session.msg(string % (playername, playername))
+                session.msg(string % (playername))
 
         except Exception:
             # We are in the middle between logged in and -not, so we have
