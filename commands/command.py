@@ -985,17 +985,14 @@ class CmdKill(Command):
         caller.db.frags = caller.db.frags + 1
         target.db.death_count = target.db.death_count +1
         target.db.effects = []
-        target.msg("Тебя убил %s." % caller.key)
-        caller.location.msg_contents("%s убил %s." % (caller.key, target.key))
+        if not target == caller: 
+            target.msg("Тебя убил %s." % caller.key)
+            caller.location.msg_contents("%s убил %s." % (caller.key, target.key))
+        else:
+            target.msg("Ты самовыпилися.")
+            caller.location.msg_contents("%s самовыпилися." % caller.key)
 
-        limbs = caller.search("Limbo", global_search=True, quiet=True,nofound_string="Бога нет, и рая нет!" )
-
-        if not limbs:
-            target.msg("Ты не смог попасть в рай. Потому что его нет! Где твой Бог теперь?")
-            return
-
-        limb = limbs[0]
-        target.move_to(limb, quiet=True)
+        target.at_die()
 
         weapon.db.durability = weapon.db.durability - 1
         caller.msg("Твое оружие утратило одно очко запаса прочности. {wЗапас просности: %s{n" % weapon.db.durability)
@@ -1011,10 +1008,46 @@ class CmdKill(Command):
             caller.msg("Твою оружие сломалось и рассыпалось в пиль.")
             return
 
+class CmdLoot(Command):
+    """
+    Команда для изъятия объектов их рук
+    """
+    key = "loot"
+    aliases = ["лут","лутать","шмонать"]
+    locks = "cmd:perm(Builders)"
+    help_category = "Building"
 
+    def func(self):
 
+        caller = self.caller
 
+        if not self.args:
+            caller.msg("Лутаем кого?")
+            return        
 
+        target = caller.search(self.args, location=caller.location,nofound_string = "Нет трупа с таким именем")
+
+        if not target:
+            return
+
+        is_corpse = target.db.is_corpse
+
+        if not is_corpse:
+            caller.msg("Ты не можешь лутать живых. На тебя подумают плохо.")
+            return
+
+        target_items = target.contents
+            
+        if not target_items:
+            caller.msg("У него ничего нет при себе.")
+            return
+
+        string = "Ты залутал: "
+        for item in target_items:
+            item.move_to(caller, quiet=True)
+            string+="%s," % item.key
+        caller.msg(string)
+        caller.location.msg_contents("%s облутал труп %s" % (caller.key, target.key))
 
 
 

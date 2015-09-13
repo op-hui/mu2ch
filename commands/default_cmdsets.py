@@ -18,7 +18,7 @@ from evennia import default_cmds
 from typeclasses.extended_room import CmdExtendedLook,CmdExtendedDesc,CmdGameTime
 from commands.help_ru import CmdHelp_ru,CmdUnconnectedHelp_ru
 from commands.command import CmdCreateNPC,CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu,CmdTalk,CmdWhoRu,CmdAccessRu,CmdNickRu
-from commands.command import CmdWear,CmdUnWear,CmdGetHands,CmdMethod,CmdKill
+from commands.command import CmdWear,CmdUnWear,CmdGetHands,CmdMethod,CmdKill,CmdLoot
 
 class CharacterCmdSet(default_cmds.CharacterCmdSet):
     """
@@ -59,6 +59,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdGetHands())
         self.add(CmdMethod())
         self.add(CmdKill())
+        self.add(CmdLoot())
         
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):
