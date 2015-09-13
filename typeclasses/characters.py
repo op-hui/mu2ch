@@ -13,6 +13,7 @@ import random
 from typeclasses.objects import Object
 from evennia import create_object
 from django.conf import settings
+from evennia import TICKER_HANDLER as tickerhandler
 
 class Character(DefaultCharacter):
     """
@@ -139,3 +140,96 @@ class Character(DefaultCharacter):
             src_name = source_location.name
         string = "%s пришел в %s из %s."
         self.location.msg_contents(string % (name, loc_name, src_name), exclude=self)
+
+    def at_die(self):
+        """
+        хук смерти игрока. создает труп, скидывает в него вещи, переносит игрока в лимб.
+        """
+        #создаем труп
+        corpse = create_object(Corpse,self.key, location=self.location)
+        #corpse.key = "Труп %s" % self.key
+        descriptions = ["Изуродованный труп %s" % self.key,
+                        "Бренное тело %s" % self.key,
+                        "Останки %s" % self.key,
+                        "Все, что оcталось от %s" % self.key]
+        corpse.db.desc = random.choice(descriptions)
+        #создаем таймер для трупа
+        tickerhandler.add(corpse, 60*3)
+        #скидываем внего вещи
+        items = self.contents
+        if items:
+            for item in items:
+                item.move_to(corpse, quiet=True)
+        in_hands = self.db.hands.contents
+        if in_hands:
+            item = in_hands[0]
+            item.move_to(corpse,quiet=True)
+        #телепортируем персонажа в лимб
+        limbs = self.search("Limbo", global_search=True, quiet=True,nofound_string="Бога нет, и рая нет!" )
+
+        if limbs:
+            limb = limbs[0]
+            self.move_to(limb, quiet=True)
+        else:
+            self.msg("Ты не смог попасть в рай. Потому что его нет! Где твой Бог теперь?")
+
+
+
+class Corpse(Character):
+    """
+    Класс трупа игрока. Будет создаваться когда игрок умирает и исчезать через 3 минуты.
+    """
+    def at_object_creation(self):
+        self.db.is_corpse = True
+        self.db.hands = create_object(settings.BASE_OBJECT_TYPECLASS, "hands")
+
+    def at_tick(self):
+        #уничтожает все свои вещи и самовыпиливается
+        items = self.contents
+        if items:
+            for item in items:
+                item.delete()
+        self.delete()
+
+    def return_appearance(self, looker):
+        """
+        This formats a description. It is the hook a 'look' command
+        should call.
+
+        Args:
+            looker (Object): Object doing the looking.
+        """
+        if not looker:
+            return
+        # get and identify all objects
+        visible = (con for con in self.contents if con != looker and
+                                                    con.access(looker, "view"))
+        exits, users, things = [], [], []
+        for con in visible:
+            key = con.get_display_name(looker)
+            if con.destination:
+                exits.append(key)
+            elif con.has_player:
+                users.append("{c%s{n" % key)
+            else:
+                things.append(key)
+
+        in_hands = (con for con in self.db.hands.contents if con != looker and
+                                                    con.access(looker, "view"))
+        thing = []
+        for con in in_hands:
+            key = con.get_display_name(looker)
+            if con:
+                thing.append(key)        
+        # get description, build string
+        string = "{C%s{n\n" % self.get_display_name(looker)
+        desc = self.db.desc
+        if desc:
+            string += "%s" % desc
+        if exits:
+            string += "\n{wВыходы:{n " + ", ".join(exits)
+        if users or things:
+            string += "\n{wТы видишь:{n " + ", ".join(users + things)
+        if thing:
+             string += "\n{wВ руках:{n " + ", ".join(thing)
+        return string

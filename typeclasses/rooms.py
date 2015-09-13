@@ -41,9 +41,20 @@ class Room(DefaultRoom):
             if con.destination:
                 exits.append(key)
             elif con.has_player:
-                users.append("{c%s{n" % key)
+            	if con.db.hands:
+            		in_hand = con.db.hands.contents
+            		if in_hand:
+            			weapon = in_hand[0]
+            			if weapon.db.is_weapon:
+            				users.append("{r%s{n" % key)
+            			else: users.append("{c%s{n" % key) 
+            		else: users.append("{c%s{n" % key)	
+                else:
+                	users.append("{c%s{n" % key)
             elif con.db.npc:
                 things.append("{y%s{n" % key)
+            elif con.db.is_corpse:
+                things.append("{C%s(труп){n" % key)
             else:
                 things.append(key)
         # get description, build string
