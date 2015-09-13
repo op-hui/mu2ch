@@ -60,7 +60,7 @@ DATABASES = {
         'PORT': ''
         }}
 
-WEBSOCKET_CLIENT_URL = "ws://mu2ch.epac.to"
+WEBSOCKET_CLIENT_URL = "ws://localhost"
 
 ######################################################################
 # Django web features
