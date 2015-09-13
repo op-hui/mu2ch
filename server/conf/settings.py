@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Evennia settings file.
 
@@ -12,7 +13,6 @@ unnecessarily.
 # Use the defaults from Evennia unless explicitly overridden
 import os
 from evennia.settings_default import *
-# -*- coding: utf-8 -*-
 
 ######################################################################
 # Evennia base server config
@@ -103,3 +103,5 @@ LIMBO_DESC = \
     """    
     Hi
     """
+
+DEFAULT_HOME = "#142"
