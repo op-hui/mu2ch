@@ -17,10 +17,15 @@ class BuildingFloor(Box):
         return self.db.building
 
 
-    def searchFreeLocation():
+    def unusedApartment(self):
         for i in self.contents_get(): 
-            if (i.isUsed() == false):
-                return i
+        # TODO Фильтровать по типам объекта возвращаемое из contents_get()
+                try:
+                        if (i.isUsed() == False):
+                                return i
+                except AttributeError:
+                        # лол ищем во всем подряд, даже небо, даже аллаха
+                        pass
 
         return None
     
