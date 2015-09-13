@@ -461,7 +461,7 @@ class CmdExtendedDesc(default_cmds.CmdDesc):
                     caller.msg("Основное описаине было задано для %s." % obj.key)
                 else:
                     # this is not an ExtendedRoom.
-                    caller.msg("Описаине было задано для %s." % obj.key)
+                    caller.msg("Описание было задано для %s." % obj.key)
 
 
 # Simple command to view the current time and season
