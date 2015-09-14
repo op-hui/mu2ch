@@ -14,6 +14,7 @@ from evennia.server.sessionhandler import SESSIONS
 from evennia.commands.default.muxcommand import MuxPlayerCommand
 from evennia.utils import utils, create, search, prettytable
 import time
+import re
 from django.conf import settings
 from evennia import create_object
 
@@ -325,18 +326,18 @@ class CmdInventoryRu(Command):
             string = "{wУ тебя с собой:\n%s" % table
         self.caller.msg(string)
 
-class CmdGetRu(Command):
+class CmdGetRu(MuxCommand):
     """
     pick up something
 
     Usage:
-      get <obj>
+      get <obj> <obj>
 
     Picks up an object from your location and puts it in
     your inventory.
     """
     key = u"get"
-    aliases = "взять"
+    aliases = [u"взять",u"брать"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -345,31 +346,72 @@ class CmdGetRu(Command):
 
         caller = self.caller
 
-        if not self.args:
+        lhs = self.lhs
+        rhs = self.rhs
+
+        if not lhs:
             caller.msg("Что взять?")
             return
-        #print "general/get:", caller, caller.location, self.args, caller.location.contents
-        obj = caller.search(self.args, location=caller.location)
-        if not obj:
-            return
-        if caller == obj:
-            caller.msg("Ты не можешь взять себя. 0_0")
-            return
-        if not obj.access(caller, 'get'):
-            if obj.db.get_err_msg:
-                caller.msg(obj.db.get_err_msg)
-            else:
-                caller.msg("Ты не можешь это взять.")
-            return
+        
+        if not rhs:
+            #print "general/get:", caller, caller.location, self.args, caller.location.contents
+            obj = caller.search(lhs, location=caller.location)
+            if not obj:
+                return
+            if caller == obj:
+                caller.msg("Ты не можешь взять себя. 0_0")
+                return
+            if not obj.access(caller, 'get'):
+                if obj.db.get_err_msg:
+                    caller.msg(obj.db.get_err_msg)
+                else:
+                    caller.msg("Ты не можешь это взять.")
+                return
 
-        obj.move_to(caller, quiet=True)
-        caller.msg("Ты подобрал %s." % obj.name)
-        caller.location.msg_contents("%s подобрал %s." %
-                                        (caller.name,
-                                         obj.name),
-                                     exclude=caller)
-        # calling hook method
-        obj.at_get(caller)
+            obj.move_to(caller, quiet=True)
+            caller.msg("Ты подобрал %s." % obj.name)
+            caller.location.msg_contents("%s подобрал %s." % (caller.name, obj.name),exclude=caller)
+            # calling hook method
+            obj.at_get(caller)
+            return
+        
+        if rhs:
+            storage_arg = lhs
+            odj_arg = rhs
+            storage = caller.search(storage_arg, location=caller.location, nofound_string="Здесь нет такких объектов-хранилищь.")
+            
+            if not storage:
+                return
+            
+            if not storage.db.is_corpse or storage.db.is_storage:
+                caller.msg("Ты можешь обыскивать только трупы и хранилища.")
+                return
+            
+            if odj_arg == "все":
+                
+                all_obj = storage.contents
+                
+                string = "Ты взял все, что было в %s: " % storage.key
+                
+                for obj in all_obj:
+                    obj.move_to(caller, quiet=True)
+                    string+="%s," % obj.key
+                
+                caller.msg(string)
+                caller.location.msg_contents("%s полностью облутал %s" % (caller.key, storage.key),exclude=caller)
+                # calling hook method
+                obj.at_get(caller)
+                return 
+            else:
+                obj = caller.search(odj_arg, location=storage, nofound_string="Здесь нет таких объектов.")
+
+                obj.move_to(caller, quiet=True)
+                caller.msg("Ты взял %s из %s" % (obj.name, storage.key))
+                caller.location.msg_contents("%s забрал %s из %s." % (caller.name, obj.name,storage.key),exclude=caller)
+                # calling hook method
+                obj.at_get(caller)
+                return
+
 
 class CmdDropRu(Command):
     """
@@ -383,7 +425,7 @@ class CmdDropRu(Command):
     """
 
     key = u"drop"
-    aliases = ["положить","бросить"]
+    aliases = [u"положить",u"бросить"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -998,7 +1040,7 @@ class CmdKill(Command):
             caller.location.msg_contents("%s убил %s." % (caller.key, target.key))
         else:
             target.msg("Ты самовыпилися.")
-            caller.location.msg_contents("%s самовыпилися." % caller.key)
+            caller.location.msg_contents("%s самовыпилися." % (caller.key),exclude=caller)
 
         target.at_die()
 
@@ -1022,8 +1064,8 @@ class CmdLoot(Command):
     """
     key = "loot"
     aliases = ["лут","лутать","шмонать"]
-    locks = "cmd:perm(Builders)"
-    help_category = "Building"
+    locks = "cmd:all()"
+    help_category = "General"
 
     def func(self):
 
