@@ -276,6 +276,7 @@ class CmdLookRu(MuxCommand):
         if args:
             # Use search to handle duplicate/nonexistant results.
             looking_at_obj = caller.search(args, use_nicks=True)
+            
             if not looking_at_obj:
                 return
         else:
