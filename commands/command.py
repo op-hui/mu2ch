@@ -186,44 +186,28 @@ class CmdMethod(Command):
 
         return True
 
-
-
-class CmdCreateNPC(Command):
+class CmdStatus(Command):
     """
-    create a new npc
+    Показывает статус персонажа
+    
+    Использование:
+        статус
 
-    Usage:
-    +createNPC <name>
-
-    Creates a new, named NPC. The NPC will start with a Power of 1.
-    """ 
-    key = "+createnpc"
-    aliases = ["+createNPC"]
-    locks = "call:not perm(nonpcs)"
-    help_category = "mush"
+    """
+    key = u"статус"
+    aliases = "status"
 
     def func(self):
-        "creates the object and names it"
         caller = self.caller
-        if not self.args:
-            caller.msg("Usage: +createNPC <name>")
-            return
-        if not caller.location:
-            # may not create npc when OOC
-            caller.msg("You must have a location to create an npc.")
-            return
-        # make name always start with capital letter
-        name = self.args.capitalize()
-        # create npc in caller's location
-        npc = create_object("characters.Character",
-                      key=name,
-                      location=caller.location,
-                      locks="edit:id(%i) and perm(Builders)" % caller.id)
-        # announce
-        message = "%s created the NPC '%s'."
-        caller.msg(message % ("You", name))
-        caller.location.msg_contents(message % (caller.key, name), exclude=caller)
+        apartment = caller.db.flat
+        if (apartment):
+            floor = apartment.floor
+            building = floor.getBuilding() 
+            apartment_txt = u"Прописан по адресу, %s %s %s" % (building.db.key, floor.db.key, apartment.db.key)
+        else:
+            apartment_txt = u"Бомж"
 
+        caller.msg(u"Хуй обыкновенный\r\n%s" % apartment_txt)
 
 class CmdHomeRu(Command):
     """

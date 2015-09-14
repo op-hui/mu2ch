@@ -14,7 +14,7 @@ class BuildingApartment(Box):
         self.db.desc = u"Прихожка"
 
     def create_room(self, room):
-        new_room = create_object(settings.BASE_ROOM_TYPECLASS, key = room['name'])
+        new_room = create_object('typeclasses.rooms.Box', key = room['name'])
         new_room.desc = room['desc']
         locationTunnelDefault(self, new_room);
         return new_room
@@ -22,10 +22,10 @@ class BuildingApartment(Box):
 
     def build_rooms(self, floor): 
         i = 0 
-        for i in xrange(0, self.rooms['default']):
+        for i in xrange(0, len(self.rooms['default'])):
             self.create_room(self.rooms['default'][i]).move_to(self.db.floor)
 
-        for i in xrange(0, min(self.rooms['additional'], self.db.additional_n)):
+        for i in xrange(0, min(len(self.rooms['additional']), self.db.additional_n)):
             self.create_room(self.rooms['additional'][i]).move_to(self.db.floor)
             
         return self
@@ -37,7 +37,7 @@ class BuildingApartment(Box):
     def build(self, floor, n):
         self.db.n = n
         self.db.floor = floor
-        self.build_rooms()
+        self.build_rooms(floor)
         return self
         
 
@@ -46,7 +46,7 @@ class BuildingApartmentUnused(BuildingApartment):
         super(BuildingApartmentUnused, self).at_object_creation()
         self.db.desc = u"Пустое нежилое помещение, ничего особенного"
 
-    def build_rooms(self):
+    def build_rooms(self, floor):
         pass
 
 class BuildingApartmentUsed(BuildingApartment): 

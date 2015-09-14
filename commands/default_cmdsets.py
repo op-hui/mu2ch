@@ -18,8 +18,8 @@ own cmdsets by inheriting from them or directly from `evennia.CmdSet`.
 from evennia import default_cmds
 from typeclasses.extended_room import CmdExtendedLook,CmdExtendedDesc,CmdGameTime
 from commands.help_ru import CmdHelp_ru,CmdUnconnectedHelp_ru
-from commands.command import CmdCreateNPC,CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu,CmdTalk,CmdWhoRu,CmdAccessRu,CmdNickRu
-from commands.command import CmdWear,CmdUnWear,CmdGetHands,CmdMethod,CmdKill,CmdLoot
+from commands.command import CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu,CmdTalk,CmdWhoRu,CmdAccessRu,CmdNickRu
+from commands.command import CmdWear,CmdUnWear,CmdGetHands,CmdMethod,CmdKill,CmdLoot,CmdStatus
 from evennia.commands.default.muxcommand import MuxCommand
 from django.conf import settings
 
@@ -46,7 +46,7 @@ class CmdUnconnectedCreateRu(MuxCommand):
     If you have spaces in your name, enclose it in quotes.
     """
     key = u"создать"
-    aliases = ["cre", "cr"]
+    aliases = ["cre", "cr", "create"]
     locks = "cmd:all()"
     arg_regex = r"\s.*?|$"
 
@@ -149,7 +149,6 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         #
         # any commands you add below will overload the default ones.
         #
-        self.add(CmdCreateNPC())
         self.add(CmdHomeRu())
         self.add(CmdLookRu())
         self.add(CmdInventoryRu())
@@ -173,6 +172,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdMethod())
         self.add(CmdKill())
         self.add(CmdLoot())
+        self.add(CmdStatus())
         
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):
