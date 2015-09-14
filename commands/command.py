@@ -969,6 +969,10 @@ class CmdKill(Command):
         #    caller.msg("Здесь нельзя убивать.")
         #    return
 
+        if not caller.db.hands:
+            caller.msg("Ты инвалид. У тебя нет рук.")
+            return
+
         in_hands = caller.db.hands.contents
 
         if not target.has_player:
