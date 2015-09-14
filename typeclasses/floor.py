@@ -33,7 +33,7 @@ class BuildingFloor(Box):
 
     def build(self, building, n):
         self.db.n = n
-        self.db.desc = u"%d этаж" % n
+        self.db.key = self.db.desc = u"%d этаж" % n
         self.db.building = building
         per_floor = building.db.apartment_per_floor
         i = 1

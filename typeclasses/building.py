@@ -6,6 +6,7 @@ from mudach.utils import locationTunnelDefault,locationTunnel
 
 class Building(Box):  
     def at_object_creation(self): 
+        self.db.key = u"Дом епт"
         self.db.desc = u"Подъезд"
         self.db.address = None
         self.db.apartment_per_floor = None
