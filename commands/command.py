@@ -185,6 +185,28 @@ class CmdMethod(Command):
 
         return True
 
+class CmdStatus(Command):
+    """
+    Показывает статус персонажа
+    
+    Использование:
+        статус
+
+    """
+    key = u"статус"
+    aliases = "status"
+
+    def func(self):
+        caller = self.caller
+        apartment = caller.db.flat
+        if (apartment):
+            floor = apartment.floor
+            building = floor.getBuilding() 
+            apartment_txt = u"Прописан по адресу, %s %s %s" % (building.db.key, floor.db.key, apartment.db.key)
+        else:
+            apartment_txt = u"Бомж"
+
+        caller.msg(u"Хуй обыкновенный\r\n%s" % apartment_txt)
 
 class CmdHomeRu(Command):
     """
