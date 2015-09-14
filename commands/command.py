@@ -868,10 +868,12 @@ class CmdWear(Command):
         
         in_hands = caller.db.hands.contents
         if in_hands:
-            string = "У тебя в руках уже есть: "
-            for in_hands_obj in in_hands:
-                string+="%s, " % in_hands_obj.key
-            string+="сними это с помощью команды 'снять'."
+            string = "У тебя в руках был "
+            in_hands_obj = in_hands[0]
+            string+="%s, " % in_hands_obj.key
+            in_hands_obj.move_to(caller, quiet=True)
+            obj.move_to(caller.db.hands,quiet=True)
+            string+="ты заменил это на %s." % obj.key
             caller.msg(string)
             return
         else:
