@@ -15,8 +15,9 @@ class CmdSetTest(CmdSet):
          self.add(default_cmds.CmdSay())
          
 
-def simpleNPC(Object):
+class simpleNPC(Object):
     def at_object_creation(self):
+        self.cmdset.add(CmdSetTest)
         self.db.npc = True
         self.locks.add("call:false()")
         self.locks.add("get:false()")
