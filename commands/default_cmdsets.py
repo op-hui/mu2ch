@@ -46,7 +46,7 @@ class CmdUnconnectedCreateRu(MuxCommand):
     If you have spaces in your name, enclose it in quotes.
     """
     key = u"создать"
-    aliases = ["cre", "cr"]
+    aliases = ["cre", "cr", "create"]
     locks = "cmd:all()"
     arg_regex = r"\s.*?|$"
 
