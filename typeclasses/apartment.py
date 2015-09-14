@@ -46,7 +46,7 @@ class BuildingApartmentUnused(BuildingApartment):
         super(BuildingApartmentUnused, self).at_object_creation()
         self.db.desc = u"Пустое нежилое помещение, ничего особенного"
 
-    def build_rooms(self):
+    def build_rooms(self, floor):
         pass
 
 class BuildingApartmentUsed(BuildingApartment): 
