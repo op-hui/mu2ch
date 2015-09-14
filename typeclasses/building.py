@@ -51,14 +51,14 @@ class Building(Box):
 
         # Уничтожаем пустую квартиру
         room_n = apartment_location.db.n
-        db_key = apartment_location.db.key
+        db_key = apartment_location.name
         apartment_location.delete() 
         
         # Создаем кваритру с комнатами
         new_apartment = create_object('apartment.BuildingApartmentUsed', key = db_key)
         new_apartment.build(floor, room_n) 
         new_apartment.db.assign_to = character
-        locationTunnel(new_apartment, new_apartment.db.key, floor, u"Лестничная площадка")
+        locationTunnel(new_apartment, new_apartment.name, floor, u"Лестничная площадка")
         new_apartment.move_to(floor, quiet = True, move_hooks = False)
         return new_apartment
         
