@@ -62,6 +62,7 @@ class Room(DefaultRoom):
                     things.append(key)
                 #else:
                     #print "Это здание: %s %s" % (con.name, con.__class__.__name__)
+
         # get description, build string
         string = "{c%s{n\n" % self.get_display_name(looker)
         desc = self.db.desc
@@ -72,6 +73,15 @@ class Room(DefaultRoom):
                     if det > 0:
                         desc = desc.replace(detail,"{y%s{n" % detail)
             string += "%s" % desc
+
+        if (self.db.after_death and looker.db.flat):
+            # Говнокод 
+            # Нужно найти выход с этажа в хату анона и добавить её в текущие выходы
+            floor = looker.db.flat.db.floor
+            for to_room in floor.exits:
+                if (to_room.name == looker.db.flat.name): 
+                    exits.append(to_room.get_display_name(looker)) 
+
         if exits:
             string += "\n{wВыходы:{n " + ", ".join(exits)
         if users or things:
