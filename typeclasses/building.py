@@ -59,6 +59,7 @@ class Building(Box):
         new_apartment.build(floor, room_n) 
         new_apartment.db.assign_to = character
         locationTunnel(new_apartment, new_apartment.db.key, floor, u"Лестничная площадка")
+        new_apartment.move_to(floor, quiet = True, move_hooks = False)
         return new_apartment
         
 

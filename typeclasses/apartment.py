@@ -24,11 +24,11 @@ class BuildingApartment(Box):
         i = 0 
         for i in xrange(0, len(self.rooms['default'])):
             room = self.create_room(self.rooms['default'][i])
-            room.move_to(self.db.floor, move_hooks = False, quiet = True)
+            room.move_to(self, move_hooks = False, quiet = True)
 
         for i in xrange(0, min(len(self.rooms['additional']), self.db.additional_n)):
             room = self.create_room(self.rooms['additional'][i])
-            room.move_to(self.db.floor, move_hooks = False, quiet = True)
+            room.move_to(self, move_hooks = False, quiet = True)
             
         return self
 
