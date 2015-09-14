@@ -180,7 +180,8 @@ class CmdMethod(Command):
         try:
             self.caller.msg(u"Output: %s" % repr(eval("obj." + method)))
         except AttributeError:
-            self.caller.msg(u"У объекта %s нет метода %s" % (obj, method))
+            self.caller.msg(u"Что то пошло не так, уже чиним")
+            raise 
 
         return True
 

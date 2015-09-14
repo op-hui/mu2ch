@@ -29,10 +29,15 @@ class Building(Box):
                 locationTunnelDefault(prev_floor, new_floor)
             prev_floor = new_floor
             
-    def searchFreeLocation():
+    def unusedApartment(self):
+        # TODO Фильтровать по типам объекта возвращаемое из contents_get()
+        location = None
         for i in self.contents_get():
-            #floor.searchFreeLocation() 
-            location = i.searchFreeLocation() 
+            try:
+                location = i.unused() 
+            except AttributeError:
+                # лол ищем во всем подряд, даже небо, даже аллаха
+                pass
             if (location):
                 return location
 
@@ -47,3 +52,5 @@ class Hrushevka(Building):
         self.db.apartment_per_floor = 4
         self.db.floor_n = 5
         self.build() 
+
+    pass
