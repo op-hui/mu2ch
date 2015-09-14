@@ -185,6 +185,7 @@ class Corpse(Character):
 
     def at_tick(self):
         #уничтожает все свои вещи и самовыпиливается
+        self.location.msg_contents("Прах игрока %s исчезает у тебя на глазах" % self.key)
         items = self.contents
         if items:
             for item in items:
