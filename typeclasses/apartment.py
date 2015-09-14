@@ -23,10 +23,12 @@ class BuildingApartment(Box):
     def build_rooms(self): 
         i = 0 
         for i in xrange(0, len(self.rooms['default'])):
-            self.create_room(self.rooms['default'][i]).move_to(self.db.floor)
+            room = self.create_room(self.rooms['default'][i])
+            room.move_to(self.db.floor, move_hooks = False, quiet = True)
 
         for i in xrange(0, min(len(self.rooms['additional']), self.db.additional_n)):
-            self.create_room(self.rooms['additional'][i]).move_to(self.db.floor)
+            room = self.create_room(self.rooms['additional'][i])
+            room.move_to(self.db.floor, move_hooks = False, quiet = True)
             
         return self
 
@@ -36,6 +38,7 @@ class BuildingApartment(Box):
 
     def build(self, floor, n):
         self.db.n = n
+        self.db.key = "Кв-%d" % (n) 
         self.db.floor = floor
         self.build_rooms()
         return self

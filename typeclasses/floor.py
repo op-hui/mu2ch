@@ -13,7 +13,7 @@ class BuildingFloor(Box):
         self.db.desc = "Неизвестный этаж"
 
     # TODO: переписать с использованием setter/getter
-    def getBuilding():
+    def getBuilding(self):
         return self.db.building
 
 
@@ -41,8 +41,9 @@ class BuildingFloor(Box):
             room_n = ((n - 1) * per_floor) + i 
             roomEntryLocation = create_object('apartment.BuildingApartmentUnused', key = u"Кв-%d" % room_n)
             roomEntryLocation.build(self, room_n) 
-            roomEntryLocation.move_to(self)
+            roomEntryLocation.move_to(self, quiet = True, move_hooks = False)
             locationTunnel(roomEntryLocation, roomEntryLocation.key, self, u"Лестничная площадка")
+
         return self
 
     pass

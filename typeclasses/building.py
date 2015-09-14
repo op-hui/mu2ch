@@ -22,7 +22,7 @@ class Building(Box):
             new_floor = create_object('floor.BuildingFloor', key = u"%d Этаж" % i) 
             new_floor.build(self, i) 
 
-            new_floor.move_to(self) 
+            new_floor.move_to(self, quiet = True, move_hooks = False) 
                 
             locationTunnel(self, self.db.desc, new_floor, None)
             if (prev_floor):
@@ -50,10 +50,11 @@ class Building(Box):
 
         # Уничтожаем пустую квартиру
         room_n = apartment_location.db.n
+        db_key = apartment_location.db.key
         apartment_location.delete() 
         
         # Создаем кваритру с комнатами
-        new_apartment = create_object('apartment.BuildingApartmentUsed', key = apartment_location.db.key)
+        new_apartment = create_object('apartment.BuildingApartmentUsed', key = db_key)
         new_apartment.build(floor, room_n) 
         new_apartment.db.assign_to = character
         locationTunnel(new_apartment, new_apartment.db.key, floor, u"Лестничная площадка")
