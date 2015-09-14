@@ -204,13 +204,19 @@ class CmdStatus(Command):
             floor = apartment.db.floor
             if (floor):
                 building = floor.getBuilding() 
-                apartment_txt = u"Прописан по адресу, %s, %s, %s" % (building.name, floor.db.key, apartment.db.key)
+                apartment_txt = u"по адресу, %s, %s, %s" % (building.name, floor.db.key, apartment.db.key)
             else:
                 apartment_txt = u"Ты забыл где твоя хата"
         else:
             apartment_txt = u"Бомж"
 
-        caller.msg(u"Хуй обыкновенный\r\n%s" % apartment_txt)
+        message = u"""Хуй обыкновенный
+        Прописка: %s
+        Фрагов: %d
+        Смертей: %d
+        """ % (apartment_txt, caller.db.frags, caller.db.death_count) 
+
+        caller.msg(message)
 
 class CmdHomeRu(Command):
     """
