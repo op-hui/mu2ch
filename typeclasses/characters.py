@@ -155,8 +155,6 @@ class Character(DefaultCharacter):
                         "Останки %s" % self.key,
                         "Все, что оcталось от %s" % self.key]
         corpse.db.desc = random.choice(descriptions)
-        #создаем таймер для трупа
-        tickerhandler.add(corpse, 60*3)
         #скидываем внего вещи
         items = self.contents
         if items:
@@ -184,7 +182,8 @@ class Corpse(Character):
     def at_object_creation(self):
         self.db.is_corpse = True
         self.db.hands = create_object(settings.BASE_OBJECT_TYPECLASS, "hands")
-
+        #создаем таймер для трупа
+        tickerhandler.add(self, 60*3)
     def at_tick(self):
         #уничтожает все свои вещи и самовыпиливается
         self.location.msg_contents("Прах игрока %s исчезает у тебя на глазах" % self.key)
