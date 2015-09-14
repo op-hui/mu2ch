@@ -14,7 +14,7 @@ class BuildingApartment(Box):
         self.db.desc = u"Прихожка"
 
     def create_room(self, room):
-        new_room = create_object(settings.BASE_ROOM_TYPECLASS, key = room['name'])
+        new_room = create_object('typeclasses.rooms.Box', key = room['name'])
         new_room.desc = room['desc']
         locationTunnelDefault(self, new_room);
         return new_room

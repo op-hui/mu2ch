@@ -43,6 +43,32 @@ class Building(Box):
 
         return None
         
+
+    def assignApartmentToCharacter(self, apartment_location, character): 
+        # TODO проверяеть тип локации который нам дают
+        floor = apartment_location.db.floor
+
+        # Уничтожаем пустую квартиру
+        room_n = apartment_location.db.n
+        apartment_location.delete() 
+        
+        # Создаем кваритру с комнатами
+        new_apartment = create_object('apartment.BuildingApartmentUsed', key = "FFFF")
+        new_apartment.build(floor, room_n) 
+        new_apartment.db.assign_to = character
+        locationTunnel(new_apartment, new_apartment.db.key, floor, u"Лестничная площадка")
+        
+
+    def assignCharacter(self, character):
+        # TODO проверять аргументы
+        apartment = self.unusedApartment() 
+        if (apartment is not None):
+            self.assignApartmentToCharacter(apartment, character)
+            # Хата
+            character.db.flat = apartment
+
+
+
     pass 
     
 
