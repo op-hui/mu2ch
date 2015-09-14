@@ -18,6 +18,8 @@ class CmdSetTest(CmdSet):
 def simpleNPC(Object):
     def at_object_creation(self):
         self.db.npc = True
+        self.locks.add("call:false()")
+        self.locks.add("get:false()")
     
 
 class YourMom(Object):
