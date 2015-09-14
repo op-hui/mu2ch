@@ -20,7 +20,7 @@ from typeclasses.extended_room import CmdExtendedLook,CmdExtendedDesc,CmdGameTim
 from commands.help_ru import CmdHelp_ru
 from commands.Unloggedin_ru import CmdUnconnectedHelp_ru, CmdUnconnectedConnectRu, CmdUnconnectedCreateRu
 from commands.command import CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu,CmdTalk,CmdWhoRu,CmdAccessRu,CmdNickRu
-from commands.command import CmdWear,CmdUnWear,CmdGetHands,CmdMethod,CmdKill,CmdStatus
+from commands.command import CmdWear,CmdUnWear,CmdGetHands,CmdMethod,CmdKill,CmdStatus,CmdOut
 from evennia.commands.default.muxcommand import MuxCommand
 from django.conf import settings
 
@@ -73,6 +73,7 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdMethod())
         self.add(CmdKill())
         self.add(CmdStatus())
+        self.add(CmdOut())
         
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):
