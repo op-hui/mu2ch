@@ -45,6 +45,8 @@ class Character(DefaultCharacter):
         self.db.death_count = 0
         #прикручиваем массив ээфектов
         self.db.effects = [];
+        # ассоциация с хатой.
+        self.db.flat = None
 
     def return_appearance(self, looker):
         """
