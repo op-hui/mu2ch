@@ -71,7 +71,7 @@ class Building(Box):
             apartment = self.assignApartmentToCharacter(apartment, character)
             # Хата
             character.db.flat = apartment
-            print "Заселили %s в %s" % (character.name, apartment.db.key) 
+            print "Заселили %s в %s" % (character.name, apartment.name) 
         else:
             print "Свободных хат нет!"
 
