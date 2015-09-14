@@ -34,7 +34,7 @@ class Building(Box):
         location = None
         for i in self.contents_get():
             try:
-                location = i.unused() 
+                location = i.unusedApartment() 
             except AttributeError:
                 # лол ищем во всем подряд, даже небо, даже аллаха
                 pass
