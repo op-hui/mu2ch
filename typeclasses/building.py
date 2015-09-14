@@ -53,19 +53,24 @@ class Building(Box):
         apartment_location.delete() 
         
         # Создаем кваритру с комнатами
-        new_apartment = create_object('apartment.BuildingApartmentUsed', key = "FFFF")
+        new_apartment = create_object('apartment.BuildingApartmentUsed', key = apartment_location.db.key)
         new_apartment.build(floor, room_n) 
         new_apartment.db.assign_to = character
         locationTunnel(new_apartment, new_apartment.db.key, floor, u"Лестничная площадка")
+        return new_apartment
         
 
     def assignCharacter(self, character):
         # TODO проверять аргументы
         apartment = self.unusedApartment() 
         if (apartment is not None):
-            self.assignApartmentToCharacter(apartment, character)
+            # пересоздаем хату
+            apartment = self.assignApartmentToCharacter(apartment, character)
             # Хата
             character.db.flat = apartment
+            print "Заселили %s в %s" % (character.db.key, apartment.db.key) 
+        else:
+            print "Свободных хат нет!"
 
 
 

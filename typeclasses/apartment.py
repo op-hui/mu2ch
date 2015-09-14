@@ -20,7 +20,7 @@ class BuildingApartment(Box):
         return new_room
         
 
-    def build_rooms(self, floor): 
+    def build_rooms(self): 
         i = 0 
         for i in xrange(0, len(self.rooms['default'])):
             self.create_room(self.rooms['default'][i]).move_to(self.db.floor)
@@ -37,7 +37,7 @@ class BuildingApartment(Box):
     def build(self, floor, n):
         self.db.n = n
         self.db.floor = floor
-        self.build_rooms(floor)
+        self.build_rooms()
         return self
         
 
@@ -46,7 +46,7 @@ class BuildingApartmentUnused(BuildingApartment):
         super(BuildingApartmentUnused, self).at_object_creation()
         self.db.desc = u"Пустое нежилое помещение, ничего особенного"
 
-    def build_rooms(self, floor):
+    def build_rooms(self):
         pass
 
 class BuildingApartmentUsed(BuildingApartment): 
