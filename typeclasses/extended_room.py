@@ -307,8 +307,25 @@ class CmdExtendedLook(default_cmds.CmdLook):
                 _AT_SEARCH_RESULT(caller, args, looking_at_obj, False)
                 return
             else:
-                # we need to extract the match manually.
-                looking_at_obj = utils.make_iter(looking_at_obj)[0]
+                if len(looking_at_obj) >1:
+                    caller.msg("Есть несколько объектов с таким именем(укажи нужный):")
+                    i=1
+                    for item in looking_at_obj:
+                        if item.has_player:
+                            caller.msg("%s-%s (Игрок)" % (i,item.key))
+                        elif item.db.is_corpse:
+                            caller.msg("%s-%s (Труп)" % (i,item.key))
+                        elif item.db.npc:
+                            caller.msg("%s-%s (NPC)" % (i,item.key))
+                        elif item.db.is_weapon:
+                            caller.msg("%s-%s (Оружие)" % (i,item.key))
+                        else:
+                            caller.msg("%s-%s (Объект)" % (i,item.key))
+                        i = i +1
+                    return
+                else:                
+                    # we need to extract the match manually.
+                    looking_at_obj = utils.make_iter(looking_at_obj)[0]
         else:
             looking_at_obj = caller.location
             if not looking_at_obj:
