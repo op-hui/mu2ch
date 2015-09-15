@@ -165,7 +165,9 @@ class Character(DefaultCharacter):
             item = in_hands[0]
             item.move_to(corpse,quiet=True)
         #телепортируем персонажа в лимб
-        limbs = self.search("Limbo", global_search=True, quiet=True,nofound_string="Бога нет, и рая нет!" )
+        #limbs = self.search("Limbo", global_search=True, quiet=True,nofound_string="Бога нет, и рая нет!" )
+        limbs = self.search(True, global_search=True, attribute_name = 'after_death', quiet=True,nofound_string="Бога нет, и рая нет!" )
+
 
         if limbs:
             limb = limbs[0]

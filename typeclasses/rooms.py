@@ -8,7 +8,7 @@ Rooms are simple containers that has no location of their own.
 
 from evennia import DefaultRoom
 from django.core.exceptions import ObjectDoesNotExist
-from utils import isCharacter
+from utils import isCharacter,isBuildingLocation
 
 
 class Room(DefaultRoom):
@@ -56,7 +56,13 @@ class Room(DefaultRoom):
             elif con.db.is_corpse:
                 things.append("{C%s(труп){n" % key)
             else:
-                things.append(key)
+                # По идеи отсюда бы вынести этот хук в отдельный класс для внутернностей дома
+                if (not isBuildingLocation(con)):
+                    #print "Thing: %s %s" % (con.name, con.__class__.__name__)
+                    things.append(key)
+                #else:
+                    #print "Это здание: %s %s" % (con.name, con.__class__.__name__)
+
         # get description, build string
         string = "{c%s{n\n" % self.get_display_name(looker)
         desc = self.db.desc
@@ -67,6 +73,15 @@ class Room(DefaultRoom):
                     if det > 0:
                         desc = desc.replace(detail,"{y%s{n" % detail)
             string += "%s" % desc
+
+        if (self.db.after_death and looker.db.flat):
+            # Говнокод 
+            # Нужно найти выход с этажа в хату анона и добавить её в текущие выходы
+            floor = looker.db.flat.db.floor
+            for to_room in floor.exits:
+                if (to_room.name == looker.db.flat.name): 
+                    exits.append(to_room.get_display_name(looker)) 
+
         if exits:
             string += "\n{wВыходы:{n " + ", ".join(exits)
         if users or things:
@@ -76,7 +91,7 @@ class Room(DefaultRoom):
     pass
 
 # Этот класс при удалении рекурсивно удаляет все кроме игроков
-class Box(DefaultRoom):
+class Box(Room):
 
     def at_object_delete(self):
         print "Комната удалена %s" % self.key
@@ -89,5 +104,7 @@ class Box(DefaultRoom):
                 pass 
 
         return True
+
+
     pass
 

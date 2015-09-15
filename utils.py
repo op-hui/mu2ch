@@ -19,3 +19,7 @@ def locationTunnelDefault(location1, location2):
 def isCharacter(obj):
         return utils.inherits_from(obj, 'typeclasses.character.Character')
 
+def isBuildingLocation(obj):
+    return obj.__class__.__name__ == 'Building' or \
+        obj.__class__.__name__ == 'BuildingFloor' or \
+        utils.inherits_from(obj, 'typeclasses.apartment.BuildingApartment')

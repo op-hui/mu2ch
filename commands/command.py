@@ -978,6 +978,26 @@ class CmdGetHands(Command):
             caller.db.effects = []
             caller.msg("Теперь у тебя есть массив с эффектами")
 
+class CmdOut(Command):
+    """
+        По этой команде персонаж выходит из локации в первый выход
+        Использование:
+            уйти
+        
+    """
+
+    key = "уйти"
+    aliases = ["out"]
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+
+        caller = self.caller
+        location = self.caller.location
+
+        caller.move_to(location.exits[0])
+
 
 class CmdKill(Command):
     """
