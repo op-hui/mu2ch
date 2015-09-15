@@ -9,7 +9,7 @@ from django.conf import settings
 class Alchemy(object):
 
 	recipes = {"1" : {"typeclass" : AcidBottle, "name": "бутылка с кислотой", "components":["сера","водород","бутылка"]},
-			   "2" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "охуительный коктель", "components":["водка","колла"]}
+			   "2" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "Бэйлис", "components":["кофе 3в1","водка"]}
 			  }
 
 
