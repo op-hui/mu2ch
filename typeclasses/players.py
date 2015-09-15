@@ -149,7 +149,10 @@ class Player(DefaultPlayer):
 
         if (building and not character.db.flat):
             # db.flat - локация хаты персонажа
-            building.assignCharacter(character) 
+            apartment = building.assignCharacter(character) 
+            if (apartment): 
+                character.msg("Тебя заселили по адресу: %s" % repr(apartment)) 
+
 
 
     pass

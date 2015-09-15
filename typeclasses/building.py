@@ -72,6 +72,7 @@ class Building(Box):
             # Хата
             character.db.flat = apartment
             print "Заселили %s в %s" % (character.name, apartment.name) 
+            return apartment
         else:
             print "Свободных хат нет!"
 
