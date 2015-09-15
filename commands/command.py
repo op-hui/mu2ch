@@ -17,6 +17,7 @@ import time
 import re
 from django.conf import settings
 from evennia import create_object
+from typeclasses.alchemy import Alchemy 
 
 class Command(BaseCommand):
     """
@@ -1050,4 +1051,63 @@ class CmdKill(Command):
         else:
             caller.msg("Твою оружие сломалось и рассыпалось в пиль.")
             return
+
+class CmdAlchemy(Command):
+    """
+    Команда для изъятия объектов их рук
+    """
+    key = "alchemy"
+    aliases = ["алхимия"]
+    locks = "cmd:all()"
+    help_category = "General"
+
+    def func(self):
+
+        caller = self.caller
+
+        if not self.args:
+            caller.msg("Использование (без <>): алхимия <ингридиент 1>+<ингридиент 2>+<ингридиент 3>+...")
+            return
+
+        componets = self.args.strip().split("+", 1)
+
+        if not componets:
+            caller.msg("Не верно указаны ингридиенты.")
+            return
+        
+        avaible_components,to_delete = [],[]
+        for componet in componets:
+            avaible = caller.search(componet, location=caller, nofound_string="У тебя нет компонента %s" % componet)
+            if not avaible:
+                continue
+            avaible_components.append(avaible.key)
+            to_delete.append(avaible)
+
+        
+        recipse = Alchemy().recipse
+        
+        if avaible_components in recipse:
+
+            result = create_object(recipse[avaible_components]["typeclass"], recipse[avaible_components]["name"], caller, home=caller)
+
+            if not result:
+                caller.msg("Не удалось нахимичить.")
+
+            string = "Ты потратил: "
+            for item in to_delete:
+                string += "%s, " % item.key
+                item.delete()
+            string+="и нахимичил %s" % result.key
+            caller.msg(string)
+
+
+
+                        
+
+
+
+
+
+
+
 
