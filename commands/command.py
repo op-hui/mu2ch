@@ -1089,7 +1089,7 @@ class CmdAlchemy(Command):
             caller.msg("Использование (без <>): алхимия <ингридиент 1>+<ингридиент 2>+<ингридиент 3>+...")
             return
 
-        componets = self.args.strip().split("+", 1)
+        componets = self.args.strip().split("+")
 
         if not componets:
             caller.msg("Не верно указаны ингридиенты.")
@@ -1103,25 +1103,35 @@ class CmdAlchemy(Command):
             avaible_components.append(avaible.key)
             to_delete.append(avaible)
 
+        if len(componets) != len(avaible_components):
+            caller.msg("У тебя не хватает компонентов!")
+            return
         
-        recipse = Alchemy().recipse
-        
-        if avaible_components in recipse:
+        recipes = Alchemy().recipes.values()
+        created= False
 
-            result = create_object(recipse[avaible_components]["typeclass"], recipse[avaible_components]["name"], caller, home=caller)
+        for recipe in recipes:
+            if self.comp(list1=avaible_components, list2=recipe["components"]):
+                result = create_object(recipe["typeclass"], recipe["name"], caller, home=caller)
+                created = True
 
-            if not result:
-                caller.msg("Не удалось нахимичить.")
+        if not created:
+            caller.msg("Нет такого рецепта. Убедись, что все компопнеты расположены в нужном порядке!")
+            return
 
-            string = "Ты потратил: "
-            for item in to_delete:
-                string += "%s, " % item.key
-                item.delete()
-            string+="и нахимичил %s" % result.key
-            caller.msg(string)
+        string = "Ты потратил: "
+        for item in to_delete:
+            string += "%s, " % item.key
+            item.delete()
+        string+="и нахимичил %s" % result.key
+        caller.msg(string)
 
 
-
+    def comp(self, list1, list2):
+        for val in list1:
+            if val in list2:
+                return True
+        return False
                         
 
 
