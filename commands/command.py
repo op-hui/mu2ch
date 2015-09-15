@@ -17,7 +17,8 @@ import time
 import re
 from django.conf import settings
 from evennia import create_object
-from typeclasses.alchemy import Alchemy 
+from typeclasses.alchemy import Alchemy
+from evennia.utils.evmenu import get_input 
 
 class Command(BaseCommand):
     """
@@ -1133,9 +1134,107 @@ class CmdAlchemy(Command):
                 return True
         return False
                         
+class CmdFollow(Command):
+    """
+    нужна что вступать в пати
+    """
+    key = u"follow"
+    aliases = [u"следовать"]
+    locks = "cmd:all()"
+    help_category = "General"
+    
+    def yesno(self, caller, prompt, result): 
+        if result.lower() in ("д", "да", "н", "нет"):
+            
+            if result.lower() in ("да","д"):
+
+                caller.db.party.append(self.caller.key)
+                self.caller.db.party_leader = caller.key
+                self.caller.msg("Тебя добавили в группу.")
+                caller.msg("Ты добвил %s в группу" % self.caller.key)
+            
+            if result.lower() in ("нет","н"):
+                
+                self.caller.msg("Тебе отказали.")
+        else:
+            # the answer is not on the right yes/no form
+            caller.msg("Ответьте 'да' или 'нет'. \n%s" % prompt)
+            # returning True will make sure the prompt state is not exited
+            return True
+
+    def func(self):
+        caller = self.caller
+
+        args = self.args.strip()
+
+        leader = caller.db.party_leader
+
+        if not args:
+            if not leader:
+                caller.msg("Ты и так не состоишь в группе.")
+                return
+        
+            leader_search = caller.search(leader, global_search=True,nofound_string="Такого лидера нет.")
+        
+            if not leader_search:
+                return
+
+            leader_search.db.party.remove(caller.key)
+            caller.db.party_leader = None
+            caller.msg("Ты вышел из группы лидера %s." % leader_search.key)
+            leader_search.msg("Из твой группы вышел %s" % caller.key)
+            return
+
+        leader_to_follow = caller.search(args, location=caller.location, global_search=True,nofound_string="Такого игрока нет.")
+
+        if not leader_to_follow:
+            return
+
+        if not leader_to_follow.has_player:
+            caller.msg("Игрок %s не в сети. Ты пока не можешь присоедениться к нему." % leader_to_follow.key)
+            return
+        
+        get_input(leader_to_follow, "Игрок %s хочет к вам присоедениться, ты согласен (Да/Нет)?" % caller.key, self.yesno)
+        caller.msg("Ты подал запрос на втупление в группу. Жди пока %s ответит." % leader_to_follow.key)
 
 
+class CmdKikcFromParty(Command):
+    """
+    Нужна чтобы турнуть из пати
+    """
+    key = u"kick"
+    aliases = [u"дропнуть", u"турнуть"]
+    locks = "cmd:all()"
+    help_category = "General"
+    
+    def func(self):
+    
+        caller = self.caller
 
+        args = self.args.strip()
+
+        if not args:
+            caller.msg("Кого дропнуть?")
+            return
+
+        if not caller.db.party:
+            caller.msg("Ты не лидер группы, ты не можешь никого турнуть.")
+            return
+
+        if args in caller.db.party:
+            caller.db.party.remove(args)
+            caller.msg("Ты турнул %s из группы." % args)
+        
+        player = caller.search(args, global_search=True,nofound_string="Такого игрока нет.")
+
+        if not player:
+            return
+
+        player.msg("Тебя турнули из группы.")
+        player.db.party_leader = None
+
+
+    
 
 
 
