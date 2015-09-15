@@ -58,7 +58,8 @@ class Building(Box):
         new_apartment = create_object('apartment.BuildingApartmentUsed', key = db_key)
         new_apartment.build(floor, room_n) 
         new_apartment.db.assign_to = character
-        locationTunnel(new_apartment, new_apartment.name, floor, u"Лестничная площадка")
+        exits = locationTunnel(new_apartment, new_apartment.name, floor, u"Лестничная площадка")
+        exits[1].locks.add("traverse: id(%d) or perm(Wizard)" % character.id)
         new_apartment.move_to(floor, quiet = True, move_hooks = False)
         return new_apartment
         
@@ -72,6 +73,7 @@ class Building(Box):
             # Хата
             character.db.flat = apartment
             print "Заселили %s в %s" % (character.name, apartment.name) 
+            return apartment
         else:
             print "Свободных хат нет!"
 

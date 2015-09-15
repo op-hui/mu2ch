@@ -44,6 +44,5 @@ class BuildingFloor(Box):
             roomEntryLocation.move_to(self, quiet = True, move_hooks = False)
             locationTunnel(roomEntryLocation, roomEntryLocation.key, self, u"Лестничная площадка")
 
-        return self
-
+            return self
     pass

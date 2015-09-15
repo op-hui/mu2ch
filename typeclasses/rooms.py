@@ -90,8 +90,14 @@ class Room(DefaultRoom):
 
     pass
 
+
+class Decoration(Room):
+    def at_object_create(self):
+        self.db.decoration = True
+        self.locks.add("get: perm(Wizard)")
+
 # Этот класс при удалении рекурсивно удаляет все кроме игроков
-class Box(Room):
+class Box(Decoration):
 
     def at_object_delete(self):
         print "Комната удалена %s" % self.key

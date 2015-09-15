@@ -203,17 +203,12 @@ class CmdStatus(Command):
         caller = self.caller
         apartment = caller.db.flat
         if (apartment):
-            floor = apartment.db.floor
-            if (floor):
-                building = floor.getBuilding() 
-                apartment_txt = u"по адресу, %s, %s, %s" % (building.name, floor.db.key, apartment.db.key)
-            else:
-                apartment_txt = u"Ты забыл где твоя хата"
+            apartment_txt = repr(apartment) 
         else:
             apartment_txt = u"Бомж"
 
         message = u"""Хуй обыкновенный
-        Прописка: %s
+        Прописка по адресу: %s
         Фрагов: %d
         Смертей: %d
         """ % (apartment_txt, caller.db.frags, caller.db.death_count) 
