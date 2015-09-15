@@ -44,9 +44,13 @@ class Character(DefaultCharacter):
         #прикручиваем количество смертей
         self.db.death_count = 0
         #прикручиваем массив ээфектов
-        self.db.effects = [];
+        self.db.effects = []
         # ассоциация с хатой.
         self.db.flat = None
+        #прикручивам группу
+        self.db.party = []
+        #прикручиваем лидера группы
+        self.db.party_leader = None
 
     def return_appearance(self, looker):
         """
@@ -142,6 +146,18 @@ class Character(DefaultCharacter):
             src_name = source_location.name
         string = "%s пришел в %s из %s."
         self.location.msg_contents(string % (name, loc_name, src_name), exclude=self)
+        #обоработка группы
+        party = self.db.party
+        if party:
+            for member in party:
+                player = self.search(member, global_search=True,nofound_string="Сорпатиец %s не найден!" % member)
+                if not player:
+                    return
+                if player and player.has_player:
+                    player.location.msg_contents("%s последовал за лидером %s" % (player.key, self.key))
+                    player.move_to(self.location,quiet=True)
+                    player.msg("Ты полследовал за лидером - %s. Вы отправились в %s" % (self.key, self.location.name))
+
 
     def at_die(self):
         """
@@ -164,6 +180,27 @@ class Character(DefaultCharacter):
         if in_hands:
             item = in_hands[0]
             item.move_to(corpse,quiet=True)
+        #сбарсываем пати, если ты умер, или умер лидер
+        leader = self.db.party_leader
+        party = self.db.party
+        
+        if party:
+            for member in party:
+                player = self.search(member, global_search=True,nofound_string="Сорпатиец %s не найден!" % member)
+                if not player:
+                    return
+                player.db.party_leader = None
+                player.msg("Ваш лидер погиб и ваша группа распалась.")
+            self.db.party = []
+            self.msg("Твоя группа распалась.")
+
+        if leader:
+            your_leader = self.search(leader, global_search=True,nofound_string="Лидер %s не найден!" % leader)
+            your_leader.db.party.remove(self.key)
+            your_leader.msg("%s погиб и вышел и твой группы." % self.key)
+            self.db.party_leader = None
+            self.msg("Ты покинул группу %s" % your_leader.key)
+
         #телепортируем персонажа в лимб
         #limbs = self.search("Limbo", global_search=True, quiet=True,nofound_string="Бога нет, и рая нет!" )
         limbs = self.search(True, global_search=True, attribute_name = 'after_death', quiet=True,nofound_string="Бога нет, и рая нет!" )
