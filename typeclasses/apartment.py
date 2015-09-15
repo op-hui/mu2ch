@@ -43,6 +43,17 @@ class BuildingApartment(Box):
         self.build_rooms()
         return self
         
+    def __repr__(self):
+        floor = self.db.floor
+
+        if (floor):
+                building = floor.getBuilding()
+                return u"%s, %s, %s" % (building.name, floor.name, self.name)
+        else:
+                return u"об этом месте лучше не упоминать"
+
+    def __str__(self):
+        return self.__repr__() 
 
 class BuildingApartmentUnused(BuildingApartment):
     def at_object_creation(self):
