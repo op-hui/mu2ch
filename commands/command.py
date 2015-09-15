@@ -1097,7 +1097,7 @@ class CmdAlchemy(Command):
         
         avaible_components,to_delete = [],[]
         for componet in componets:
-            avaible = caller.search(componet, location=caller, nofound_string="У тебя нет компонента %s" % componet)
+            avaible = caller.search(componet, location=caller, nofound_string="У тебя нет компонента: %s" % componet)
             if not avaible:
                 continue
             avaible_components.append(avaible.key)
@@ -1116,7 +1116,7 @@ class CmdAlchemy(Command):
                 created = True
 
         if not created:
-            caller.msg("Нет такого рецепта. Убедись, что все компопнеты расположены в нужном порядке!")
+            caller.msg("Нет такого рецепта!")
             return
 
         string = "Ты потратил: "
