@@ -208,12 +208,45 @@ class CmdStatus(Command):
             apartment_txt = u"Бомж"
 
         message = u"""Хуй обыкновенный
-        Прописка по адресу: %s
-        Фрагов: %d
-        Смертей: %d
+    Прописка по адресу: %s
+    Фрагов: %d
+    Смертей: %d
         """ % (apartment_txt, caller.db.frags, caller.db.death_count) 
 
         caller.msg(message)
+
+
+
+        if caller.db.party_leader:
+            party_leader = caller.search(caller.db.party_leader, location=caller.location, global_search=True,nofound_string="Такого игрока нет.")
+            
+            message = """\nГруппа:
+    Лидер: %s
+    """ % (party_leader.key)
+
+            if party_leader.db.party:
+                
+                message+= """Сопартийцы: """
+                
+                for member in party_leader.db.party:
+                    if member != caller.key:
+                        message+="%s, " % member
+                
+                caller.msg(message)
+
+        if caller.db.party:
+
+            message = """\nГруппа:
+    Ты лидер группы
+    """
+
+            message+= """Сопартийцы: """
+            
+            for member in caller.db.party:
+                message+="%s, " % member
+            
+            caller.msg(message)
+
 
 class CmdHomeRu(Command):
     """
