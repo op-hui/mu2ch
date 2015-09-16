@@ -51,6 +51,8 @@ class Character(DefaultCharacter):
         self.db.party = []
         #прикручиваем лидера группы
         self.db.party_leader = None
+        #прикручиваем деньги
+        self.db.money = 100
 
     def return_appearance(self, looker):
         """

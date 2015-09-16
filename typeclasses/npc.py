@@ -9,6 +9,7 @@ from evennia.contrib import menusystem
 from typeclasses.objects import Object
 from evennia import create_object
 from django.conf import settings
+from evennia import TICKER_HANDLER as tickerhandler
 
 class CmdSetTest(CmdSet):
      def at_cmdset_creation(self):
@@ -312,3 +313,197 @@ class CmdTruff(Command):
 		else : 
 			self.menutree.goto("i5")
 			sweets.move_to(talking_to,quiet=True)
+
+
+
+
+
+
+class Druggist(simpleNPC):
+
+    goods = {"1" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "сера", "desc": "Коричневый порошок. Воняет тухлыми яйцами.", "coast":3},
+             "2" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "водород", "desc": "Водород.", "coast":5},
+             "3" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "бутылка", "desc": "Пустая стеклянная бутылка.", "coast":5},
+             "4" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "вещества", "desc": "Вещества. Можно упороться ими.", "coast":20}
+            }
+
+    last_ticker_deley_value = 0
+
+
+    def at_object_creation(self):
+        self.cmdset.add(CmdSetTest)
+        self.db.npc = True
+        self.locks.add("call:false()")
+        self.locks.add("get:false()")
+        self.db.desc = "Среденестатистическая аптекарша."
+        #задаем таймер, рандомно срабратывающий
+        self.db.last_ticker_deley_value = 0
+        self.db.last_ticker_deley_value = random.randint(15, 120)
+        tickerhandler.add(self, self.db.last_ticker_deley_value)
+
+        CONV = {"START": {"text": "Добро пожаловать. Чем могу вам помочь?",
+                  "links": ["i1", "i1", "i1","i1","END"],
+                  "linktexts": ["Купить серу - 3 еденицы денег.",
+                                "Купить водород - 5 едениц денег.",
+                                "Купить бутылку - 5 едениц денег.",
+                                "Купить вещества - 20 едениц денег.",
+                                "Ничего"],
+                  "keywords": ["1","2","3","4","5"],
+                  "selectcmds":[CmdSera,CmdVodorod,CmdBottle,CmdDrugs,None],
+                  "callback": None},
+        "i1": {"text": "Спасибо за покупку. Что нибудь еще?",
+                  "links": ["START", "END"],
+                  "linktexts":["Еще",
+                               "Нет. Все."],
+                 "keywords": None,
+                 "callback": None},
+        "i2": {"text": "Этот товар закончился. Скоро обещали привезти.",
+                 "links": ["START", "END"],
+                 "linktexts": ["Можно тогда...",
+                               "Ну ладно. Досвидания."],
+                 "keywords": None,
+                 "callback": None},
+        "i3": {"text": "У тебя не хватет денег. Подкопи и тогда возвращайся.",
+                 "links": ["START", "END"],
+                 "linktexts": ["Можно тогда...",
+                               "Ну ладно. Досвидания."],
+                 "keywords": None,
+                 "callback": None},
+                }
+
+        self.db.conversation = CONV
+    
+
+    def at_tick(self):
+
+        tickerhandler.remove(self, self.db.last_ticker_deley_value)
+        self.db.last_ticker_deley_value = random.randint(15, 120) 
+        tickerhandler.add(self, self.db.last_ticker_deley_value)
+
+        if not self.goods:
+            return
+
+        goods_to_create = self.goods.values()
+
+        for good in goods_to_create:
+            good_in_inv = self.search(good["name"], location=self, nofound_string="")
+            if not good_in_inv:
+                new_good = create_object(good["typeclass"], good["name"], self, home=self)
+                new_good.db.desc = good["desc"]
+                new_good.db.coast = good["coast"]
+
+class CmdSera(Command):
+
+    key="1"
+    locks = "cmd:all()"
+
+    def func(self):
+        caller = self.caller
+        talking_to = caller.search(caller.db.last_talk_with, location=caller.location)
+        item = caller.search("сера", location=talking_to)
+        
+        if not item: 
+            self.menutree.goto("i2")
+            return
+        
+        if not caller.db.money:
+            self.menutree.goto("i3")
+            return
+        
+        if caller.db.money < item.db.coast:
+            self.menutree.goto("i3")
+            return
+
+        if not item.db.coast:
+            item.db.coast = 3
+         
+        self.menutree.goto("i1")
+        caller.db.money = caller.db.money - item.db.coast
+        item.move_to(caller,quiet=True)
+
+class CmdVodorod(Command):
+
+    key="2"
+    locks = "cmd:all()"
+
+    def func(self):
+        caller = self.caller
+        talking_to = caller.search(caller.db.last_talk_with, location=caller.location)
+        item = caller.search("водород", location=talking_to)
+        
+        if not item: 
+            self.menutree.goto("i2")
+            return
+        
+        if not caller.db.money:
+            self.menutree.goto("i3")
+            return
+        
+        if caller.db.money < item.db.coast:
+            self.menutree.goto("i3")
+            return
+
+        if not item.db.coast:
+            item.db.coast = 5
+         
+        self.menutree.goto("i1")
+        caller.db.money = caller.db.money - item.db.coast
+        item.move_to(caller,quiet=True)
+
+class CmdBottle(Command):
+
+    key="3"
+    locks = "cmd:all()"
+
+    def func(self):
+        caller = self.caller
+        talking_to = caller.search(caller.db.last_talk_with, location=caller.location)
+        item = caller.search("бутылка", location=talking_to)
+        
+        if not item: 
+            self.menutree.goto("i2")
+            return
+        
+        if not caller.db.money:
+            self.menutree.goto("i3")
+            return
+        
+        if caller.db.money < item.db.coast:
+            self.menutree.goto("i3")
+            return
+
+        if not item.db.coast:
+            item.db.coast = 5
+         
+        self.menutree.goto("i1")
+        caller.db.money = caller.db.money - item.db.coast
+        item.move_to(caller,quiet=True)
+
+class CmdDrugs(Command):
+
+    key="4"
+    locks = "cmd:all()"
+
+    def func(self):
+        caller = self.caller
+        talking_to = caller.search(caller.db.last_talk_with, location=caller.location)
+        item = caller.search("вещества", location=talking_to)
+        
+        if not item: 
+            self.menutree.goto("i2")
+            return
+        
+        if not caller.db.money:
+            self.menutree.goto("i3")
+            return
+        
+        if caller.db.money < item.db.coast:
+            self.menutree.goto("i3")
+            return
+
+        if not item.db.coast:
+            item.db.coast = 20
+         
+        self.menutree.goto("i1")
+        caller.db.money = caller.db.money - item.db.coast
+        item.move_to(caller,quiet=True)
