@@ -283,7 +283,7 @@ class CmdUse(Command):
 
         if (utils.inherits_from(substance, 'typeclasses.substance.Substance')):
             caller.msg(u"Ты употребил %s" % substance.name)
-            substance.delete() 
+            substance.use(caller) 
         else:
             # TODO переработать, использовать можно не только вещества
             caller.msg(u"Ты не можешь употребить %s" % substance.name) 
