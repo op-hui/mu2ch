@@ -19,6 +19,7 @@ from django.conf import settings
 from evennia import create_object
 from typeclasses.alchemy import Alchemy
 from evennia.utils.evmenu import get_input 
+from evennia import utils
 
 class Command(BaseCommand):
     """
@@ -247,7 +248,8 @@ class CmdStatus(Command):
             
             caller.msg(message)
 
-
+# TODO вероятно команду надо переменовать
+# использовать можно не только вещества, но у другие предметы
 class CmdUse(Command): 
     """
     Употребляешь вещество (оно должно находиться в инвентаре)
@@ -269,16 +271,22 @@ class CmdUse(Command):
         caller.msg(repr(args))
 
         if (not len(args)):
-            caller.msg("Не указано какое вещесво заюзать.")
+            caller.msg(u"Не указано какое вещесво заюзать.")
             return False
 
             
-        substance = caller.search(args, location=caller, global_search = False, nofound_string = "Такого вещества у тебя нет") 
+        substance = caller.search(args, location=caller, global_search = False, nofound_string = u"Такого вещества у тебя нет") 
 
         if (not substance):
+            caller.msg(u"")
             return False
 
-        caller.msg("Ты употребил %s" % substance.name)
+        if (utils.inherits_from(substance, 'typeclasses.substance.Substance')):
+            caller.msg(u"Ты употребил %s" % substance.name)
+        else:
+            # TODO переработать, использовать можно не только вещества
+            caller.msg(u"Ты не можешь употребить %s" % substance.name) 
+
 
         return True
         
