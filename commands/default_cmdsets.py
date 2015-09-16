@@ -23,6 +23,10 @@ from commands.command import CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDrop
 
 from commands.command import CmdWear,CmdUnWear,CmdGetHands,CmdMethod,CmdKill,CmdStatus,CmdAlchemy,CmdOut,CmdFollow,CmdKikcFromParty
 
+from commands.command import CmdUse
+
+
+
 from evennia.commands.default.muxcommand import MuxCommand
 from django.conf import settings
 
@@ -78,7 +82,8 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdOut())
         self.add(CmdKikcFromParty())
         self.add(CmdFollow())
-        
+        self.add(CmdUse()) 
+            
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):
     """

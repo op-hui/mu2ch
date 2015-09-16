@@ -248,6 +248,41 @@ class CmdStatus(Command):
             caller.msg(message)
 
 
+class CmdUse(Command): 
+    """
+    Употребляешь вещество (оно должно находиться в инвентаре)
+    
+    Использование:
+        употребить <вещество в инвентаре>
+
+    Употребляешь вещества
+    """
+
+    key = u"употребить"
+    aliases = ["use", u"юзать"]
+
+    def func(self):
+        caller = self.caller
+        args = self.args
+
+
+        caller.msg(repr(args))
+
+        if (not len(args)):
+            caller.msg("Не указано какое вещесво заюзать.")
+            return False
+
+            
+        substance = caller.search(args, location=caller, global_search = False, nofound_string = "Такого вещества у тебя нет") 
+
+        if (not substance):
+            return False
+
+        caller.msg("Ты употребил %s" % substance.name)
+
+        return True
+        
+
 class CmdHomeRu(Command):
     """
     move to your character's home location
