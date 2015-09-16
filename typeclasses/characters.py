@@ -178,10 +178,11 @@ class Character(DefaultCharacter):
         if items:
             for item in items:
                 item.move_to(corpse, quiet=True)
-        in_hands = self.db.hands.contents
-        if in_hands:
-            item = in_hands[0]
-            item.move_to(corpse,quiet=True)
+        if self.db.hands:
+            in_hands = self.db.hands.contents
+            if in_hands:
+                item = in_hands[0]
+                item.move_to(corpse,quiet=True)
         #сбарсываем пати, если ты умер, или умер лидер
         leader = self.db.party_leader
         party = self.db.party
@@ -256,14 +257,14 @@ class Corpse(Character):
                 users.append("{c%s{n" % key)
             else:
                 things.append(key)
-
-        in_hands = (con for con in self.db.hands.contents if con != looker and
-                                                    con.access(looker, "view"))
-        thing = []
-        for con in in_hands:
-            key = con.get_display_name(looker)
-            if con:
-                thing.append(key)        
+        if self.db.hands:
+            in_hands = (con for con in self.db.hands.contents if con != looker and
+                                                        con.access(looker, "view"))
+            thing = []
+            for con in in_hands:
+                key = con.get_display_name(looker)
+                if con:
+                    thing.append(key)        
         # get description, build string
         string = "{C%s{n\n" % self.get_display_name(looker)
         desc = self.db.desc

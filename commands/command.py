@@ -354,7 +354,7 @@ class CmdGetRu(MuxCommand):
     pick up something
 
     Usage:
-      get <obj> <obj>
+      get <obj> = <obj>
 
     Picks up an object from your location and puts it in
     your inventory.
@@ -373,7 +373,7 @@ class CmdGetRu(MuxCommand):
         rhs = self.rhs
 
         if not lhs:
-            caller.msg("Что взять?")
+            caller.msg("Что взять? Использование(без <>): \n взять <объект> \n взять <объект> = <объект>")
             return
         
         if not rhs:
