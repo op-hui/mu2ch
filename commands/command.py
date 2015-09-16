@@ -294,7 +294,7 @@ class CmdHomeRu(Command):
     """
 
     key = u"home"
-    aliases = "домой"
+    aliases = [u"домой"]
     locks = "cmd:perm(home) or perm(Builders)"
     arg_regex = r"$"
 
@@ -562,7 +562,7 @@ class CmdDescRu(Command):
     look at you.
     """
     key = u"desc"
-    aliases = "я"
+    aliases = [u"я"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -656,7 +656,7 @@ class CmdPoseRu(Command):
     automatically begin with your name.
     """
     key = u"pose"
-    aliases = "действие"
+    aliases = [u"действие"]
     locks = "cmd:all()"
 
     def parse(self):
@@ -950,7 +950,7 @@ class CmdWear(Command):
     Команда для перемещения предметов в руку
     """
     key = "wear"
-    aliases = ["одеть"]
+    aliases = [u"одеть"]
     locks = "cmd:all()"
     help_category = "General"
 
@@ -987,7 +987,7 @@ class CmdUnWear(Command):
     Команда для изъятия объектов их рук
     """
     key = "unwear"
-    aliases = ["снять"]
+    aliases = [u"снять"]
     locks = "cmd:all()"
     help_category = "General"
 
@@ -1010,7 +1010,7 @@ class CmdGetHands(Command):
     Команда для изъятия объектов их рук
     """
     key = "@hands"
-    aliases = ["@руки"]
+    aliases = ["u@руки"]
     locks = "cmd:perm(Builders)"
     help_category = "Building"
 
@@ -1068,7 +1068,7 @@ class CmdKill(Command):
     Команда для изъятия объектов их рук
     """
     key = "kill"
-    aliases = ["убить"]
+    aliases = [u"убить"]
     locks = "cmd:all()"
     help_category = "General"
 
@@ -1141,7 +1141,7 @@ class CmdAlchemy(Command):
     Команда для изъятия объектов их рук
     """
     key = "alchemy"
-    aliases = ["алхимия"]
+    aliases = [u"алхимия"]
     locks = "cmd:all()"
     help_category = "General"
 
