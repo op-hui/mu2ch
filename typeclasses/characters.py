@@ -56,13 +56,9 @@ class Character(DefaultCharacter):
         #прикручиваем деньги
         self.db.money = 100
         #прикручиваем религию
-<<<<<<< HEAD
-        self.db.religion = "атэист"
+        self.db.religion = "атеист"
         #прикручиваем предыдущую локацию
         self.db.last_location = None
-=======
-        self.religion = "атеист"
->>>>>>> 12f9ff437878f1aef79b0da1212fed64b5e3360e
 
     def return_appearance(self, looker):
         """
