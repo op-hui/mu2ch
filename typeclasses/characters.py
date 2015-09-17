@@ -45,8 +45,8 @@ class Character(DefaultCharacter):
         self.db.frags = 0
         #прикручиваем количество смертей
         self.db.death_count = 0
-        #прикручиваем массив ээфектов
-        self.db.effects = []
+        #прикручиваем хеш ээфектов
+        self.db.effects = {} 
         # ассоциация с хатой.
         self.db.flat = None
         #прикручивам группу
