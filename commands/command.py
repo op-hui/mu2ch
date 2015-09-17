@@ -445,7 +445,7 @@ class CmdGetRu(MuxCommand):
         if rhs:
             storage_arg = lhs
             odj_arg = rhs
-            storage = caller.search(storage_arg, location=caller.location, nofound_string="Здесь нет такких объектов-хранилищь.")
+            storage = caller.search(storage_arg, location=caller.location, nofound_string="Здесь нет таких объектов-хранилищь.")
             
             if not storage:
                 return
@@ -454,6 +454,10 @@ class CmdGetRu(MuxCommand):
                 caller.msg("Ты можешь обыскивать только трупы и хранилища.")
                 return
             
+            if not storage.contents:
+                caller.msg("Здесь ничего нет.")
+                return
+
             if odj_arg == "все":
                 
                 all_obj = storage.contents
@@ -1123,8 +1127,9 @@ class CmdKill(Command):
         target.db.death_count = target.db.death_count +1
         target.db.effects = []
         if not target == caller: 
-            target.msg("Тебя убил %s." % caller.key)
-            caller.location.msg_contents("%s убил %s." % (caller.key, target.key))
+            target.msg("Тебя убил %s. Ты потерял все свои вещи и оправляешься в..." % caller.key)
+            caller.msg("Ты убил %s. Теперь можешь обшманать его труп." % target.key)
+            caller.location.msg_contents("%s убил %s." % (caller.key, target.key),exclude=caller)
         else:
             target.msg("Ты самовыпилися.")
             caller.location.msg_contents("%s самовыпилися." % (caller.key),exclude=caller)
