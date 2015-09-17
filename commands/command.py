@@ -198,7 +198,7 @@ class CmdStatus(Command):
 
     """
     key = u"статус"
-    aliases = "status"
+    aliases = [u"status"]
 
     def func(self):
         caller = self.caller
@@ -213,7 +213,12 @@ class CmdStatus(Command):
     Фрагов: %d
     Смертей: %d
     Религия: %s
-        """ % (apartment_txt, caller.db.frags, caller.db.death_count, caller.db.religion) 
+""" % (apartment_txt, caller.db.frags, caller.db.death_count, caller.db.religion) 
+
+        if (len(caller.db.effects.keys())): 
+            message += "    Ты находишься под воздействием: "
+            for effect in caller.db.effects.keys():
+                message += effect + " "
 
         caller.msg(message)
 
