@@ -389,7 +389,9 @@ class Druggist(simpleNPC):
             good_in_inv = self.search(good["name"], location=self, nofound_string="")
             if not good_in_inv:
                 new_good = create_object(good["typeclass"], good["name"], self, home=self)
-                new_good.db.desc = good["desc"]
+                if not new_good.db.desc:
+                    if good["desc"]:
+                        new_good.db.desc = good["desc"]
                 new_good.db.coast = good["coast"]
 
 class CmdSera(Command):
