@@ -25,6 +25,8 @@
 @desc PVE = 
   Зона свободная от убийств и смертей, но не от мудаков 
 #
+@set PVE/no_kill = True
+#
 @dig/tel Лекция 
 #
 @set Лекция/after_death = True
