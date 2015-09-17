@@ -331,7 +331,7 @@ class CmdLookRu(MuxCommand):
     Observes your location or objects in your vicinity.
     """
     key = u"look"
-    aliases = [u"l",u"lk",u"смотреть"]
+    aliases = [u"l",u"lk",u"смотреть",u"см"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -450,7 +450,7 @@ class CmdGetRu(MuxCommand):
             if not storage:
                 return
             
-            if not storage.db.is_corpse or storage.db.is_storage:
+            if not (storage.db.is_corpse or storage.db.is_storage):
                 caller.msg("Ты можешь обыскивать только трупы и хранилища.")
                 return
             
@@ -496,7 +496,7 @@ class CmdDropRu(Command):
     """
 
     key = u"drop"
-    aliases = [u"положить",u"бросить"]
+    aliases = [u"бросить",u"выкинуть"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -535,7 +535,7 @@ class CmdGiveRu(MuxCommand):
     placing it in their inventory.
     """
     key = u"give"
-    aliases = [u"дать",u"передать",u"отдать"]
+    aliases = [u"дать",u"передать",u"положить"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
