@@ -8,52 +8,6 @@ from evennia.utils import search
 from utils import locationTunnelDefault
 
 
-def PlayerDynamicLocation(player):
-    def alreadyHas():
-        return False
-    def createLocation(): 
-
-        hallway = create_object('extended_room.ExtendedRoom', key = u"Прихожка")
-        hallway.db.desc = u"Сюда приходят{/Под ногами уютно поскрипывает паркет"
-
-        anonRoom = create_object('extended_room.ExtendedRoom', key = u"Сычевальня")
-        anonRoom.db.desc = u"Все облезло-обшарпано, стулья, диван древние разъебанные в хлам, ремонт утонул, разве что компьютерный стол из этого века"
-
-        kitchen = create_object('extended_room.ExtendedRoom', key = u"Кухня")
-        kitchen.db.desc = u"Женское место, пованивает рыбой"
-
-        mom = create_object("npc.YourMom", key = "Твоя Мамка", location = kitchen)
-
-
-        toilet = create_object('extended_room.ExtendedRoom', key = u"Сортир")
-        toilet.db.desc = u"Сортир, заметна щель ежду дверью и полом{/В углу стоит эмалированное ведро для использованной туалетой бумаги"
-
-        dad = create_object("npc.YourDad", key = "Лысый Батя", location = toilet)
-
-        badroom = create_object('extended_room.ExtendedRoom', key = u"Ванная")
-        badroom.db.desc = u"Ржавая ванная с капающим краном, каждый предмет в ванной исчточает совковую эпоху"
-
-
-        for room in [anonRoom, kitchen, toilet, badroom]: 
-            locationTunnelDefault(hallway, room)
-
-        homeRoom = hallway
-
-        character = player.character
-        corridor = character.search(u"1-Коридор", global_search = True) 
-        if (corridor): 
-            create_object(settings.BASE_EXIT_TYPECLASS, u"Лестничная площадка", location = hallway, destination = corridor)
-            #locationTunnelDefault(hallway, corridor)
-            
-
-        return homeRoom
-
-    if not alreadyHas():
-        return createLocation() 
-    else: 
-        return None
-            
-
 class Player(DefaultPlayer):
     """
     This class describes the actual OOC player (i.e. the user connecting

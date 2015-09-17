@@ -19,6 +19,7 @@ from django.conf import settings
 from evennia import create_object
 from typeclasses.alchemy import Alchemy
 from evennia.utils.evmenu import get_input 
+from evennia import utils
 
 class Command(BaseCommand):
     """
@@ -247,6 +248,49 @@ class CmdStatus(Command):
             
             caller.msg(message)
 
+# TODO вероятно команду надо переменовать
+# использовать можно не только вещества, но у другие предметы
+class CmdUse(Command): 
+    """
+    Употребляешь вещество (оно должно находиться в инвентаре)
+    
+    Использование:
+        употребить <вещество в инвентаре>
+
+    Употребляешь вещества
+    """
+
+    key = u"употребить"
+    aliases = ["use", u"юзать"]
+
+    def func(self):
+        caller = self.caller
+        args = self.args
+
+
+        caller.msg(repr(args))
+
+        if (not len(args)):
+            caller.msg(u"Не указано какое вещесво заюзать.")
+            return False
+
+            
+        substance = caller.search(args, location=caller, global_search = False, nofound_string = u"Такого вещества у тебя нет") 
+
+        if (not substance):
+            caller.msg(u"")
+            return False
+
+        if (utils.inherits_from(substance, 'typeclasses.substance.Substance')):
+            caller.msg(u"Ты употребил %s" % substance.name)
+            substance.use(caller) 
+        else:
+            # TODO переработать, использовать можно не только вещества
+            caller.msg(u"Ты не можешь употребить %s" % substance.name) 
+
+
+        return True
+        
 
 class CmdHomeRu(Command):
     """
@@ -259,7 +303,7 @@ class CmdHomeRu(Command):
     """
 
     key = u"home"
-    aliases = "домой"
+    aliases = [u"домой"]
     locks = "cmd:perm(home) or perm(Builders)"
     arg_regex = r"$"
 
@@ -527,7 +571,7 @@ class CmdDescRu(Command):
     look at you.
     """
     key = u"desc"
-    aliases = "я"
+    aliases = [u"я"]
     locks = "cmd:all()"
     arg_regex = r"\s|$"
 
@@ -621,7 +665,7 @@ class CmdPoseRu(Command):
     automatically begin with your name.
     """
     key = u"pose"
-    aliases = "действие"
+    aliases = [u"действие"]
     locks = "cmd:all()"
 
     def parse(self):
@@ -915,7 +959,7 @@ class CmdWear(Command):
     Команда для перемещения предметов в руку
     """
     key = "wear"
-    aliases = ["одеть"]
+    aliases = [u"одеть"]
     locks = "cmd:all()"
     help_category = "General"
 
@@ -952,7 +996,7 @@ class CmdUnWear(Command):
     Команда для изъятия объектов их рук
     """
     key = "unwear"
-    aliases = ["снять"]
+    aliases = [u"снять"]
     locks = "cmd:all()"
     help_category = "General"
 
@@ -975,7 +1019,7 @@ class CmdGetHands(Command):
     Команда для изъятия объектов их рук
     """
     key = "@hands"
-    aliases = ["@руки"]
+    aliases = ["u@руки"]
     locks = "cmd:perm(Builders)"
     help_category = "Building"
 
@@ -1033,7 +1077,7 @@ class CmdKill(Command):
     Команда для изъятия объектов их рук
     """
     key = "kill"
-    aliases = ["убить"]
+    aliases = [u"убить"]
     locks = "cmd:all()"
     help_category = "General"
 
@@ -1106,7 +1150,7 @@ class CmdAlchemy(Command):
     Команда для изъятия объектов их рук
     """
     key = "alchemy"
-    aliases = ["алхимия"]
+    aliases = [u"алхимия"]
     locks = "cmd:all()"
     help_category = "General"
 
