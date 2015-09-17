@@ -21,7 +21,7 @@ from commands.help_ru import CmdHelp_ru
 from commands.Unloggedin_ru import CmdUnconnectedHelp_ru, CmdUnconnectedConnectRu, CmdUnconnectedCreateRu
 from commands.command import CmdHomeRu,CmdLookRu,CmdInventoryRu,CmdGetRu,CmdDropRu,CmdGiveRu,CmdSayRu,CmdPoseRu,CmdDescRu,CmdTalk,CmdWhoRu,CmdAccessRu,CmdNickRu
 
-from commands.command import CmdWear,CmdUnWear,CmdGetHands,CmdMethod,CmdKill,CmdStatus,CmdAlchemy,CmdOut,CmdFollow,CmdKikcFromParty
+from commands.command import CmdWear,CmdUnWear,CmdGetHands,CmdMethod,CmdKill,CmdStatus,CmdAlchemy,CmdOut,CmdFollow,CmdKikcFromParty,CmdReligionChange
 
 from commands.command import CmdUse
 
@@ -82,7 +82,8 @@ class CharacterCmdSet(default_cmds.CharacterCmdSet):
         self.add(CmdOut())
         self.add(CmdKikcFromParty())
         self.add(CmdFollow())
-        self.add(CmdUse()) 
+        self.add(CmdUse())
+        self.add(CmdReligionChange()) 
             
 
 class PlayerCmdSet(default_cmds.PlayerCmdSet):

@@ -35,7 +35,8 @@ class Character(DefaultCharacter):
                     has connected" message echoed to the room
 
     """
-    #hands = create_object(settings.BASE_OBJECT_TYPECLASS, "hands")
+    #религии
+    avaible_religions = ["христианство","буддизм","сатанизм"]
 
     def at_object_creation(self):
         #прикручиваем руку
@@ -54,6 +55,8 @@ class Character(DefaultCharacter):
         self.db.party_leader = None
         #прикручиваем деньги
         self.db.money = 100
+        #прикручиваем религию
+        self.religion = "атэист"
 
     def return_appearance(self, looker):
         """

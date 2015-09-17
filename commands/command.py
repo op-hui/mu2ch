@@ -212,7 +212,8 @@ class CmdStatus(Command):
     Прописка по адресу: %s
     Фрагов: %d
     Смертей: %d
-        """ % (apartment_txt, caller.db.frags, caller.db.death_count) 
+    Религия: %s
+        """ % (apartment_txt, caller.db.frags, caller.db.death_count, caller.db.religion) 
 
         caller.msg(message)
 
@@ -1311,9 +1312,44 @@ class CmdKikcFromParty(Command):
         player.db.party_leader = None
 
 
+class CmdReligionChange(Command):
+    """
+    Нужна чтобы уверовать в разных богов
+    """
+    key = u"religion"
+    aliases = [u"религия", u"уверовать"]
+    locks = "cmd:all()"
+    help_category = "General"
     
+    def func(self):
+    
+        caller = self.caller
 
+        args = self.args.strip()
 
+        if not args:
+            string = " "
+            for rel in caller.avaible_religions:
+                string += "%s, " % rel
+            caller.msg("Какую религию выберьшь? Доступны: %s" % string)
+            return
 
+        if args == "отречься":
+            caller.msg("Ты стал атэистом")
+            caller.location.msg_contents("%s разочаровался в своих богах и отрекся от них. Теперь он атэист." % (caller.key),exclude=caller)
+            caller.db.religion = "атэист"
+            return
+ 
+        if not args.lower() in caller.avaible_religions:
+            caller.msg("Такой религии нет в этом мире.")
+            return
 
+        if caller.db.religion:
+            caller.msg("Ты сменил религию с %s на %s" % (caller.db.religion, args))
+            caller.location.msg_contents("%s сменил религию на %s" % (caller.key, args),exclude=caller)
+            caller.db.religion = args
+        else:
+            caller.msg("Ты уверовал в %s" % args)
+            caller.location.msg_contents("%s подался в %s" % (caller.key, args),exclude=caller)
+            caller.db.religion = args
 
