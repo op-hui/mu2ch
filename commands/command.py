@@ -198,7 +198,7 @@ class CmdStatus(Command):
 
     """
     key = u"статус"
-    aliases = "status"
+    aliases = [u"status"]
 
     def func(self):
         caller = self.caller
@@ -213,7 +213,12 @@ class CmdStatus(Command):
     Фрагов: %d
     Смертей: %d
     Религия: %s
-        """ % (apartment_txt, caller.db.frags, caller.db.death_count, caller.db.religion) 
+""" % (apartment_txt, caller.db.frags, caller.db.death_count, caller.db.religion) 
+
+        if (len(caller.db.effects.keys())): 
+            message += "    Ты находишься под воздействием: "
+            for effect in caller.db.effects.keys():
+                message += effect + " "
 
         caller.msg(message)
 
@@ -268,18 +273,13 @@ class CmdUse(Command):
         caller = self.caller
         args = self.args
 
-
-        caller.msg(repr(args))
-
         if (not len(args)):
             caller.msg(u"Не указано какое вещесво заюзать.")
             return False
-
             
         substance = caller.search(args, location=caller, global_search = False, nofound_string = u"Такого вещества у тебя нет") 
 
         if (not substance):
-            caller.msg(u"")
             return False
 
         if (utils.inherits_from(substance, 'typeclasses.substance.Substance')):
@@ -1335,9 +1335,9 @@ class CmdReligionChange(Command):
             return
 
         if args == "отречься":
-            caller.msg("Ты стал атэистом")
-            caller.location.msg_contents("%s разочаровался в своих богах и отрекся от них. Теперь он атэист." % (caller.key),exclude=caller)
-            caller.db.religion = "атэист"
+            caller.msg("Ты стал атеистом")
+            caller.location.msg_contents("%s разочаровался в своих богах и отрекся от них. Теперь он атеист." % (caller.key),exclude=caller)
+            caller.db.religion = "атеист"
             return
  
         if not args.lower() in caller.avaible_religions:

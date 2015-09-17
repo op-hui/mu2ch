@@ -65,7 +65,7 @@ class Knife(Weapon):
         self.db.durability = 1
         self.db.is_weapon = True
         #self.db.placing = "RightHand"
-        self.db.desc = "Картонный нож. Достосно прочный что убить кого-то... один раз."
+        self.db.desc = "Картонный нож. Достаточно прочный что убить кого-то... один раз."
 
 class AcidBottle(Weapon):
 
