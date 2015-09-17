@@ -324,7 +324,7 @@ class Druggist(simpleNPC):
     goods = {"1" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "сера", "desc": "Коричневый порошок. Воняет тухлыми яйцами.", "coast":3},
              "2" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "водород", "desc": "Водород.", "coast":5},
              "3" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "бутылка", "desc": "Пустая стеклянная бутылка.", "coast":5},
-             "4" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "вещества", "desc": "Вещества. Можно упороться ими.", "coast":20}
+             "4" : {"typeclass" : 'typeclasses.substance.Veshestvo', "name": "вещества", "desc": "Вещества. Можно упороться ими.", "coast":20}
             }
 
     last_ticker_deley_value = 0
