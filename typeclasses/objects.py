@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Object
 
@@ -155,4 +156,21 @@ class Object(DefaultObject):
 
      """
 
-    pass
+
+
+class HiddenObject(Object):
+
+    def at_object_creation(self):
+        
+        self.db.is_hidden = True
+        self.db.desc = "Ты не сразу замечаешь %s." %self.key
+
+
+class HiddenStorage(Object):
+
+    def at_object_creation(self):
+
+        self.db.is_hidden = True
+        self.db.is_storage = True
+        self.db.desc = "Ты не сразу замечаешь %s. Внутри возможно что-то лежит" %self.key
+

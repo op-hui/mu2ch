@@ -41,7 +41,7 @@ class Room(DefaultRoom):
             if con.destination:
                 exits.append(key)
             elif con.has_player:
-            	if con.db.hands:
+            	if con.db.hands: #проверка на вооруженность игрока
             		in_hand = con.db.hands.contents
             		if in_hand:
             			weapon = in_hand[0]
@@ -59,7 +59,9 @@ class Room(DefaultRoom):
                 # По идеи отсюда бы вынести этот хук в отдельный класс для внутернностей дома
                 if (not isBuildingLocation(con)):
                     #print "Thing: %s %s" % (con.name, con.__class__.__name__)
-                    things.append(key)
+                    #проверка на вилимость предмета в списках
+                    if not con.db.is_hidden:
+                        things.append(key)
                 #else:
                     #print "Это здание: %s %s" % (con.name, con.__class__.__name__)
 
