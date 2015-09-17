@@ -1353,3 +1353,30 @@ class CmdReligionChange(Command):
             caller.location.msg_contents("%s подался в %s" % (caller.key, args),exclude=caller)
             caller.db.religion = args
 
+class CmdBack(Command):
+    """
+    Нужна чтобы уверовать в разных богов
+    """
+    key = u"back"
+    aliases = u"назад"
+    locks = "cmd:all()"
+    help_category = "General"
+    
+    def func(self):
+    
+        caller = self.caller
+
+        args = self.args.strip()
+
+        if not caller.db.last_location:
+            caller.msg("Ты не можешь вернуться в предыдущую локацию.")
+            return
+
+        last_location = caller.db.last_location
+        
+        if caller.location == last_location:
+            caller.msg("Ты уже в предыдущей локации.")
+            return
+        
+        caller.move_to(last_location,quiet=True)
+        caller.msg("Ты венулся в пердыдущую локацию.")

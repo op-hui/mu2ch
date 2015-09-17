@@ -56,7 +56,9 @@ class Character(DefaultCharacter):
         #прикручиваем деньги
         self.db.money = 100
         #прикручиваем религию
-        self.religion = "атэист"
+        self.db.religion = "атэист"
+        #прикручиваем предыдущую локацию
+        self.db.last_location = None
 
     def return_appearance(self, looker):
         """
@@ -126,6 +128,9 @@ class Character(DefaultCharacter):
         dest_name = destination.name
         string = "%s уходит из %s, направляясь в %s."
         self.location.msg_contents(string % (name, loc_name, dest_name), exclude=self)
+
+        #пердыдущая локация
+        self.db.last_location = self.location
 
 
     def announce_move_to(self, source_location):
