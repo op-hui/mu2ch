@@ -14,6 +14,7 @@ from typeclasses.objects import Object
 from evennia import create_object
 from django.conf import settings
 from evennia import TICKER_HANDLER as tickerhandler
+from evennia.utils import delay
 
 class Character(DefaultCharacter):
     """
@@ -204,6 +205,10 @@ class Character(DefaultCharacter):
             self.db.party_leader = None
             self.msg("Ты покинул группу %s" % your_leader.key)
 
+        # задрежка
+        delay(5, callback=self.TelToLimb)
+
+    def TelToLimb(self):
         #телепортируем персонажа в лимб
         #limbs = self.search("Limbo", global_search=True, quiet=True,nofound_string="Бога нет, и рая нет!" )
         limbs = self.search(True, global_search=True, attribute_name = 'after_death', quiet=True,nofound_string="Бога нет, и рая нет!" )
