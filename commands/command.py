@@ -268,18 +268,13 @@ class CmdUse(Command):
         caller = self.caller
         args = self.args
 
-
-        caller.msg(repr(args))
-
         if (not len(args)):
             caller.msg(u"Не указано какое вещесво заюзать.")
             return False
-
             
         substance = caller.search(args, location=caller, global_search = False, nofound_string = u"Такого вещества у тебя нет") 
 
         if (not substance):
-            caller.msg(u"")
             return False
 
         if (utils.inherits_from(substance, 'typeclasses.substance.Substance')):
