@@ -47,7 +47,7 @@ class Character(DefaultCharacter):
         self.db.death_count = 0
         #прикручиваем хеш ээфектов
         self.db.effects = {} 
-        # ассоциация с хатой.
+        #ассоциация с хатой.
         self.db.flat = None
         #прикручивам группу
         self.db.party = []
@@ -56,7 +56,7 @@ class Character(DefaultCharacter):
         #прикручиваем деньги
         self.db.money = 100
         #прикручиваем религию
-        self.religion = "атэист"
+        self.religion = "атеист"
 
     def return_appearance(self, looker):
         """
@@ -167,7 +167,7 @@ class Character(DefaultCharacter):
 
     def at_die(self):
         """
-        хук смерти игрока. создает труп, скидывает в него вещи, переносит игрока в лимб.
+        Хук смерти игрока. Создает труп, скидывает в него вещи, переносит игрока в лимб.
         """
         #создаем труп
         corpse = create_object(Corpse,self.key, location=self.location)

@@ -172,5 +172,5 @@ class HiddenStorage(Object):
 
         self.db.is_hidden = True
         self.db.is_storage = True
-        self.db.desc = "Ты не сразу замечаешь %s. Внутри возможно что-то лежит" %self.key
+        self.db.desc = "Ты не сразу замечаешь %s. Внутри возможно что-то лежит." %self.key
 
