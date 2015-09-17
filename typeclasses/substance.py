@@ -11,13 +11,13 @@ class Substance(Object):
         pass
 
     def use(self, caller):
-        self.ndb.caller = caller
+        self.db.caller = caller
         tickerhandler.add(self, 10)
 
     def at_tick(self):
         self.func()
         tickerhandler.remove(self, self.ndb.affect_time)
-        self.ndb.caller.msg(u"Ушла любовь, завяли помидоры") 
+        self.db.caller.msg(u"Ушла любовь, завяли помидоры") 
 
 class Veshestvo(Substance):
     def at_object_creation(self):
@@ -25,5 +25,5 @@ class Veshestvo(Substance):
         self.db.affect_time = 5
 
     def func(self):
-        caller = self.ndb.caller
+        caller = self.db.caller
         caller.msg(u"Эффект") 

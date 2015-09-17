@@ -875,7 +875,7 @@ class CmdWhoRu(MuxPlayerCommand):
                 delta_conn = time.time() - session.conn_time
                 player = session.get_player()
                 puppet = session.get_puppet()
-                location = puppet.location.key if puppet else "None"
+                location = puppet.location.key if puppet and puppet.location else "None"
                 table.add_row([utils.crop(player.name, width=25),
                                utils.time_format(delta_conn, 0),
                                utils.time_format(delta_cmd, 1),
