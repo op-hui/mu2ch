@@ -2,7 +2,7 @@
 from evennia import DefaultRoom
 from typeclasses.rooms import Box
 from evennia import create_object
-from mudach.utils import locationTunnelDefault
+from mudach.utils import locationTunnelDefault,locationTunnel
 
 class BuildingApartment(Box):
     # Вход в квартиру, существует всегда
@@ -16,7 +16,15 @@ class BuildingApartment(Box):
     def create_room(self, room):
         new_room = create_object('typeclasses.rooms.Box', key = room['name'])
         new_room.desc = room['desc']
-        locationTunnelDefault(self, new_room);
+
+        try:
+            for npc in room['npc']:
+                create_object(npc['typeclass'], key = npc['name'], location = new_room)
+        except KeyError:
+            pass
+
+        #locationTunnelDefault(self, new_room);
+        locationTunnel(self, "Прихожка", new_room, new_room.name);
         return new_room
         
 
@@ -25,6 +33,7 @@ class BuildingApartment(Box):
         for i in xrange(0, len(self.rooms['default'])):
             room = self.create_room(self.rooms['default'][i])
             room.move_to(self, move_hooks = False, quiet = True)
+
 
         for i in xrange(0, min(len(self.rooms['additional']), self.db.additional_n)):
             room = self.create_room(self.rooms['additional'][i])
@@ -38,7 +47,7 @@ class BuildingApartment(Box):
 
     def build(self, floor, n):
         self.db.n = n
-        self.db.key = "Кв. %d" % (n) 
+        self.db.key = "Кв-%d" % (n) 
         self.db.floor = floor
         self.build_rooms()
         return self
@@ -73,12 +82,24 @@ class BuildingApartmentUsed(BuildingApartment):
             },  
             {
                 "name" : u"Ванная",
-                "desc" : u"Ржавая ванная с капающим краном, каждый предмет в ванной источает совковую эпоху."
+                "desc" : u"Ржавая ванная с капающим краном, каждый предмет в ванной исчточает совковую эпоху",
+                "npc": [
+                     { 
+                        "typeclass": 'typeclasses.npc.YourDad',
+                        "name": 'Батя',
+                     } 
+                 ]  
             },
             {
                 "name" : u"Кухня",
-                "desc" : u"Женское место, пованивает рыбой." 
-            }, 
+                "desc" : u"Женское место, пованивает рыбой",
+                "npc"  : [
+                     { 
+                        "typeclass": 'typeclasses.npc.YourMom',
+                        "name": 'Твоя мамка',
+                     } 
+                 ]  
+            },  
             {
                 "name" : u"Сычевальня",
                 "desc" : u"Пека, открытый двач на пеке, родная капчевальня." 

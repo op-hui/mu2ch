@@ -99,15 +99,29 @@ class Player(DefaultPlayer):
             character.move_to(homeLocation)
         
     
-        building = character.search(u"Дом1", global_search = True) 
+        apartment = None
 
-        if (building and not character.db.flat):
+        if (character.db.flat):
+            return 
+
+        i = 1
+        while (apartment is None):
+            building = character.search(u"1-Дом%d" % i, global_search = True) 
+
+            if (not building):
+                building = create_object('typeclasses.building.Hrushevka', key = u"Дом%d" % i) 
+                locationTunnel(building, "Улица", homeLocation, u"1-Дом%d" % i)
+                if (not building):
+                    print "Что-то пошло не так"
+                    # never happend
+                    break
+
             # db.flat - локация хаты персонажа
             apartment = building.assignCharacter(character) 
             if (apartment): 
                 character.msg("Тебя заселили по адресу: %s" % repr(apartment)) 
 
-
+            i = i + 1
 
     pass
         

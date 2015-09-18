@@ -23,4 +23,5 @@ def isCharacter(obj):
 def isBuildingLocation(obj):
     return obj.__class__.__name__ == 'Building' or \
         obj.__class__.__name__ == 'BuildingFloor' or \
-        utils.inherits_from(obj, 'typeclasses.apartment.BuildingApartment')
+        obj.__class__.__name__ == 'Box' or \
+        utils.inherits_from(obj, 'BuildingApartment')

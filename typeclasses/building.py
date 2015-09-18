@@ -14,7 +14,7 @@ class Building(Box):
 
     def apartments_n(self): 
         # raise if None
-        self.db.apartment_per_floor * self.db.floor_n
+        return self.db.apartment_per_floor * self.db.floor_n
 
     def build(self):
         i = 0
