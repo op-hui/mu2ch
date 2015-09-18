@@ -172,10 +172,14 @@ class Character(DefaultCharacter):
 
     def at_die(self):
         """
-        Хук смерти игрока. Создает труп, скидывает в него вещи, переносит игрока в лимб.
+        Хук смерти игрока. Создает труп, скидывает в него вещи, деньги, переносит игрока в лимб.
         """
         #создаем труп
         corpse = create_object(Corpse,self.key, location=self.location)
+        #денюшки
+        if self.db.money:
+            corpse.db.money = self.db.money
+            self.db.money = 0
         #corpse.key = "Труп %s" % self.key
         descriptions = ["Изуродованный труп %s" % self.key,
                         "Бренное тело %s" % self.key,
