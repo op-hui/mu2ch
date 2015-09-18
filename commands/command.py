@@ -213,12 +213,15 @@ class CmdStatus(Command):
     Фрагов: %d
     Смертей: %d
     Религия: %s
-""" % (apartment_txt, caller.db.frags, caller.db.death_count, caller.db.religion) 
+    Деньги: %d
+""" % (apartment_txt, caller.db.frags, caller.db.death_count, caller.db.religion, caller.db.money) 
+    
+        if caller.db.effects:
 
-        if (len(caller.db.effects.keys())): 
-            message += "    Ты находишься под воздействием: "
-            for effect in caller.db.effects.keys():
-                message += effect + " "
+            if (len(caller.db.effects.keys())): 
+                message += "    Ты находишься под воздействием: "
+                for effect in caller.db.effects.keys():
+                    message += effect + " "
 
         caller.msg(message)
 
@@ -445,7 +448,7 @@ class CmdGetRu(MuxCommand):
         
         if rhs:
             storage_arg = lhs
-            odj_arg = rhs
+            obj_arg = rhs
             storage = caller.search(storage_arg, location=caller.location, nofound_string="Здесь нет таких объектов-хранилищь.")
             
             if not storage:
@@ -455,27 +458,63 @@ class CmdGetRu(MuxCommand):
                 caller.msg("Ты можешь обыскивать только трупы и хранилища.")
                 return
             
-            if not storage.contents:
+            if (not storage.contents and not storage.db.money and storage.db.money == 0 ) :
                 caller.msg("Здесь ничего нет.")
                 return
 
-            if odj_arg == "все":
+            if obj_arg == "все":
                 
                 all_obj = storage.contents
-                
+
+                if storage.db.money:
+                    if storage.db.money > 0:
+                        caller.db.money = caller.db.money + storage.db.money
+                        caller.msg("Ты взял %d едениц денег." % storage.db.money)
+                        storage.db.money = 0
+
                 string = "Ты взял все, что было в %s: " % storage.key
                 
                 for obj in all_obj:
                     obj.move_to(caller, quiet=True)
                     string+="%s," % obj.key
+                    obj.at_get(caller)
                 
                 caller.msg(string)
                 caller.location.msg_contents("%s полностью облутал %s" % (caller.key, storage.key),exclude=caller)
                 # calling hook method
-                obj.at_get(caller)
-                return 
-            else:
-                obj = caller.search(odj_arg, location=storage, nofound_string="Здесь нет таких объектов.")
+                #obj.at_get(caller)
+                return
+
+            if "деньги" in obj_arg:
+               
+                money_args = obj_arg.strip().split()
+
+                if storage.db.money:
+                    if storage.db.money > 0:
+                        if len(money_args) == 1:
+                            caller.db.money = caller.db.money + storage.db.money
+                            caller.msg("Ты взял %d едениц денег." % storage.db.money)
+                            storage.db.money = 0
+                            return
+                        if len(money_args) == 2:
+                            amount = int(money_args[1])
+                            caller.db.money = int(caller.db.money) + amount
+                            caller.msg("Ты взял %d едениц денег." % amount)
+                            storage.db.money = int(storage.db.money) - amount
+                            return
+                    else:
+                        caller.msg("Здесь нет денег.")
+                        return
+                else:
+                    caller.msg("Здесь нет денег.")
+                    return
+
+            if (not "деньги" in obj_arg and obj_arg != "все"):
+                
+                obj = caller.search(obj_arg, location=storage, nofound_string="Здесь нет таких объектов.")
+
+                if not obj:
+                    return
 
                 obj.move_to(caller, quiet=True)
                 caller.msg("Ты взял %s из %s" % (obj.name, storage.key))
@@ -483,6 +522,7 @@ class CmdGetRu(MuxCommand):
                 # calling hook method
                 obj.at_get(caller)
                 return
+
 
 
 class CmdDropRu(Command):
@@ -518,8 +558,8 @@ class CmdDropRu(Command):
             return
 
         obj.move_to(caller.location, quiet=True)
-        caller.msg("Ты кладешь %s." % (obj.name,))
-        caller.location.msg_contents("%s положил %s." %
+        caller.msg("Ты выбросил %s." % (obj.name,))
+        caller.location.msg_contents("%s выбросил %s." %
                                          (caller.name, obj.name),
                                      exclude=caller)
         # Call the object script's at_drop() method.
@@ -544,23 +584,78 @@ class CmdGiveRu(MuxCommand):
         "Implement give"
 
         caller = self.caller
+
         if not self.args or not self.rhs:
             caller.msg("Использование: дать <объект> = <цель>")
             return
+
+        target = caller.search(self.rhs,nofound_string="Здесь нет такой цели.")
+
+        if not target:
+            return
+        
+        if "деньги" in self.lhs:
+            
+            money_args = self.lhs.strip().split()
+            
+            if caller.db.money:
+                if caller.db.money > 0:
+                    if not target.db.money:
+                        caller.msg("Ты не можешь положить или передать денньги этому объекту.")
+                        return
+                    if len(money_args) == 1:
+
+                        target.db.money = target.db.money + caller.db.money
+                        if (target.db.is_storage or target.db.is_corpse):
+                            caller.msg("Ты положил все свои деньги в: %s." % target.key)
+                        else:
+                            caller.msg("Ты отдал все свои деньги: %s." % target.key)
+                        caller.db.money = 0
+                        return
+            
+                    if len(money_args) == 2:
+
+                        amount = int(money_args[1])
+                            
+                        if int(caller.db.money) < amount:
+                            caller.msg("У тебя нет такой суммы. У тебя всего %d едениц денег" % caller.db.money)
+                            return
+
+                        target.db.money = int(target.db.money) + amount
+                        if (target.db.is_storage or target.db.is_corpse):
+                            caller.msg("Ты положил %d едениц денег в: %s." % (amount, target.key))
+                        else:
+                            caller.msg("Ты дал %d едениц денег: %s." % (amount, target.key))
+                        caller.db.money = int(caller.db.money) - amount
+                        return
+                else:
+                    caller.msg("У тебя нет денег.")
+                    return
+            else:
+                caller.msg("У тебя нет денег.")
+                return
+
         to_give = caller.search(self.lhs, location=caller,
                                 nofound_string="У тебя нет %s." % self.lhs,
                                 multimatch_string="У тебя несколько %s:" % self.lhs)
-        target = caller.search(self.rhs)
+
+        
         if not (to_give and target):
             return
+        
         if target == caller:
             caller.msg("Ты оставил %s у себя." % to_give.key)
             return
+        
         if not to_give.location == caller:
             caller.msg("У тебя нет %s." % to_give.key)
             return
+        
         # give object
-        caller.msg("Ты дал %s: %s." % (to_give.key, target.key))
+        if (target.db.is_storage or target.db.is_corpse):
+            caller.msg("Ты полоджил %s: %s." % (to_give.key, target.key))
+        else:
+            caller.msg("Ты дал %s: %s." % (to_give.key, target.key))
         to_give.move_to(target, quiet=True)
         target.msg("%s дал тебе %s." % (caller.key, to_give.key))
 
@@ -1090,6 +1185,10 @@ class CmdKill(Command):
 
         caller = self.caller
 
+        if caller.location.db.no_kill:
+            caller.msg("Это PVE зона. Здесь нельзя убивать.")
+            return
+
         if not self.args:
             caller.msg("Кого убиваем?")
             return
@@ -1335,9 +1434,9 @@ class CmdReligionChange(Command):
             return
 
         if args == "отречься":
-            caller.msg("Ты стал атэистом")
-            caller.location.msg_contents("%s разочаровался в своих богах и отрекся от них. Теперь он атэист." % (caller.key),exclude=caller)
-            caller.db.religion = "атэист"
+            caller.msg("Ты стал атеистом")
+            caller.location.msg_contents("%s разочаровался в своих богах и отрекся от них. Теперь он атеист." % (caller.key),exclude=caller)
+            caller.db.religion = "атеист"
             return
  
         if not args.lower() in caller.avaible_religions:
@@ -1353,3 +1452,30 @@ class CmdReligionChange(Command):
             caller.location.msg_contents("%s подался в %s" % (caller.key, args),exclude=caller)
             caller.db.religion = args
 
+class CmdBack(Command):
+    """
+    Нужна чтобы уверовать в разных богов
+    """
+    key = u"back"
+    aliases = u"назад"
+    locks = "cmd:all()"
+    help_category = "General"
+    
+    def func(self):
+    
+        caller = self.caller
+
+        args = self.args.strip()
+
+        if not caller.db.last_location:
+            caller.msg("Ты не можешь вернуться в предыдущую локацию.")
+            return
+
+        last_location = caller.db.last_location
+        
+        if caller.location == last_location:
+            caller.msg("Ты уже в предыдущей локации.")
+            return
+        
+        caller.move_to(last_location,quiet=True)
+        caller.msg("Ты венулся в пердыдущую локацию.")

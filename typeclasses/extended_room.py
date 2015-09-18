@@ -445,7 +445,7 @@ class CmdExtendedDesc(default_cmds.CmdDesc):
                                                       "winter"):
                 # a seasonal switch was given
                 if self.rhs:
-                    caller.msg("Сезрнные описания работают только с комнатами, не с объектами.")
+                    caller.msg("Сезонные описания работают только с комнатами, не с объектами.")
                     return
                 switch = self.switches[0]
                 if not location:

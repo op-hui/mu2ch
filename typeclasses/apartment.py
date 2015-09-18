@@ -11,7 +11,7 @@ class BuildingApartment(Box):
         self.db.n = None
         # Количество "дополнительных" комнат
         self.db.additional_n = 0
-        self.db.desc = u"Прихожка"
+        self.db.desc = u"Прихожая"
 
     def create_room(self, room):
         new_room = create_object('typeclasses.rooms.Box', key = room['name'])
@@ -46,7 +46,7 @@ class BuildingApartment(Box):
 
     def build(self, floor, n):
         self.db.n = n
-        self.db.key = "Кв-%d" % (n) 
+        self.db.key = "Кв. %d" % (n) 
         self.db.floor = floor
         self.build_rooms()
         return self
@@ -58,7 +58,7 @@ class BuildingApartment(Box):
                 building = floor.getBuilding()
                 return u"%s, %s, %s" % (building.name, floor.name, self.name)
         else:
-                return u"об этом месте лучше не упоминать"
+                return u"Об этом месте лучше не упоминать."
 
     def __str__(self):
         return self.__repr__() 
@@ -66,7 +66,7 @@ class BuildingApartment(Box):
 class BuildingApartmentUnused(BuildingApartment):
     def at_object_creation(self):
         super(BuildingApartmentUnused, self).at_object_creation()
-        self.db.desc = u"Пустое нежилое помещение, ничего особенного"
+        self.db.desc = u"Пустое нежилое помещение, ничего особенного."
 
     def build_rooms(self):
         pass
@@ -77,7 +77,7 @@ class BuildingApartmentUsed(BuildingApartment):
         "default" : [
             {
                 "name" : u"Сортир",
-                "desc" : u"Сортир, заметна щель ежду дверью и полом{/В углу стоит эмалированное ведро для использованной туалетой бумаги",
+                "desc" : u"Сортир, заметна щель между дверью и полом. В углу стоит эмалированное ведро для использованной туалетой бумаги."
             },  
             {
                 "name" : u"Ванная",
@@ -98,17 +98,21 @@ class BuildingApartmentUsed(BuildingApartment):
                         "name": 'Твоя мамка',
                      } 
                  ]  
-            }, 
+            },  
+            {
+                "name" : u"Ванная",
+                "desc" : u"Ржавая ванная с капающим краном, каждый предмет в ванной источает совковую эпоху."
+            },
             {
                 "name" : u"Сычевальня",
-                "desc" : u"Пека, открытый двач, родная капчевальня" 
+                "desc" : u"Пека, открытый двач на пеке, родная капчевальня." 
             }, 
         ], 
         # Дополнительные комнаты
         "additional" : [
             {
                 "name" : u"Кладовка",
-                "desc" : u"Темное место"
+                "desc" : u"Темное место."
             } 
         ] 
     } 

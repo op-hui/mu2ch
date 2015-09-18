@@ -15,6 +15,7 @@ from evennia import create_object
 from django.conf import settings
 from evennia import TICKER_HANDLER as tickerhandler
 from evennia.utils import delay
+from evennia import gametime
 
 class Character(DefaultCharacter):
     """
@@ -37,6 +38,7 @@ class Character(DefaultCharacter):
     """
     #религии
     avaible_religions = ["христианство","буддизм","сатанизм"]
+    poket_money_amount = 10
 
     def at_object_creation(self):
         #прикручиваем руку
@@ -47,16 +49,18 @@ class Character(DefaultCharacter):
         self.db.death_count = 0
         #прикручиваем хеш ээфектов
         self.db.effects = {} 
-        # ассоциация с хатой.
+        #ассоциация с хатой.
         self.db.flat = None
         #прикручивам группу
         self.db.party = []
         #прикручиваем лидера группы
         self.db.party_leader = None
         #прикручиваем деньги
-        self.db.money = 100
+        self.db.money = 3
         #прикручиваем религию
-        self.religion = "атэист"
+        self.db.religion = "атеист"
+        #прикручиваем предыдущую локацию
+        self.db.last_location = None
 
     def return_appearance(self, looker):
         """
@@ -107,6 +111,14 @@ class Character(DefaultCharacter):
         if self.location.key == (u"Сычевальня"):
             bugurts = [u"первый бугурт", u"второй бугурт"]
             self.execute_cmd("сказать " + random.choice(bugurts))
+        #получаем от мамаки ежедневные карманные деньги.
+        your_mom = self.search(True, location=self.location, attribute_name = 'is_mom', quiet=True)
+        if your_mom:
+            mom = your_mom[0]
+            if (gametime.gametime() - mom.db.last_payout) >= (24*60)*60:
+                self.db.money = self.db.money + self.poket_money_amount
+                self.msg("Мамка дала тебе %s денег." % self.poket_money_amount)
+                mom.db.last_payout = gametime.gametime()  
 
     def announce_move_from(self, destination):
         """
@@ -126,6 +138,9 @@ class Character(DefaultCharacter):
         dest_name = destination.name
         string = "%s уходит из %s, направляясь в %s."
         self.location.msg_contents(string % (name, loc_name, dest_name), exclude=self)
+
+        #пердыдущая локация
+        self.db.last_location = self.location
 
 
     def announce_move_to(self, source_location):
@@ -167,10 +182,14 @@ class Character(DefaultCharacter):
 
     def at_die(self):
         """
-        хук смерти игрока. создает труп, скидывает в него вещи, переносит игрока в лимб.
+        Хук смерти игрока. Создает труп, скидывает в него вещи, деньги, переносит игрока в лимб.
         """
         #создаем труп
         corpse = create_object(Corpse,self.key, location=self.location)
+        #денюшки
+        if self.db.money:
+            corpse.db.money = self.db.money
+            self.db.money = 0
         #corpse.key = "Труп %s" % self.key
         descriptions = ["Изуродованный труп %s" % self.key,
                         "Бренное тело %s" % self.key,
