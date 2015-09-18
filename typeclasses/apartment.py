@@ -2,7 +2,7 @@
 from evennia import DefaultRoom
 from typeclasses.rooms import Box
 from evennia import create_object
-from mudach.utils import locationTunnelDefault
+from mudach.utils import locationTunnelDefault,locationTunnel
 
 class BuildingApartment(Box):
     # Вход в квартиру, существует всегда
@@ -23,7 +23,8 @@ class BuildingApartment(Box):
         except KeyError:
             pass
 
-        locationTunnelDefault(self, new_room);
+        #locationTunnelDefault(self, new_room);
+        locationTunnel(self, "Прихожка", new_room, new_room.name);
         return new_room
         
 
@@ -46,7 +47,7 @@ class BuildingApartment(Box):
 
     def build(self, floor, n):
         self.db.n = n
-        self.db.key = "Кв. %d" % (n) 
+        self.db.key = "Кв-%d" % (n) 
         self.db.floor = floor
         self.build_rooms()
         return self
