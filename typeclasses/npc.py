@@ -258,9 +258,7 @@ class CmdSetStr(Command):
 	
 	def func(self):
 		caller = self.caller
-		caller.db.str = 5
-		caller.db.agl = 5
-		caller.db.vos = 5
+
 		pantsu = create_object(settings.BASE_OBJECT_TYPECLASS, "Детские трусики", caller, home=caller)
 		talking_to = caller.search(caller.db.last_talk_with, location=caller.location)
 		pantsu.db.desc = "Трусики принадлежат: %s!" % talking_to.key
@@ -492,7 +490,7 @@ class CmdDrugs(Command):
         caller.db.money = caller.db.money - item.db.coast
         item.move_to(caller,quiet=True)
 
-class Confectioner(simpleNPC):
+class Conditer(simpleNPC):
 
     goods = {"1" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "шоколадные конфеты", "desc": "Конфеты 'Мишки в лесу'.", "coast":5},
              "2" : {"typeclass" : settings.BASE_OBJECT_TYPECLASS, "name": "трюфели", "desc": "Отличные трюфели. Местного производства.", "coast":5}
@@ -512,8 +510,8 @@ class Confectioner(simpleNPC):
         self.db.last_ticker_deley_value = random.randint(15, 120)
         tickerhandler.add(self, self.db.last_ticker_deley_value)
 
-        CONV = {"START": {"text": "Добро пожаловать. Чем могу вам помочь?",
-                  "links": ["i1", "i1", "i1","i1","END"],
+        CONV_cond = {"START": {"text": "Добро пожаловать. Чем могу вам помочь?",
+                  "links": ["i1", "i1", "END"],
                   "linktexts": ["Купить шоколадные конфеты - 5 интренета.",
                                 "Купить трюфели - 5 интернетов.",
                                 "Ничего"],
@@ -540,7 +538,7 @@ class Confectioner(simpleNPC):
                  "callback": None},
                 }
 
-        self.db.conversation = CONV
+        self.db.conversation = CONV_cond
     
 
     def at_tick(self):

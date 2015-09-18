@@ -2,7 +2,7 @@
 from evennia import DefaultRoom
 from typeclasses.rooms import Box
 from evennia import create_object, search_object
-from mudach.utils import locationTunnelDefault,locationTunnel
+from utils import locationTunnelDefault,locationTunnel
 from evennia import DefaultScript
 
 
