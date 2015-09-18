@@ -5,7 +5,7 @@ from evennia import create_object
 from evennia import DefaultPlayer, DefaultGuest
 from evennia.objects import DefaultExit
 from evennia.utils import search
-from utils import locationTunnelDefault
+from utils import locationTunnelDefault, locationTunnel
 
 
 class Player(DefaultPlayer):
