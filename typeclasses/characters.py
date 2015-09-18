@@ -54,7 +54,7 @@ class Character(DefaultCharacter):
         #прикручиваем лидера группы
         self.db.party_leader = None
         #прикручиваем деньги
-        self.db.money = 100
+        self.db.money = 3
         #прикручиваем религию
         self.db.religion = "атеист"
         #прикручиваем предыдущую локацию
