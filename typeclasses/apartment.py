@@ -1,8 +1,27 @@
 # -*- coding: utf-8 -*-
 from evennia import DefaultRoom
 from typeclasses.rooms import Box
-from evennia import create_object
+from evennia import create_object, search_object
 from mudach.utils import locationTunnelDefault,locationTunnel
+from evennia import DefaultScript
+
+
+class KitchenKnife(DefaultScript):
+    def at_script_creation(self):
+        #имя скрипта
+        self.key = "knife_spawn_script"
+        #описание
+        self.desc = "Спаунит нож на кухне у мамки."
+        #интервал с которым выполняется метод at_repeat
+        self.interval = 900
+        #Переживет ли скрипт перезагрузку сервера. Типа авто запуска скрипта.
+        self.persistent = True
+
+    def at_repeat(self): 
+        try:
+            knife = search_object(u"Картонный нож", location = self.obj, quiet = True)[0] 
+        except:
+            create_object('typeclasses.weapons.Knife', u"Картонный нож", self.obj)
 
 class BuildingApartment(Box):
     # Вход в квартиру, существует всегда
@@ -16,6 +35,9 @@ class BuildingApartment(Box):
     def create_room(self, room):
         new_room = create_object('typeclasses.rooms.Box', key = room['name'])
         new_room.desc = room['desc']
+
+        if (new_room.name == u'Кухня'):
+            new_room.scripts.add(KitchenKnife) 
 
         try:
             for npc in room['npc']:
