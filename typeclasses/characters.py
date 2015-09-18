@@ -115,15 +115,10 @@ class Character(DefaultCharacter):
         your_mom = self.search(True, location=self.location, attribute_name = 'is_mom', quiet=True)
         if your_mom:
             mom = your_mom[0]
-            if not mom.db.my_son:
-                mom.db.my_son = self.key
             if (gametime.gametime() - mom.db.last_payout) >= (24*60)*60:
-                if mom.db.my_son == self.key:
-                    self.db.money = self.db.money + self.poket_money_amount
-                    self.msg("Мамка дала тебе %s денег." % self.poket_money_amount)
-                    mom.db.last_payout = gametime.gametime()
-                else: 
-                    self.msg("%s говорит: Ты кто такой? Мы тебя не звали. Иди нахер." % mom.key)  
+                self.db.money = self.db.money + self.poket_money_amount
+                self.msg("Мамка дала тебе %s денег." % self.poket_money_amount)
+                mom.db.last_payout = gametime.gametime()  
 
     def announce_move_from(self, destination):
         """
