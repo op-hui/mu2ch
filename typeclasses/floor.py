@@ -37,12 +37,12 @@ class BuildingFloor(Box):
         self.db.building = building
         per_floor = building.db.apartment_per_floor
         i = 1
-        for i in xrange(i, per_floor + 1):
+        for i in xrange(1, per_floor + 1):
             room_n = ((n - 1) * per_floor) + i 
             roomEntryLocation = create_object('apartment.BuildingApartmentUnused', key = u"Кв-%d" % room_n)
             roomEntryLocation.build(self, room_n) 
             roomEntryLocation.move_to(self, quiet = True, move_hooks = False)
             locationTunnel(roomEntryLocation, roomEntryLocation.key, self, u"Лестничная площадка")
 
-            return self
+        return self
     pass
