@@ -122,7 +122,7 @@ class Player(DefaultPlayer):
                     return
 
                 building = create_object('typeclasses.building.Hrushevka', key = u"Дом%d" % i) 
-                locationTunnel(building, "Улица", building_home, u"1-Дом%d" % i)
+                locationTunnel(building, u"Дом%d" % i , building_home, u"Улица")
                 if (not building):
                     print "Что-то пошло не так"
                     # never happend
