@@ -76,13 +76,13 @@ class Room(DefaultRoom):
                         desc = desc.replace(detail,"{y%s{n" % detail)
             string += "%s" % desc
 
-        if (self.db.after_death and looker.db.flat):
+#        if (self.db.after_death and looker.db.flat):
             # Говнокод 
             # Нужно найти выход с этажа в хату анона и добавить её в текущие выходы
-            floor = looker.db.flat.db.floor
-            for to_room in floor.exits:
-                if (to_room.name == looker.db.flat.name): 
-                    exits.append(to_room.get_display_name(looker)) 
+#            floor = looker.db.flat.db.floor
+#            for to_room in floor.exits:
+#                if (to_room.name == looker.db.flat.name): 
+#                    exits.append(to_room.get_display_name(looker)) 
 
         if exits:
             string += "\n{wВыходы:{n " + ", ".join(exits)
