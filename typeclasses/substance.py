@@ -40,5 +40,5 @@ class Substance(Object):
 class Veshestvo(Substance):
     def at_object_creation(self):
         super(Veshestvo, self).at_object_creation()
-        self.db.affect_time = 5
+        self.db.affect_time = 300 
         self.db.name = "Вещества"
