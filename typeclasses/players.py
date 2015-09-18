@@ -5,7 +5,7 @@ from evennia import create_object
 from evennia import DefaultPlayer, DefaultGuest
 from evennia.objects import DefaultExit
 from evennia.utils import search
-from utils import locationTunnelDefault
+from utils import locationTunnelDefault, locationTunnel
 
 
 class Player(DefaultPlayer):
@@ -92,7 +92,13 @@ class Player(DefaultPlayer):
         character = self.character
         
         # Вероятно, этот код нужно убрать в at_first_login хук
-        homeLocation = character.search(u"1-Общий дворик", global_search = True) 
+        try:
+            homeLocation = character.search(u"1-Общий дворик", global_search = True, quiet = True)[0] 
+        except IndexError:
+            # сервер после вайпа, нужно выполнить инцилизацию локаций вручную
+            # bathccommand mu2ch_init
+            # пока заглушка
+            return 
 
         if (homeLocation and character.home != homeLocation):
             character.home = character.location = homeLocation
@@ -106,11 +112,17 @@ class Player(DefaultPlayer):
 
         i = 1
         while (apartment is None):
-            building = character.search(u"1-Дом%d" % i, global_search = True) 
+            try:
+                building = character.search(u"1-Дом%d" % i, global_search = True, quiet = True)[0] 
+            except IndexError:
+                try:
+                    building_home = character.search(u"Преддомовая территория", global_search = True, quiet = True)[0]
+                except IndexError:
+                    # что то пошло не так
+                    return
 
-            if (not building):
                 building = create_object('typeclasses.building.Hrushevka', key = u"Дом%d" % i) 
-                locationTunnel(building, "Улица", homeLocation, u"1-Дом%d" % i)
+                locationTunnel(building, u"Дом%d" % i , building_home, u"Улица")
                 if (not building):
                     print "Что-то пошло не так"
                     # never happend
