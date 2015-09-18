@@ -109,8 +109,23 @@ class Character(DefaultCharacter):
     def at_after_move(self, source_location):
         super(Character, self).at_after_move(source_location) 
         if self.location.key == (u"Сычевальня"):
-            bugurts = [u"первый бугурт", u"второй бугурт"]
+            bugurts = [u"ПОЧЕМУ У МЕНЯ НЕТ ТЯН... РАЗВЕ Я ТАК МНОГО ПРОШУ...", u"ТРИЖДЫБЛЯДСКАЯ ЯРОСТЬ"]
             self.execute_cmd("сказать " + random.choice(bugurts))
+
+        #выходит в окно если под веществами
+        if self.location.key == (u"Сычевальня"):
+            if self.db.effects:
+                if len(self.db.effects) > 0:
+                    out = self.search("Преддворая территория",global_search=True,quiet=True)
+                    if out:
+                        dest = out[0]
+                        self.move_to(dest,quiet=True)
+                        self.msg("Ты был под веществами. Ты перепутал ковер с окном и вашел в него.")
+                        self.at_die()
+                    else:
+                        self.msg("Ты был под веществами. Ты тебе привидилась Леночка и вы вкрылись.")
+                        self.at_die()
+
         #получаем от мамаки ежедневные карманные деньги.
         your_mom = self.search(True, location=self.location, attribute_name = 'is_mom', quiet=True)
         if your_mom:
