@@ -10,6 +10,7 @@ from typeclasses.objects import Object
 from evennia import create_object
 from django.conf import settings
 from evennia import TICKER_HANDLER as tickerhandler
+from evennia import gametime
 
 class CmdSetTest(CmdSet):
      def at_cmdset_creation(self):
@@ -62,9 +63,13 @@ class YourMom(Object):
         self.locks.add("call:false()")
         self.db.npc = True
         self.db.desc = random.choice(self.descriptions)
+        self.db.last_payout = gametime.gametime() - (24*60)*60
+        self.db.is_mom = True
+        self.db.my_son = None 
 
     def at_object_receive(self, obj, source_location):
         self.execute_cmd("say Хороший сыночка-корзиночка растет, спасибо за %s, %s!" % (obj, source_location))
+
 
 class YourDad(Object):
     descriptions = [ 

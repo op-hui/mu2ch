@@ -15,6 +15,7 @@ from evennia import create_object
 from django.conf import settings
 from evennia import TICKER_HANDLER as tickerhandler
 from evennia.utils import delay
+from evennia import gametime
 
 class Character(DefaultCharacter):
     """
@@ -37,6 +38,7 @@ class Character(DefaultCharacter):
     """
     #религии
     avaible_religions = ["христианство","буддизм","сатанизм"]
+    poket_money_amount = 10
 
     def at_object_creation(self):
         #прикручиваем руку
@@ -109,6 +111,19 @@ class Character(DefaultCharacter):
         if self.location.key == (u"Сычевальня"):
             bugurts = [u"первый бугурт", u"второй бугурт"]
             self.execute_cmd("сказать " + random.choice(bugurts))
+        #получаем от мамаки ежедневные карманные деньги.
+        your_mom = self.search(True, location=self.location, attribute_name = 'is_mom', quiet=True)
+        if your_mom:
+            mom = your_mom[0]
+            if not mom.db.my_son:
+                mom.db.my_son = self.key
+            if (gametime.gametime() - mom.db.last_payout) >= (24*60)*60:
+                if mom.db.my_son == self.key:
+                    self.db.money = self.db.money + self.poket_money_amount
+                    self.msg("Мамка дала тебе %s денег." % self.poket_money_amount)
+                    mom.db.last_payout = gametime.gametime()
+                else: 
+                    self.msg("%s говорит: Ты кто такой? Мы тебя не звали. Иди нахер." % mom.key)  
 
     def announce_move_from(self, destination):
         """
