@@ -1185,6 +1185,10 @@ class CmdKill(Command):
 
         caller = self.caller
 
+        if caller.location.db.no_kill:
+            caller.msg("Это PVE зона. Здесь нельзя убивать.")
+            return
+
         if not self.args:
             caller.msg("Кого убиваем?")
             return
