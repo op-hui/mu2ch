@@ -213,7 +213,7 @@ class CmdStatus(Command):
     Фрагов: %d
     Смертей: %d
     Религия: %s
-    Деньги: %d
+    Деньги: %d (интернеты)
 """ % (apartment_txt, caller.db.frags, caller.db.death_count, caller.db.religion, caller.db.money) 
     
         if caller.db.effects:
@@ -469,7 +469,7 @@ class CmdGetRu(MuxCommand):
                 if storage.db.money:
                     if storage.db.money > 0:
                         caller.db.money = caller.db.money + storage.db.money
-                        caller.msg("Ты взял %d едениц денег." % storage.db.money)
+                        caller.msg("Ты взял %d интернетов." % storage.db.money)
                         storage.db.money = 0
 
                 string = "Ты взял все, что было в %s: " % storage.key
@@ -493,13 +493,13 @@ class CmdGetRu(MuxCommand):
                     if storage.db.money > 0:
                         if len(money_args) == 1:
                             caller.db.money = caller.db.money + storage.db.money
-                            caller.msg("Ты взял %d едениц денег." % storage.db.money)
+                            caller.msg("Ты взял %d интернетов." % storage.db.money)
                             storage.db.money = 0
                             return
                         if len(money_args) == 2:
                             amount = int(money_args[1])
                             caller.db.money = int(caller.db.money) + amount
-                            caller.msg("Ты взял %d едениц денег." % amount)
+                            caller.msg("Ты взял %d интернетов." % amount)
                             storage.db.money = int(storage.db.money) - amount
                             return
                     else:
@@ -607,9 +607,9 @@ class CmdGiveRu(MuxCommand):
 
                         target.db.money = target.db.money + caller.db.money
                         if (target.db.is_storage or target.db.is_corpse):
-                            caller.msg("Ты положил все свои деньги в: %s." % target.key)
+                            caller.msg("Ты положил все свои интернеты в: %s." % target.key)
                         else:
-                            caller.msg("Ты отдал все свои деньги: %s." % target.key)
+                            caller.msg("Ты отдал все свои интернеты: %s." % target.key)
                         caller.db.money = 0
                         return
             
@@ -618,14 +618,14 @@ class CmdGiveRu(MuxCommand):
                         amount = int(money_args[1])
                             
                         if int(caller.db.money) < amount:
-                            caller.msg("У тебя нет такой суммы. У тебя всего %d едениц денег" % caller.db.money)
+                            caller.msg("У тебя нет такой суммы. У тебя всего %d интренетов." % caller.db.money)
                             return
 
                         target.db.money = int(target.db.money) + amount
                         if (target.db.is_storage or target.db.is_corpse):
-                            caller.msg("Ты положил %d едениц денег в: %s." % (amount, target.key))
+                            caller.msg("Ты положил %d интернетов в: %s." % (amount, target.key))
                         else:
-                            caller.msg("Ты дал %d едениц денег: %s." % (amount, target.key))
+                            caller.msg("Ты дал %d интернетов: %s." % (amount, target.key))
                         caller.db.money = int(caller.db.money) - amount
                         return
                 else:
