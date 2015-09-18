@@ -16,6 +16,13 @@ class BuildingApartment(Box):
     def create_room(self, room):
         new_room = create_object('typeclasses.rooms.Box', key = room['name'])
         new_room.desc = room['desc']
+
+        try:
+            for npc in room['npc']:
+                create_object(npc['typeclass'], key = npc['name'], location = new_room)
+        except KeyError:
+            pass
+
         locationTunnelDefault(self, new_room);
         return new_room
         
@@ -25,6 +32,7 @@ class BuildingApartment(Box):
         for i in xrange(0, len(self.rooms['default'])):
             room = self.create_room(self.rooms['default'][i])
             room.move_to(self, move_hooks = False, quiet = True)
+
 
         for i in xrange(0, min(len(self.rooms['additional']), self.db.additional_n)):
             room = self.create_room(self.rooms['additional'][i])
@@ -69,15 +77,27 @@ class BuildingApartmentUsed(BuildingApartment):
         "default" : [
             {
                 "name" : u"Сортир",
-                "desc" : u"Сортир, заметна щель ежду дверью и полом{/В углу стоит эмалированное ведро для использованной туалетой бумаги"
+                "desc" : u"Сортир, заметна щель ежду дверью и полом{/В углу стоит эмалированное ведро для использованной туалетой бумаги",
             },  
             {
                 "name" : u"Ванная",
-                "desc" : u"Ржавая ванная с капающим краном, каждый предмет в ванной исчточает совковую эпоху"
+                "desc" : u"Ржавая ванная с капающим краном, каждый предмет в ванной исчточает совковую эпоху",
+                "npc": [
+                     { 
+                        "typeclass": 'typeclasses.npc.YourDad',
+                        "name": 'Батя',
+                     } 
+                 ]  
             },
             {
                 "name" : u"Кухня",
-                "desc" : u"Женское место, пованивает рыбой" 
+                "desc" : u"Женское место, пованивает рыбой",
+                "npc"  : [
+                     { 
+                        "typeclass": 'typeclasses.npc.YourMom',
+                        "name": 'Твоя мамка',
+                     } 
+                 ]  
             }, 
             {
                 "name" : u"Сычевальня",
