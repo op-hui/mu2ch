@@ -25,14 +25,12 @@ Sup Анонимус!
 Добро пожаловать на тестовый сервер MUDча.
 
 Что бы войти на сервер введите:
-        {wconnect <username> <password> {n
+        {wвойти <username> <password> {n
 Что бы создать аккаунт введите:
         {wсоздать <username> <password> {n
 
 Основная страница разработчиков на GitHub:
         https://github.com/op-hui/mu2ch
-Инструкции по созданию своих локаций, предметов, объектов, даже неба и даже Аллаха:
-        https://github.com/op-hui/mu2ch/wiki
 Инструкция по взаимодействию с игровым миром и передвижению по его локациям:
         https://github.com/op-hui/mu2ch/blob/master/guide/faq.md
 Конференция в жаббере:
