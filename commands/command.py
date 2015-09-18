@@ -600,7 +600,8 @@ class CmdGiveRu(MuxCommand):
             
             if caller.db.money:
                 if caller.db.money > 0:
-            
+                    if not target.db.money:
+                        target.db.money = 0
                     if len(money_args) == 1:
 
                         target.db.money = target.db.money + caller.db.money
