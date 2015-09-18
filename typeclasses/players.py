@@ -99,7 +99,7 @@ class Player(DefaultPlayer):
             character.move_to(homeLocation)
         
     
-        building = character.search(u"Дом1", global_search = True) 
+        building = character.search(u"1-Дом1", global_search = True) 
 
         if (building and not character.db.flat):
             # db.flat - локация хаты персонажа
