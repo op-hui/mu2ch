@@ -18,9 +18,8 @@ class KitchenKnife(DefaultScript):
         self.persistent = True
 
     def at_repeat(self): 
-        try:
-            knife = search_object(u"Картонный нож", location = self.obj, quiet = True)[0] 
-        except:
+        knife = search_object(u"Картонный нож", location = self.obj, quiet = True)[0] 
+        if (not knife):
             create_object('typeclasses.weapons.Knife', u"Картонный нож", self.obj)
 
 class BuildingApartment(Box):
@@ -34,7 +33,7 @@ class BuildingApartment(Box):
 
     def create_room(self, room):
         new_room = create_object('typeclasses.rooms.Box', key = room['name'])
-        new_room.desc = room['desc']
+        new_room.db.desc = room['desc']
 
         if (new_room.name == u'Кухня'):
             new_room.scripts.add(KitchenKnife) 
