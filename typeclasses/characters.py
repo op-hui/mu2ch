@@ -37,7 +37,7 @@ class Character(DefaultCharacter):
 
     """
     #религии
-    avaible_religions = ["христианство","буддизм","сатанизм"]
+    avaible_religions = ["христианство","буддизм","сатанизм","ислам"]
     poket_money_amount = 10
 
     def at_object_creation(self):
