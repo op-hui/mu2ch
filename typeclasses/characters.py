@@ -191,7 +191,7 @@ class Character(DefaultCharacter):
                     return
                 if player and player.has_player:
                     player.location.msg_contents("%s последовал за лидером %s" % (player.key, self.key))
-                    player.move_to(self.location,quiet=True)
+                    player.move_to(self.location)
                     player.msg("Ты полследовал за лидером - %s. Вы отправились в %s" % (self.key, self.location.name))
 
 
