@@ -91,7 +91,7 @@ TEMPLATE_DIRS = (
     os.path.join(EVENNIA_DIR, "web", "templates", ACTIVE_TEMPLATE),
     os.path.join(EVENNIA_DIR, "web", "templates"),)
 
-TEST_SERVER = True
+# TEST_SERVER = True
 
 # The secret key is randomly seeded upon creation. It is used to sign
 # Django's cookies. Do not share this with anyone. Changing it will
