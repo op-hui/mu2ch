@@ -18,7 +18,7 @@ class KitchenKnife(DefaultScript):
         self.persistent = True
 
     def at_repeat(self): 
-        knife = search_object(u"Картонный нож", location = self.obj, quiet = True)[0] 
+        knife = self.obj.search(u"Картонный нож", quiet = True)
         if (not knife):
             create_object('typeclasses.weapons.Knife', u"Картонный нож", self.obj)
 
