@@ -120,10 +120,10 @@ class Character(DefaultCharacter):
                     if out:
                         dest = out[0]
                         self.move_to(dest,quiet=True)
-                        self.msg("Ты был под веществами. Ты перепутал ковер с окном и вашел в него.")
+                        self.msg("Ты был под веществами. Ты перепутал окно с ковром и вышел в него.")
                         self.at_die()
                     else:
-                        self.msg("Ты был под веществами. Ты тебе привидилась Леночка и вы вкрылись.")
+                        self.msg("Ты был под веществами. Тебе привиделась Алиска и вы вскрылись.")
                         self.at_die()
 
         #получаем от мамаки ежедневные карманные деньги.
@@ -186,13 +186,13 @@ class Character(DefaultCharacter):
         party = self.db.party
         if party:
             for member in party:
-                player = self.search(member, global_search=True,nofound_string="Сорпатиец %s не найден!" % member)
+                player = self.search(member, global_search=True,nofound_string="Сопартиец %s не найден!" % member)
                 if not player:
                     return
                 if player and player.has_player:
                     player.location.msg_contents("%s последовал за лидером %s" % (player.key, self.key))
                     player.move_to(self.location)
-                    player.msg("Ты полследовал за лидером - %s. Вы отправились в %s" % (self.key, self.location.name))
+                    player.msg("Ты последовал за лидером - %s. Вы отправились в %s" % (self.key, self.location.name))
 
 
     def at_die(self):
@@ -227,7 +227,7 @@ class Character(DefaultCharacter):
         
         if party:
             for member in party:
-                player = self.search(member, global_search=True,nofound_string="Сорпатиец %s не найден!" % member)
+                player = self.search(member, global_search=True,nofound_string="Сопартиец %s не найден!" % member)
                 if not player:
                     return
                 player.db.party_leader = None
