@@ -179,7 +179,7 @@ class T_Loli(Object):
                  "keywords": None,
                  "callback": None},
         "i3": {"text": "А конфеты у тебя шоколадные?",
-                 "links": ["i4", "END"],
+                 "links": ["i4", "START"],
                  "linktexts": ["КОНЕЧНО!",
                                "Нет. Только 'Рачки'."],
                  "selectcmds":[CmdChoco,None],
