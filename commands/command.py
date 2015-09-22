@@ -426,7 +426,7 @@ class CmdGetRu(MuxCommand):
         
         if not rhs:
             #print "general/get:", caller, caller.location, self.args, caller.location.contents
-            obj = caller.search(lhs, location=caller.location)
+            obj = caller.search(lhs, location=caller.location, nofound_string = "Здесь этого нет.")
             if not obj:
                 return
             if caller == obj:
@@ -449,7 +449,7 @@ class CmdGetRu(MuxCommand):
         if rhs:
             storage_arg = lhs
             obj_arg = rhs
-            storage = caller.search(storage_arg, location=caller.location, nofound_string="Здесь нет таких объектов-хранилищь.")
+            storage = caller.search(storage_arg, nofound_string="Здесь нет таких объектов-хранилищь.")
             
             if not storage:
                 return
