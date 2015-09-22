@@ -184,7 +184,7 @@ class CmdMethod(Command):
         try:
             self.caller.msg(u"Output: %s" % repr(eval("obj." + method)))
         except AttributeError:
-            self.caller.msg(u"Что то пошло не так, уже чиним")
+            self.caller.msg(u"Что-то пошло не так, уже чиним")
             raise 
 
         return True
@@ -277,7 +277,7 @@ class CmdUse(Command):
         args = self.args
 
         if (not len(args)):
-            caller.msg(u"Не указано какое вещесво заюзать.")
+            caller.msg(u"Не указано какое вещество употребить.")
             return False
             
         substance = caller.search(args, location=caller, global_search = False, nofound_string = u"Такого вещества у тебя нет") 
@@ -449,7 +449,7 @@ class CmdGetRu(MuxCommand):
         if rhs:
             storage_arg = lhs
             obj_arg = rhs
-            storage = caller.search(storage_arg, nofound_string="Здесь нет таких объектов-хранилищь.")
+            storage = caller.search(storage_arg, nofound_string="Здесь нет таких объектов-хранилищ.")
             
             if not storage:
                 return
@@ -480,7 +480,7 @@ class CmdGetRu(MuxCommand):
                     obj.at_get(caller)
                 
                 caller.msg(string)
-                caller.location.msg_contents("%s полностью облутал %s" % (caller.key, storage.key),exclude=caller)
+                caller.location.msg_contents("%s полностью обобрал %s" % (caller.key, storage.key),exclude=caller)
                 # calling hook method
                 #obj.at_get(caller)
                 return
@@ -653,7 +653,7 @@ class CmdGiveRu(MuxCommand):
         
         # give object
         if (target.db.is_storage or target.db.is_corpse):
-            caller.msg("Ты полоджил %s: %s." % (to_give.key, target.key))
+            caller.msg("Ты положил %s: %s." % (to_give.key, target.key))
         else:
             caller.msg("Ты дал %s: %s." % (to_give.key, target.key))
         to_give.move_to(target, quiet=True)
@@ -1068,7 +1068,7 @@ class CmdWear(Command):
         caller = self.caller
 
         if not self.args:
-            caller.msg("Что одеть?")
+            caller.msg("Что надеть?")
             return
 
         obj = caller.search(self.args, location=caller)
@@ -1228,11 +1228,11 @@ class CmdKill(Command):
         target.db.effects = []
         if not target == caller: 
             target.msg("Тебя убил %s. Ты потерял все свои вещи и оправляешься в..." % caller.key)
-            caller.msg("Ты убил %s. Теперь можешь обшманать его труп." % target.key)
+            caller.msg("Ты убил %s. Теперь можешь обыскать его труп в поисках чего-нибудь ценного." % target.key)
             caller.location.msg_contents("%s убил %s." % (caller.key, target.key),exclude=caller)
         else:
-            target.msg("Ты самовыпилися.")
-            caller.location.msg_contents("%s самовыпилися." % (caller.key),exclude=caller)
+            target.msg("Ты самовыпилился.")
+            caller.location.msg_contents("%s самовыпилился." % (caller.key),exclude=caller)
 
         target.at_die()
 
@@ -1247,7 +1247,7 @@ class CmdKill(Command):
         if not okey:
             caller.msg("Не удалось уничтожить оружие.")
         else:
-            caller.msg("Твою оружие сломалось и рассыпалось в пиль.")
+            caller.msg("Твою оружие сломалось и рассыпалось в пыль.")
             return
 
 class CmdAlchemy(Command):
@@ -1264,13 +1264,13 @@ class CmdAlchemy(Command):
         caller = self.caller
 
         if not self.args:
-            caller.msg("Использование (без <>): алхимия <ингридиент 1>+<ингридиент 2>+<ингридиент 3>+...")
+            caller.msg("Использование (без <>): алхимия <ингредиент 1>+<ингредиент 2>+<ингредиент 3>+...")
             return
 
         componets = self.args.strip().split("+")
 
         if not componets:
-            caller.msg("Не верно указаны ингридиенты.")
+            caller.msg("Не верно указаны ингредиенты.")
             return
         
         avaible_components,to_delete = [],[]
@@ -1328,7 +1328,7 @@ class CmdFollow(Command):
                 caller.db.party.append(self.caller.key)
                 self.caller.db.party_leader = caller.key
                 self.caller.msg("Тебя добавили в группу.")
-                caller.msg("Ты добвил %s в группу" % self.caller.key)
+                caller.msg("Ты добавил %s в группу" % self.caller.key)
             
             if result.lower() in ("нет","н"):
                 
@@ -1368,11 +1368,11 @@ class CmdFollow(Command):
             return
 
         if not leader_to_follow.has_player:
-            caller.msg("Игрок %s не в сети. Ты пока не можешь присоедениться к нему." % leader_to_follow.key)
+            caller.msg("Игрок %s не в сети. Ты пока не можешь присоединиться к нему." % leader_to_follow.key)
             return
         
-        get_input(leader_to_follow, "Игрок %s хочет к вам присоедениться, ты согласен (Да/Нет)?" % caller.key, self.yesno)
-        caller.msg("Ты подал запрос на втупление в группу. Жди пока %s ответит." % leader_to_follow.key)
+        get_input(leader_to_follow, "Игрок %s хочет к вам присоединиться, ты согласен? (Да/Нет)" % caller.key, self.yesno)
+        caller.msg("Ты подал запрос на вступление в группу. Жди пока %s ответит." % leader_to_follow.key)
 
 
 class CmdKikcFromParty(Command):
@@ -1380,7 +1380,7 @@ class CmdKikcFromParty(Command):
     Нужна чтобы турнуть из пати
     """
     key = u"kick"
-    aliases = [u"дропнуть", u"турнуть"]
+    aliases = [u"дропнуть", u"турнуть", u"выгнать", u"кикнуть"]
     locks = "cmd:all()"
     help_category = "General"
     
@@ -1391,23 +1391,23 @@ class CmdKikcFromParty(Command):
         args = self.args.strip()
 
         if not args:
-            caller.msg("Кого дропнуть?")
+            caller.msg("Кого выгнать из группы?")
             return
 
         if not caller.db.party:
-            caller.msg("Ты не лидер группы, ты не можешь никого турнуть.")
+            caller.msg("Ты не лидер группы, ты не можешь никого выгнать.")
             return
 
         if args in caller.db.party:
             caller.db.party.remove(args)
-            caller.msg("Ты турнул %s из группы." % args)
+            caller.msg("Ты выгнал %s из группы." % args)
         
         player = caller.search(args, global_search=True,nofound_string="Такого игрока нет.")
 
         if not player:
             return
 
-        player.msg("Тебя турнули из группы.")
+        player.msg("Тебя выгнали из группы.")
         player.db.party_leader = None
 
 
@@ -1430,7 +1430,7 @@ class CmdReligionChange(Command):
             string = " "
             for rel in caller.avaible_religions:
                 string += "%s, " % rel
-            caller.msg("Какую религию выберьшь? Доступны: %s" % string)
+            caller.msg("Какую религию выберешь? Доступны: %s" % string)
             return
 
         if args == "отречься":
@@ -1478,4 +1478,4 @@ class CmdBack(Command):
             return
         
         caller.move_to(last_location,quiet=True)
-        caller.msg("Ты венулся в пердыдущую локацию.")
+        caller.msg("Ты вернулся в предыдущую локацию.")
